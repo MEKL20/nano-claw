@@ -142,6 +142,10 @@ Use for:
 
 Daily memory is not meant to be permanent truth. It is a staging area.
 
+### 3.4 Semi-Automatic Daily Memory
+
+By default, the assistant should decide when to write into daily memory without requiring the user to explicitly ask. Write when there is a meaningful task, decision, result, blocker, open loop, or follow-up. Do not write for ordinary conversation or noisy transcript logs. Keep notes minimal and auditable rather than exhaustive.
+
 ---
 
 ## 4. Project Slug Rules
@@ -419,6 +423,7 @@ Before writing memory, ask:
 - Is this safe to store?
 - Does this belong globally, project-level, or daily?
 - Can this be written as a concise summary instead of raw detail?
+- Is this ordinary conversation or should it be recorded? Prefer recording meaningful tasks, decisions, results, blockers, open loops, and follow-ups. Skip ordinary chat.
 
 ## Completion Checklist
 
