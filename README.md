@@ -1,36 +1,37 @@
 # nano-claw
 
-Reusable system, workflow, and blueprint notes for MEKL's OpenClaw/nano setup.
+Reusable blueprints for MEKL's systems, workflows, and OpenClaw/nano setup.
 
-## Current contents
+This repo is intended as a clean library of portable concepts that can be reused on new servers or fresh assistant workspaces.
 
-- [`BLUEPRINT.md`](./BLUEPRINT.md) — reusable memory concept blueprint.
+## Structure
 
-## Memory blueprint scope
+```text
+blueprints/
+└── <category>/
+    └── <blueprint-name>/
+        ├── BLUEPRINT.md
+        └── README.md
+```
 
-The current blueprint intentionally covers **memory design only**:
+## Available blueprints
 
-- global durable memory
-- project durable memory
-- daily working memory
-- project slug rules
-- memory promotion rules
-- recall/review rules
-- privacy and safety rules
-- file templates for a new server to generate
-
-It intentionally does **not** include persona, model/provider config, channel config, server config, or private live workspace data.
+| Blueprint | Category | Purpose |
+| --- | --- | --- |
+| [Hybrid Scoped Memory](./blueprints/memory/hybrid-scoped/) | `memory` | Lightweight local-first memory layout using global, project, and daily memory layers. |
 
 ## Usage
 
-On a new server or fresh assistant workspace:
+1. Choose a blueprint folder.
+2. Read its `README.md` for scope and quick usage.
+3. Give its `BLUEPRINT.md` to the target server/assistant.
+4. Ask the target to generate only the files described by that blueprint.
+5. Customize only confirmed local values.
 
-1. Copy `BLUEPRINT.md` into the target workspace.
-2. Ask the assistant/server to read it fully.
-3. Generate the memory files described inside it.
-4. Customize only confirmed local values.
-5. Keep global memory compact and project memory scoped.
+## Principles
 
-## Principle
-
-Simple first. Local-first. Auditable. Promote memory upward only when it is stable, safe, and reusable.
+- Simple first.
+- Local-first when possible.
+- Auditable over magical.
+- Keep private live workspace data out of reusable blueprints.
+- Prefer concepts and templates over machine-specific configuration.
