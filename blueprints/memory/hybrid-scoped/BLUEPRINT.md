@@ -142,9 +142,9 @@ Use for:
 
 Daily memory is not meant to be permanent truth. It is a staging area.
 
-### 3.4 Semi-Automatic Daily Memory
+### 3.4 End-of-Turn Discipline for Daily Memory
 
-By default, the assistant should decide when to write into daily memory without requiring the user to explicitly ask. Write when there is a meaningful task, decision, result, blocker, open loop, or follow-up. Do not write for ordinary conversation or noisy transcript logs. Keep notes minimal and auditable rather than exhaustive.
+Daily memory uses end-of-turn discipline: before every substantive final reply, the assistant must check whether the exchange produced a useful task, decision, result, gotcha, blocker, or follow-up; if yes, update the relevant daily/project memory before replying. Write when there is a meaningful task, decision, result, blocker, open loop, or follow-up. Do not write for ordinary conversation or noisy transcript logs. Keep notes minimal and auditable rather than exhaustive.
 
 ---
 
