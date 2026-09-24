@@ -1,4 +1,4 @@
-# subagent-team
+# Crew5
 
 One audited AI agent software team — plan, design, build, test, secure —
 shipped as installable agent skills. Built on [Hermes Agent](https://github.com/NousResearch/hermes-agent),
@@ -43,6 +43,9 @@ design-rules/         antislop rule packs (core, ui, copywriting,
 qa-templates/         QA report template + filled worked example
 ```
 
+Display name: **Crew5** - five roles, one crew. Skill identifier stays
+`subagent-team` (stable, grep-able).
+
 ## Rules sources (audited before adoption)
 
 - [karpathy-guidelines](https://github.com/multica-ai/andrej-karpathy-skills)
@@ -59,14 +62,31 @@ snapshot, not an endorsement forever.
 ## Install (Hermes)
 
 ```bash
-# member skills
-cp roles/*-SKILL.md ~/.hermes/skills/software-development/
-# rename each to <name>/SKILL.md layout, e.g.
-#   ~/.hermes/skills/software-development/architect-subagent/SKILL.md
+REPO=https://raw.githubusercontent.com/MEKL20/nano-claw/main/subagent-team
+
+# router + member skills (each folder = one skill)
+mkdir -p ~/.hermes/skills/software-development/subagent-team
+curl -sL $REPO/SKILL.md -o ~/.hermes/skills/software-development/subagent-team/SKILL.md
+for r in architect-subagent coding-subagent qa-subagent security-subagent ui-ux-subagent; do
+  mkdir -p ~/.hermes/skills/software-development/$r
+  curl -sL $REPO/roles/$r/SKILL.md -o ~/.hermes/skills/software-development/$r/SKILL.md
+done
 
 # design rules used by ui-ux-subagent
-cp -r design-rules/* ~/.hermes/skills/creative/
-cp -r roles/creative/antislop-code ~/.hermes/skills/software-development/
+for d in antislop antislop-ui antislop-copywriting antislop-layoutmobile antislop-human; do
+  mkdir -p ~/.hermes/skills/creative/$d
+  curl -sL $REPO/design-rules/$d/SKILL.md -o ~/.hermes/skills/creative/$d/SKILL.md
+done
+mkdir -p ~/.hermes/skills/software-development/antislop-code
+curl -sL $REPO/design-rules/antislop-code/SKILL.md -o ~/.hermes/skills/software-development/antislop-code/SKILL.md
+# contrast checker + MCP helper for the human skill:
+curl -sL $REPO/design-rules/antislop-human/contrast-check.py -o ~/.hermes/skills/creative/antislop-human/contrast-check.py
+curl -sL $REPO/design-rules/antislop-human/contrast-mcp.py -o ~/.hermes/skills/creative/antislop-human/contrast-mcp.py
+
+# qa report template lands inside the qa skill:
+mkdir -p ~/.hermes/skills/software-development/qa-subagent/templates
+curl -sL $REPO/qa-templates/qa-report-template.md -o ~/.hermes/skills/software-development/qa-subagent/templates/qa-report-template.md
+curl -sL $REPO/qa-templates/example-stats-cli.md -o ~/.hermes/skills/software-development/qa-subagent/examples/example-stats-cli.md
 ```
 
 ## Install (other agents)
