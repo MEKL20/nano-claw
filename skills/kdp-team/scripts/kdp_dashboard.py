@@ -143,8 +143,9 @@ font-size:.9rem;font-weight:650;text-decoration:none;transition:filter .15s}
 .doc p{margin:8px 0;font-size:.9rem}
 .doc li{margin:5px 0 5px 18px;font-size:.9rem}
 .doc code{background:#f1ece2;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.82rem}
-.doc pre{background:#17332f;color:#e8f2ef;border-radius:8px;padding:14px;overflow-x:auto;font-size:.8rem;margin:10px 0;position:relative}
-.doc pre .copybtn{position:absolute;top:8px;right:8px;background:var(--terra);color:#fff;border:0;
+.prewrap{position:relative;margin:10px 0}
+.doc pre{background:#17332f;color:#e8f2ef;border-radius:8px;padding:14px;padding-top:38px;overflow-x:auto;font-size:.8rem;margin:0}
+.copybtn{position:absolute;top:8px;right:10px;z-index:2;background:var(--terra);color:#fff;border:0;
 border-radius:6px;padding:5px 11px;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.4px}
 .doc pre .copybtn:active{transform:scale(.96)}
 .doc td .cp{background:var(--terra);color:#fff;border:0;border-radius:5px;padding:3px 9px;
@@ -171,8 +172,7 @@ document.addEventListener('click', async (e) => {
   if (btn.classList.contains('cp')) {
     text = btn.parentElement.querySelector('.cp-src').textContent;
   } else {
-    let clone = btn.parentElement.cloneNode(true);
-    clone.querySelectorAll('.copybtn').forEach(n => n.remove());
+    let clone = btn.parentElement.querySelector('pre').cloneNode(true);
     text = clone.textContent;
   }
   text = text.replace(/\u00a0/g, ' ');
@@ -211,9 +211,9 @@ def render_md(text):
         line = lines[i]
         if line.startswith('```'):
             if in_pre:
-                out.append('<button class="copybtn" data-copy>COPY</button></pre>')
+                out.append('</pre></div>')
             else:
-                out.append('<pre>')
+                out.append('<div class="prewrap"><button class="copybtn" data-copy>COPY</button><pre>')
             in_pre = not in_pre; i += 1; continue
         if in_pre:
             out.append(esc(line)); i += 1; continue
@@ -256,7 +256,7 @@ def render_md(text):
         if not line.strip():
             i += 1; continue
         out.append(f'<p>{inline(line)}</p>'); i += 1
-    if in_pre: out.append('</pre>')
+    if in_pre: out.append('</pre></div>')
     return '\n'.join(out)
 
 # ---------- views ----------
