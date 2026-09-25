@@ -147,6 +147,9 @@ font-size:.9rem;font-weight:650;text-decoration:none;transition:filter .15s}
 .doc pre .copybtn{position:absolute;top:8px;right:8px;background:var(--terra);color:#fff;border:0;
 border-radius:6px;padding:5px 11px;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.4px}
 .doc pre .copybtn:active{transform:scale(.96)}
+.doc td .cp{background:var(--terra);color:#fff;border:0;border-radius:5px;padding:3px 9px;
+font-size:.68rem;font-weight:700;cursor:pointer;margin-left:8px;vertical-align:middle;white-space:nowrap}
+.doc td .cp:active{transform:scale(.96)}
 .doc table{border-collapse:collapse;width:100%;font-size:.84rem;margin:10px 0}
 .doc th{background:var(--teal);color:#fff;text-align:left;padding:7px 10px;font-weight:650}
 .doc td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
@@ -162,19 +165,26 @@ footer{text-align:center;font-size:.75rem;color:var(--mut);padding-bottom:30px}
 <footer>KDP Dashboard · part of the kdp-team bundle · LAN only · token-gated</footer>
 <script>
 document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.copybtn');
+  const btn = e.target.closest('.copybtn, .cp');
   if (!btn) return;
-  let text = btn.parentElement.cloneNode(true);
-  text.querySelectorAll('.copybtn').forEach(n => n.remove());
-  text = text.textContent.replace(/\u00a0/g, ' ');
+  let text;
+  if (btn.classList.contains('cp')) {
+    text = btn.parentElement.querySelector('.cp-src').textContent;
+  } else {
+    let clone = btn.parentElement.cloneNode(true);
+    clone.querySelectorAll('.copybtn').forEach(n => n.remove());
+    text = clone.textContent;
+  }
+  text = text.replace(/\u00a0/g, ' ');
   try { await navigator.clipboard.writeText(text); }
   catch (err) {
     const ta = document.createElement('textarea');
     ta.value = text; document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); ta.remove();
   }
+  const old = btn.textContent;
   btn.textContent = 'COPIED ✓';
-  setTimeout(() => { btn.textContent = 'COPY'; }, 1200);
+  setTimeout(() => { btn.textContent = old; }, 1200);
 });
 </script></body></html>'''
 
@@ -215,7 +225,12 @@ def render_md(text):
                 rows.append([c.strip() for c in lines[i].strip('|').split('|')])
                 i += 1
             th = ''.join(f'<th>{inline(c)}</th>' for c in hdr)
-            trs = ''.join('<tr>' + ''.join(f'<td>{inline(c)}</td>' for c in r) + '</tr>' for r in rows)
+            def _cell(c):
+                cp = c.rstrip().endswith('·copy')
+                txt = c.rstrip()[:-5].rstrip() if cp else c
+                btn = ' <button class="cp" data-copy>copy</button>' if cp else ''
+                return f'<td><span class="cp-src">{inline(txt)}</span>{btn}</td>'
+            trs = ''.join('<tr>' + ''.join(_cell(c) for c in r) + '</tr>' for r in rows)
             out.append(f'<table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table>')
             continue
         m = re.match(r'^(#{1,4}) (.+)$', line)
