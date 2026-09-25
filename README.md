@@ -31,6 +31,7 @@ the principle blocks into any agent framework):
 | Skill | Purpose |
 | --- | --- |
 | [Crew5](./skills/crew5/) | A complete audited agent team - plan, design, build, test, secure - five specialist roles plus one human approval gate. |
+| [KDP Team](./skills/kdp-team/) | Five-role Amazon KDP publishing pipeline - research, production, SEO, QA, publish - with AI-disclosure compliance and manual-upload runbook. |
 
 ## Usage
 
