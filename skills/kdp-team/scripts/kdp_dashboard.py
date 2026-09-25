@@ -305,6 +305,21 @@ def book_page(slug):
                     f'<span class="chip {cls}">{esc(status)}</span>')
     publish_open = (f'<a class="btn primary" href="/{TOKEN}/{slug}/publish">📄 Open publish runbook</a>'
                     if os.path.isfile(pkg) else '<span class="sec-note">runbook not written yet</span>')
+    asin_block = ''
+    if st['asin']:
+        asin_block = f'''
+      <div class="dl-row">
+        <a class="btn ghost" href="https://www.amazon.com/dp/{esc(st['asin'])}">↗ amazon.com/dp/{esc(st['asin'])}</a>
+        <span class="sec-note" style="padding:0">sales tracking active · weekly digest · 30-day review {esc((live_date(slug) and time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.strptime(live_date(slug), "%Y-%m-%d"))) + 30*86400)) or '')}</span>
+      </div>'''
+    elif status in ('READY TO UPLOAD', 'LIVE') or os.path.isfile(pkg):
+        asin_block = f'''
+      <form method="post" action="/{TOKEN}/{slug}/set-asin" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+        <input name="asin" required placeholder="ASIN after live (B0…)" pattern="B0[A-Z0-9]{{8}}"
+               style="padding:11px 14px;border:1.5px solid var(--teal);border-radius:9px;font-size:.9rem;width:230px;text-transform:uppercase">
+        <button class="btn primary" type="submit">Activate LIVE + tracking</button>
+      </form>
+      <div class="sec-note" style="padding:8px 0 0">Paste the ASIN from your KDP Bookshelf once the book is live. This arms the weekly sales digest and the 30-day review.</div>'''
     body = f'''
 <main>
 <a class="backlink" href="/{TOKEN}/">← Shelf</a>
@@ -318,6 +333,7 @@ def book_page(slug):
       <div class="subtitle">{esc(slug)} · managed by kdp-team</div>
       {stats}
       <div class="dl-row">{dl_epub}{dl_cover}</div>
+      {asin_block}
     </div>
   </div>
 </div>
@@ -355,6 +371,38 @@ def safe_files(slug):
     return {os.path.normpath(os.path.join(b, rel)) for rel in cands
             if os.path.isfile(os.path.join(b, rel))}
 
+
+def set_asin(slug, asin):
+    log = os.path.join(ROOT, slug, 'sales/log.csv')
+    os.makedirs(os.path.dirname(log), exist_ok=True)
+    if not os.path.isfile(log):
+        with open(log, 'w') as f: f.write('date,slug,asin,price,notes\n')
+    txt = open(log).read()
+    lines = txt.rstrip('\n').split('\n')
+    now = time.strftime('%Y-%m-%d %H:%M')
+    for i in range(len(lines) - 1, 0, -1):
+        cols = lines[i].split(',')
+        if len(cols) >= 3 and (cols[2] == 'PENDING' or not cols[2]):
+            cols[2] = asin
+            if len(cols) < 5: cols += [''] * (5 - len(cols))
+            cols[4] = (cols[4] + ' | ' if cols[4] else '') + f'ASIN set {now}'
+            lines[i] = ','.join(cols)
+            open(log, 'w').write('\n'.join(lines) + '\n')
+            return True
+    lines.append(f'{time.strftime("%Y-%m-%d")},{slug},{asin},,{f"ASIN set {now}"}')
+    open(log, 'w').write('\n'.join(lines) + '\n')
+    return True
+
+def live_date(slug):
+    for line in read1(os.path.join(ROOT, slug, 'sales/log.csv')).splitlines()[1:]:
+        cols = [c.strip() for c in line.split(',')]
+        if len(cols) >= 5 and cols[2] and cols[2] != 'PENDING':
+            return cols[0]
+    return None
+
+def armed(slug):
+    return read1(os.path.join(ROOT, slug, f'.tracking-armed')).strip() == '1'
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         sys.stderr.write('[kdp-dash] %s\n' % (fmt % args))
@@ -367,6 +415,29 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header(k, v)
         self.end_headers()
         self.wfile.write(body)
+
+    def do_POST(self):
+        parts = [p for p in unquote(self.path).split('/') if p]
+        if not parts or parts[0] != TOKEN:
+            self._send(404, b'404'); return
+        rest = parts[1:]
+        if len(rest) == 2 and rest[1] == 'set-asin' and SLUG_RE.match(rest[0]) and rest[0] in books():
+            slug = rest[0]
+            length = int(self.headers.get('Content-Length', 0))
+            form = self.rfile.read(length).decode('utf-8', 'replace')
+            m = re.search(r'(?:^|&)asin=([A-Z0-9]{10})(&|$)', form)
+            if not m:
+                self._send(400, b'bad asin'); return
+            asin = m.group(1)
+            set_asin(slug, asin)
+            open(os.path.join(ROOT, slug, '.tracking-armed'), 'w').write('1')
+            live = live_date(slug) or time.strftime('%Y-%m-%d')
+            self._send(200, render_page(f'<main><div class="card empty">ASIN {esc(asin)} activated for {esc(slug)} '
+                                        f'(live date {esc(live)}). Tracking armed: weekly digest + 30-day review on '
+                                        '{esc((time.strptime(live, "%Y-%m-%d") and (time.mktime(time.strptime(live, "%Y-%m-%d")) + 30*86400) and time.strftime("%Y-%m-%d", time.localtime(time.mktime(time.strptime(live, "%Y-%m-%d"))) + 30*86400)))}.'
+                                        f'<br><br><a class="btn primary" href="/{TOKEN}/{slug}/">← Back to book</a></div></main>').encode())
+            return
+        self._send(404, b'404')
 
     def do_GET(self):
         parts = [p for p in unquote(self.path).split('/') if p]

@@ -64,6 +64,21 @@ for the next link in the chain.
   (systemd configure errors) — don't apt-install anything for this
   pipeline. Cover: PIL 12 + DejaVu fonts are present.
 
+## Agentic cycle (triggers 2+3)
+
+ASIN is the switch: MEKL pastes it into the dashboard form
+(/<token>/<slug>/ set-asin) -> log.csv updated + .tracking-armed marker
+-> status LIVE. Cron jobs (created 2026-09-25, deliver to MEKL's
+Telegram, 09:00 WIB = 02:00 UTC):
+- kdp-live-detector (daily, monitor-gated on kdp_watch.sh): announces a
+  book going LIVE/UNLISTED only when the stable ASIN state changes.
+- kdp-weekly-digest (Mondays 09:00 WIB, loads this skill): sales digest
+  per live book, asks MEKL for numbers when stale, performs the 30-day
+  SEQUEL/KILL review (writes sales/review-30d.done so it fires once).
+Trigger 1 (new book) stays manual: MEKL says go -> full pipeline.
+Monitor script must emit STABLE output (no timestamps/day counters) or
+monitor-gated cron runs every tick.
+
 ## Run-state layout used by book-001
 
 manuscript/chapters/chNN.md one file per chapter (resumable), listing.md
