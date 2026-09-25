@@ -62,7 +62,7 @@ snapshot, not an endorsement forever.
 ## Install (Hermes)
 
 ```bash
-REPO=https://raw.githubusercontent.com/MEKL20/nano-claw/main/subagent-team
+REPO=https://raw.githubusercontent.com/MEKL20/nano-claw/main/skills/crew5
 
 # router + member skills (each folder = one skill)
 mkdir -p ~/.hermes/skills/software-development/subagent-team

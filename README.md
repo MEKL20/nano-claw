@@ -12,6 +12,9 @@ blueprints/
     └── <blueprint-name>/
         ├── BLUEPRINT.md
         └── README.md
+skills/
+└── <skill-name>/
+    └── SKILL.md (+ supporting files)
 ```
 
 ## Available blueprints
@@ -19,6 +22,15 @@ blueprints/
 | Blueprint | Category | Purpose |
 | --- | --- | --- |
 | [Hybrid Scoped Memory](./blueprints/memory/hybrid-scoped/) | `memory` | Lightweight local-first memory layout using global, project, and daily memory layers. |
+
+## Skills
+
+Installable, self-contained skills (drop into `~/.hermes/skills/` or paste
+the principle blocks into any agent framework):
+
+| Skill | Purpose |
+| --- | --- |
+| [Crew5](./skills/crew5/) | A complete audited agent team - plan, design, build, test, secure - five specialist roles plus one human approval gate. |
 
 ## Usage
 
