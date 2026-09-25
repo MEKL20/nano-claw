@@ -143,7 +143,10 @@ font-size:.9rem;font-weight:650;text-decoration:none;transition:filter .15s}
 .doc p{margin:8px 0;font-size:.9rem}
 .doc li{margin:5px 0 5px 18px;font-size:.9rem}
 .doc code{background:#f1ece2;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:.82rem}
-.doc pre{background:#17332f;color:#e8f2ef;border-radius:8px;padding:14px;overflow-x:auto;font-size:.8rem;margin:10px 0}
+.doc pre{background:#17332f;color:#e8f2ef;border-radius:8px;padding:14px;overflow-x:auto;font-size:.8rem;margin:10px 0;position:relative}
+.doc pre .copybtn{position:absolute;top:8px;right:8px;background:var(--terra);color:#fff;border:0;
+border-radius:6px;padding:5px 11px;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.4px}
+.doc pre .copybtn:active{transform:scale(.96)}
 .doc table{border-collapse:collapse;width:100%;font-size:.84rem;margin:10px 0}
 .doc th{background:var(--teal);color:#fff;text-align:left;padding:7px 10px;font-weight:650}
 .doc td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
@@ -156,7 +159,24 @@ footer{text-align:center;font-size:.75rem;color:var(--mut);padding-bottom:30px}
 <div class="topbar"><div class="logo">KM</div>
 <div><h1>KDP Console</h1><div class="sub">@@TODAY@@</div></div></div>
 @@BODY@@
-<footer>KDP Dashboard · part of the kdp-team bundle · LAN only · token-gated</footer></body></html>'''
+<footer>KDP Dashboard · part of the kdp-team bundle · LAN only · token-gated</footer>
+<script>
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.copybtn');
+  if (!btn) return;
+  let text = btn.parentElement.cloneNode(true);
+  text.querySelectorAll('.copybtn').forEach(n => n.remove());
+  text = text.textContent.replace(/\u00a0/g, ' ');
+  try { await navigator.clipboard.writeText(text); }
+  catch (err) {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+  }
+  btn.textContent = 'COPIED ✓';
+  setTimeout(() => { btn.textContent = 'COPY'; }, 1200);
+});
+</script></body></html>'''
 
 def render_page(body, today=None):
     return (PAGE.replace('@@TODAY@@', today or time.strftime('%d %b %Y'))
@@ -180,7 +200,10 @@ def render_md(text):
     while i < len(lines):
         line = lines[i]
         if line.startswith('```'):
-            out.append('</pre>' if in_pre else '<pre>')
+            if in_pre:
+                out.append('<button class="copybtn" data-copy>COPY</button></pre>')
+            else:
+                out.append('<pre>')
             in_pre = not in_pre; i += 1; continue
         if in_pre:
             out.append(esc(line)); i += 1; continue
