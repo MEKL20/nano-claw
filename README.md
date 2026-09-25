@@ -1,6 +1,6 @@
 # nano-claw
 
-Reusable blueprints for MEKL's systems, workflows, and OpenClaw/nano setup.
+Reusable blueprints and skills for MEKL's systems, workflows, and OpenClaw/nano setup.
 
 This repo is intended as a clean library of portable concepts that can be reused on new servers or fresh assistant workspaces.
 
@@ -13,7 +13,7 @@ blueprints/
         ├── BLUEPRINT.md
         └── README.md
 skills/
-└── <skill-name>/
+└── <skill-name>/          e.g. skills/crew5/
     └── SKILL.md (+ supporting files)
 ```
 
