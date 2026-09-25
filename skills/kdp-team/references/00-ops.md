@@ -29,6 +29,25 @@ for the next link in the chain.
    asking for a fixed reply string costs ~25s and proves model+route.
 5. **web_search (Firecrawl keyless) 403s intermittently** — children
    should retry/rephrase, not stall. Say so in the brief.
+6. **429 mid-run = resume, not restart**: upstream glm-5.3-flash rate
+   limits under long generation load (happened at ch09 of 15 files,
+   2026-09-25). Files on disk survive. On retry: inventory the project
+   dir first, then dispatch a resume brief that lists exactly what
+   exists (do-not-rewrite) and what remains, and tells the child to
+   read the last written chapter to match voice and continue.
+7. **Tiny fix tasks: parent executes directly.** A 3-patch fix dispatch
+   died to 429 twice (2026-09-25); parent doing the patches itself with
+   `patch` + grep verification finished in one call. Rule: mechanical
+   edits under ~15 minutes with deterministic verification go to the
+   parent; dispatch only real reasoning work.
+8. **Fix briefs must inventory partial progress first.** Even the
+   "failed" 429 run had graded 2 of 5 fixes before dying — grep each
+   finding's old/new text in the files before assigning fixes, or the
+   child redoes/misses half-done items.
+9. **Cross-artifact consistency is a parent check too**: after fixes
+   change facts (e.g. 3 → 4 benchmarks), grep the listing description
+   and cover brief for the old number — QA checks the book, not the
+   listing against the fixed book.
 
 ## Proven techniques (reuse verbatim)
 
