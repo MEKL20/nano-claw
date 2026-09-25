@@ -1,3 +1,9 @@
+---
+name: kdp-team
+version: 1.0.0
+description: "Five-role KDP subagent team: research to publish pipeline."
+---
+
 # KDP Team: research - produce - seo - qa - publish
 
 Subagent team for Amazon KDP self-publishing, run by nano (parent).
@@ -14,6 +20,10 @@ project directory under `~/kdp/<slug>/`.
 | Publish | references/05-publish.md | upload package + MEKL upload runbook | touch credentials, automate dashboard |
 
 Parent (nano): verify children, route fixes, run analytics, relay MEKL.
+Autonomous mode: after MEKL approves niche, run the chain without
+re-asking; gates stay (niche, final read, upload). Ops lessons,
+delegation routing pins, and Amazon-scrape techniques live in
+references/00-ops.md — read it before dispatching children.
 
 ## Non-negotiables
 
