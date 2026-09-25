@@ -4,12 +4,10 @@ version: 1.0.0
 description: "One audited agent team: plan, design, build, test, secure."
 ---
 
-# Subagent Team: plan-design-build-test-secure
-
-# Crew5
+# Crew5: plan - design - build - test - secure
 
 A complete subagent software team for Hermes (or any agent with a
-spawn-delegate primitive), shipped as one installable skill: Crew5. Five specialist
+spawn-delegate primitive), shipped as one installable skill. Five specialist
 roles, one human approval gate, rules that survive sessions. Every rule in
 this team was live-tested before being written down (field tests noted in
 each member skill).
@@ -52,12 +50,10 @@ External rules sources (audited before adoption, re-audit before updating):
 
 ## Install
 
-Hermes: copy each member folder into `~/.hermes/skills/software-development/`
-(e.g. `roles/architect-subagent/` -> `~/.hermes/skills/software-development/architect-subagent/`).
-The ui-ux role also needs the `design-rules/` packs: antislop* folders go to
-`~/.hermes/skills/creative/`, `antislop-code` goes to
-`~/.hermes/skills/software-development/` with the role skills.
-All member skills must keep the same version tag as this file; mixed versions
+Hermes: copy the member skill folders into `~/.hermes/skills/` (keep the
+category dirs or flatten - skill names are what matter). The ui-ux role
+also needs the five antislop skill folders (creative category). All
+member skills must keep the same version tag as this file; mixed versions
 = re-run the field tests before use.
 
 Other agents: any framework with (a) spawned sub-conversations, (b) a
