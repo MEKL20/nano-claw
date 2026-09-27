@@ -19,6 +19,10 @@
 - Ship: package.md fields complete, no credential material inside.
 
 ## Environment
+- Child timeout: delegation.child_timeout_seconds = 3600 (raised from 1800
+  on 2026-09-27 after 2 visual-fix children died at 30min mid-verification).
+  Single-child dispatches may now run the full QA&Tester job; still keep
+  verification cheap (scripts reuse qa/pt-* patterns).
 - Verify `node -v` exists before promising solver runs; fallback: python
   check script (write one, put in tools/).
 - Local test server: `python3 -m http.server` in build/ (no build step).
