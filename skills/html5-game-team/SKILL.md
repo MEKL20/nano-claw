@@ -18,11 +18,14 @@ project directory under `~/games/<slug>/`.
 | Build | references/02-build.md | full game code, levels JSON, solver tool, SDK wrapper, build report | claim play-tested, invent results |
 | QA | references/03-qa.md | static+spec+solver+SDK checks with evidence, PASS/FAIL verdict | fix anything |
 | Ship | references/04-ship.md | submission package, portal copy, MEKL runbook, metrics plan | touch credentials, submit |
-| Asset | references/06-asset-design.md | icon 512, real-gameplay screenshots, cover, visual audit vs GDD | touch js/levels/tools, fake gameplay images |
+| Asset | references/06-asset-design.md + 07-style-guide.md | PRE-build: style guide (hex-level art spec, contrast gates). POST-build: icon 512, real-gameplay screenshots, cover, pixel audit vs style guide | touch js/levels/tools, fake gameplay images, skip contrast gates |
 
 Parent (nano): verify children, route fixes, relay MEKL, track metrics.
-Autonomous mode: after MEKL approves the design gate, run Build→QA loop
-without re-asking; gates stay (design, playtest, submission).
+Autonomy (MEKL standing order, 2026-09-27): parent DECIDES game pick, GDD
+approval, asset acceptance, and fix routing without asking. MEKL touches
+the pipeline twice: playtest verdict (quality) and portal submission
+(physical action — his account, his payout identity). Gates are evidence
+checks, not permission requests.
 
 ## Non-negotiables
 
@@ -30,10 +33,10 @@ without re-asking; gates stay (design, playtest, submission).
    budget, solver output, report files. Nothing reaches MEKL on a child's word.
 2. **Separation of duties.** QA never fixes; Build never certifies; whoever
    fixes never re-checks the fix.
-3. **MEKL owns risk calls.** Approves: game pick, GDD, playtest verdict,
-   submission (his portal account, his payout identity).
+3. **Parent owns judgment calls.** Pick, GDD sign-off, asset acceptance,
+   FAIL→fix routing = parent decides with evidence. MEKL plays and submits.
 4. **Escalation guards.** Same QA failure twice = stop, report with evidence.
-   Scope change mid-build = back to design gate.
+   Scope change mid-build = back to design.
 5. **Durable docs.** Every phase writes files into the project dir; chat only
    notifies.
 
@@ -52,12 +55,15 @@ without re-asking; gates stay (design, playtest, submission).
 
 ## Pipeline
 
-Strategy file → Research (trend scan → pick + evidence) → MEKL game-pick
-gate → Design GDD → MEKL design gate → Build → QA verdict loop until
-PASS → MEKL playtest → Ship package → MEKL submits manually (~30 min) →
-metrics log (plays, conversion ≥1min, plays/day) → 30-day go/no-go.
-(For game-001 the research step was done manually by the parent — strategy
-file ~/saas-blueocean/game-html5-strategi.md is the pick evidence.)
+Strategy file → Research (parent picks with evidence) → Design GDD (gameplay)
+→ ASSET pre-build: style guide (exact hexes + declared contrast gates) →
+Build (2 dispatches; implements GDD + style guide; parent verifies solver
+between) → QA verdict loop until PASS → ASSET post-build: pixel audit vs
+gates + icon/screenshots → fix loop if gates fail → MEKL playtest (only
+human quality gate) → Ship package → MEKL submits manually (~30 min, his
+account) → metrics log → 30-day go/no-go.
+(For game-001 research + style guide were done retroactively the hard way:
+a full redesign cycle. Their cost is why both now run before build.)
 
 ## Pins (do not re-litigate per game)
 
