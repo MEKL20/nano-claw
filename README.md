@@ -32,6 +32,7 @@ the principle blocks into any agent framework):
 | --- | --- |
 | [Crew5](./skills/crew5/) | A complete audited agent team - plan, design, build, test, secure - five specialist roles plus one human approval gate. |
 | [KDP Team](./skills/kdp-team/) | Five-role Amazon KDP publishing pipeline - research, production, SEO, QA, publish - with AI-disclosure compliance and manual-upload runbook. |
+| [HTML5 Game Team](./skills/html5-game-team/) | Six-role HTML5 portal-game pipeline - research, design, build, QA, asset design, ship - headless-browser QA probes and a token-gated playtest/publish dashboard. |
 
 ## Usage
 
