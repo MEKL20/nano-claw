@@ -4,7 +4,7 @@ version: 1.0.0
 description: "Use when building an HTML5 game for portal ad revenue."
 ---
 
-# HTML5 Game Team: research - design - build - qa - asset - ship
+# HTML5 Game Team: research - design - build - qa - asset - test - ship
 
 Subagent team for HTML5 portal games (CrazyGames primary, Poki second),
 run by nano (parent). Children cannot load skills: nano pastes the matching
@@ -17,6 +17,7 @@ project directory under `~/games/<slug>/`.
 | Design | references/01-design.md | GDD: core loop, twist, level plan, rewarded slots, acceptance criteria, scope cuts | pick engine (pinned), approve itself |
 | Build | references/02-build.md | full game code, levels JSON, solver tool, SDK wrapper, build report | claim play-tested, invent results |
 | QA | references/03-qa.md | static+spec+solver+SDK checks with evidence, PASS/FAIL verdict | fix anything |
+| Game Tester | references/08-game-tester.md | automated real-browser playtest: full playthrough, latency/FPS, fun-killers, mobile, persistence | fix code, report without measured evidence |
 | Ship | references/04-ship.md | submission package, portal copy, MEKL runbook, metrics plan | touch credentials, submit |
 | Asset | references/06-asset-design.md + 07-style-guide.md | PRE-build: style guide (hex-level art spec, contrast gates). POST-build: icon 512, real-gameplay screenshots, cover, pixel audit vs style guide | touch js/levels/tools, fake gameplay images, skip contrast gates |
 
@@ -59,7 +60,8 @@ Strategy file → Research (parent picks with evidence) → Design GDD (gameplay
 → ASSET pre-build: style guide (exact hexes + declared contrast gates) →
 Build (2 dispatches; implements GDD + style guide; parent verifies solver
 between) → QA verdict loop until PASS → ASSET post-build: pixel audit vs
-gates + icon/screenshots → fix loop if gates fail → MEKL playtest (only
+gates + icon/screenshots → GAME TESTER real-browser playtest → fix loop
+if gates/playtest fail → MEKL playtest (only
 human quality gate) → Ship package → MEKL submits manually (~30 min, his
 account) → metrics log → 30-day go/no-go.
 (For game-001 research + style guide were done retroactively the hard way:
