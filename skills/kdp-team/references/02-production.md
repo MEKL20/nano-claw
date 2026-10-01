@@ -61,10 +61,32 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
    every other book shares:
 
        cp ~/kdp/tools/cover_build.py cover/cover_build.py
-       # edit cover/cover_build.py: palette, title, subtitle, tagline
+       cp ~/kdp/tools/Montserrat.ttf cover/   # optional; or point KDP_FONT at it
+       # edit cover/cover_build.py — see the edit map below
        KDP_FONT=~/kdp/tools/Montserrat.ttf \
        KDP_COVER_OUT=$PWD/cover/cover.jpg \
          python3 cover/cover_build.py
+
+   **Edit map (verified against the real file 2026-10-01).** The text is NOT a
+   tidy constant block at the top — it sits inline around lines 45-79:
+
+   | What | Where | Note |
+   |---|---|---|
+   | palette | lines 6-10 (`TEAL`, `CREAM`, `TERRA`, `GOLD`, `CHARCOAL`) | RGB tuples; names are positional, not semantic |
+   | title, as displayed lines | `title_lines = [...]` | one list entry per rendered line |
+   | title, for font sizing | `tf = fit("...", max_w, 230)` | **the title appears TWICE** |
+   | subtitle | `sub = "..."` and `sub2 = "..."` | two separate lines |
+   | tagline | `tag = "..."` | rendered uppercase, letter-spaced |
+
+   **The duplication is the trap:** `fit()` computes the font size from the
+   string you hand it, so if you update `title_lines` and not the `fit(...)`
+   call, the type is sized for the PREVIOUS book's title and silently overflows
+   or under-fills. Pass `fit()` the LONGEST line of your title.
+
+   Field test: a 3-line title ("Dehydrator" / "Cookbook" / "for Beginners",
+   33 chars vs book-001's 15) rendered at (1600, 2560) with ink from y=320 to
+   y=2320 — clear of the bottom-6% margin at y=2406. So the layout does adapt to
+   a longer title; it is the sizing call you must keep in sync.
 
    That writes `cover.jpg` plus `thumb_100.png` and `preview_400.png` beside
    it. Keeping the edited copy in `cover/` also makes this book's cover

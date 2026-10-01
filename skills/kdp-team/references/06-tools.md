@@ -26,9 +26,12 @@ Install copies to `~/kdp/tools/` (where book-001 ran them from).
 
 - Output is **1600x2560 JPG** (`W, H = 1600, 2560` at the top of the file),
   type-forward.
-- **Per-book settings are module-level constants, so treat the installed file
-  as a read-only template: copy it to `<project>/cover/cover_build.py` and
-  edit there.** Editing `~/kdp/tools/cover_build.py` in place rewrites the
+- **Per-book text is inline around lines 45-79, not a constant block, and the
+  title string appears TWICE** (`title_lines` for display, `fit("...")` for font
+  sizing). Update both or the type is sized for the previous book's title. Full
+  edit map in references/02-production.md.
+- **Treat the installed file as a read-only template: copy it to
+  `<project>/cover/cover_build.py` and edit there.** Editing `~/kdp/tools/cover_build.py` in place rewrites the
   generator every other book shares, makes finished covers unreproducible, and
   makes two concurrent books overwrite each other.
 - Output paths come from the environment, never from edited literals:
