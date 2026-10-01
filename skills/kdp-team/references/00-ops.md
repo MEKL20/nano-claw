@@ -64,12 +64,26 @@ next link in the chain.
 
 ## Proven techniques (reuse verbatim)
 
-- **Amazon data via r.jina.ai**: `curl -sL --max-time 60
-  "https://r.jina.ai/https://www.amazon.com/dp/ASIN" -o /tmp/x.txt` then regex
-  `Best Sellers Rank` + `(\d[\d,]*) ratings` in `execute_code`. Category
-  bestsellers: same proxy on `/gp/bestsellers/digital-text/...`. Worked
-  2026-09-25. Amazon autocomplete API returns empty — use Google suggest
-  instead.
+- **Amazon data via r.jina.ai** (keyless; re-verified 2026-10-01, returns
+  ~200-260KB of markdown per product page):
+
+      curl -sL --max-time 50 "https://r.jina.ai/https://www.amazon.com/dp/<ASIN>"
+
+  Extraction patterns that actually match (6-ASIN sample):
+
+      BSR      Best Sellers Rank:\s*#([\d,]+)\s+in\s+([^(\n\[]+)    4/6
+      ratings  ([\d,]+)\s+global\s+ratings                          2/6
+      stars    ([\d.]+)\s+out of 5 stars                            5/6
+
+  `(\d[\d,]*) ratings` matched 0/6 — it was wrong in the original brief.
+  `#N in Kindle Store` misses titles ranked "in Books". Gaps are UNKNOWN,
+  never 0: a star score with no count means the count did not render, and a
+  refetch returns a byte-identical page, so retrying is wasted time.
+  Google suggest works for autocomplete; Amazon's own API returns empty.
+- **Probe with REAL data before declaring an outage.** A made-up ASIN returns
+  HTTP 200 with a ~400-byte "continue shopping" stub, which reads exactly
+  like a bot wall. Diagnosing the proxy as dead from that is a fabricated
+  blocker — always probe with an ASIN cited in an existing decision.md.
 - **Verification of child evidence**: re-fetch 3 sampled ASINs with the same
   technique and diff BSR/reviews against the child's table.
 - **Builders, not packages**: EPUB via `scripts/epub_build.py`, cover via

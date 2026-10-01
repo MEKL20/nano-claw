@@ -17,15 +17,37 @@ Either a topic brief from the parent, or the directive "pick from trends".
 2. For each promising candidate, gather evidence. Amazon pages are reachable
    through the reader proxy:
 
-       curl -sL --max-time 60 "https://r.jina.ai/https://www.amazon.com/dp/<ASIN>" -o /tmp/x.txt
+       curl -sL --max-time 50 "https://r.jina.ai/https://www.amazon.com/dp/<ASIN>"
 
-   then regex `Best Sellers Rank` and `(\d[\d,]*) ratings`. Category
-   bestsellers: the same proxy on `/gp/bestsellers/digital-text/...`.
+   Extract with these patterns, re-verified against 6 real ASINs 2026-10-01:
+
+       BSR:     Best Sellers Rank:\s*#([\d,]+)\s+in\s+([^(\n\[]+)
+       ratings: ([\d,]+)\s+global\s+ratings
+       stars:   ([\d.]+)\s+out of 5 stars
+
+   Do NOT use `#(\d+) in Kindle Store` (misses titles ranked "in Books")
+   and do NOT use `(\d[\d,]*) ratings` — that one matched 0 of 6 real pages.
+   Capture the BSR category too; a rank is meaningless without it.
+
+   **Missing numbers are UNKNOWN, never 0.** Measured hit rates on the proxy:
+   BSR resolves ~4 of 6 ASINs, review counts ~2 of 6. A page often shows a
+   star score with no count string — that title HAS ratings that simply did
+   not render. Refetching does not help (verified: byte-identical on retry),
+   so record `UNKNOWN` and move on. Writing 0, or a guess, corrupts the
+   competition screen that the whole book decision rests on.
+
+   Category bestsellers: the same proxy on `/gp/bestsellers/digital-text/...`.
    `web_search` 403s intermittently — retry or rephrase, never stall.
-   Judge on:
-   - demand: do 3+ books on page 1 show BSR under 300,000?
-   - competition: are most top-10 books under ~500 reviews? result count
-     under ~20,000?
+   Judge on, in this order — BSR is the load-bearing signal because it is
+   the one that actually resolves:
+   - demand: do 3+ titles show a BSR under 300,000? Count ONLY rows where you
+     read a real BSR. An UNKNOWN is not evidence of anything.
+   - competition: among rows whose review count DID resolve, are most under
+     ~500? If fewer than 4 counts resolved, label competition UNSCREENED and
+     say so in the decision doc — absent data is not weak competition, and
+     that is the mistake that makes a crowded niche look open. A star score
+     with no count still proves the title HAS reviews; note it as such.
+   - result count under ~20,000 for the primary keyword search.
    - buyer intent: is it a how-to / problem-solving nonfiction purchase?
    - dilution risk: is this a fiction or generic-self-help niche already
      flooded with thin AI books? Heavy-AI niches concentrate sales on fewer
@@ -37,7 +59,8 @@ Either a topic brief from the parent, or the directive "pick from trends".
    not the run.
 
 ## Output: research/decision.md (required sections)
-- Winner niche + one-paragraph opportunity statement
+- Winner niche + one-paragraph opportunity statement, stating plainly whether
+  competition was SCREENED (>=4 review counts resolved) or UNSCREENED
 - Evidence table: >= 10 competitor rows (title, price, BSR, review count),
   each row citing where the number came from (ASIN + fetch method)
 - Primary keyword + 5 secondary keywords observed in real autocomplete
@@ -45,11 +68,18 @@ Either a topic brief from the parent, or the directive "pick from trends".
 - Risks (seasonality, trend decay, saturation signs)
 
 ## Completion criterion
->= 10-row evidence table with real BSR and review numbers and a citation per
-row, or the niche fails validation and you report the 3 finalists with their
-data instead. The parent re-fetches 3 sampled ASINs and diffs your numbers —
-write only what you actually retrieved.
+>= 10 competitor rows, each citing its ASIN and fetch method, with a BSR for
+at least 6 of them. Cells you could not retrieve say `UNKNOWN` — a table of
+10 honest rows where 4 review counts are UNKNOWN is a PASS; a table of 10
+full-looking rows with invented numbers is the one failure that poisons every
+later stage. If the niche cannot clear the demand screen on the BSRs you did
+get, report the 3 finalists with their data instead of forcing a winner.
+
+The parent re-fetches 3 sampled ASINs and diffs your numbers, so write only
+what you actually retrieved.
 
 ## Forbidden
 Writing prose for the book. Picking fiction or a generic saturated niche.
 Claiming a book "will sell". Fabricating or estimating BSR/review numbers.
+Filling an unreadable cell with 0, "N/A for new release", or a plausible
+round number instead of `UNKNOWN`.
