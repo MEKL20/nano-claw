@@ -20,7 +20,11 @@ how much each mattered:
 4. **Naming book-001's niche as a hard exclusion.** No overlap to unwind.
 
 What the child still got wrong, and the parent caught: row-based tallies that
-counted multi-format editions as separate rivals (see gotcha 13). A brief that
+counted multi-format editions as separate rivals (see gotcha 13), and a
+summary tally that disagreed with its own table (it reported 11 of 13 BSRs
+resolved and named the two gaps, while a third row recorded BSR UNKNOWN — the
+cells were honest, the count was not). **Recompute every tally from the
+artifact's cells; never copy a number out of the final message.** A brief that
 produces verifiable work does not produce a sound conclusion by itself — the
 parent's dedup and gate checks are not ceremony.
 
