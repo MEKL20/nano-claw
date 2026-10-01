@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.1.0
+version: 1.2.0
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -20,7 +20,7 @@ relative to it.
 | Production | references/02-production.md | manuscript chapters, cover, EPUB | self-certify, invent facts |
 | SEO | references/03-seo.md | title/subtitle, 7 keywords, categories, description, price | rewrite manuscript body |
 | QA | references/04-qa.md | guidelines, fact spot-check, EPUB + cover checks, verdict | fix anything |
-| Publish | references/05-publish.md | upload package + MEKL upload runbook | touch credentials, automate dashboard |
+| Publish | references/05-publish.md | package.md: KDP field table + inlined click-by-click runbook | touch credentials, automate dashboard, split the runbook into its own file |
 
 Parent (nano): verify children, route fixes, run analytics, relay MEKL.
 
@@ -93,7 +93,7 @@ Three rules keep retrieval honest:
   manuscript/PROGRESS.md        chapter-by-chapter word counts
   cover/brief.md, cover.jpg, preview_400.png, thumb_100.png
   qa/report.md
-  publish/package.md, runbook.md
+  publish/package.md            field table + runbook section in ONE file
   sales/log.csv
 ```
 
@@ -111,10 +111,10 @@ verify by running something.
 | 2 | Niche gate | **MEKL** | approval in chat, logged in decision.md | explicit yes on niche + concept. No yes = no writing | RESEARCHED |
 | 3 | SEO skeleton | child | seo/listing.md (TODO markers for TOC fields) | title + 7 keywords present, every char count computed with `len()` | WRITING |
 | 4 | Production | child | manuscript/chapters/, cover/, book.epub | word count >=10,000 counted by parent; EPUB zipfile self-check; cover is 1600x2560 | PACKAGING |
-| 5 | QA | child | qa/report.md | `Verdict: PASS` with zero BLOCKER/MAJOR, every check backed by evidence | IN QA |
+| 5 | QA | child | qa/report.md | `## Verdict` + literal `**PASS**` (bold — the board greps it), zero BLOCKER/MAJOR, every check backed by evidence | IN QA |
 | 6 | Fix loop | production/SEO fixes, fresh QA re-checks | updated files + report status | re-run ALL checks, not just the fixed one; fixer never re-checks | IN QA |
 | 7 | SEO finalize | child | seo/listing.md complete | zero TODO markers; banned-term grep clean | IN QA |
-| 8 | Publish package | child | publish/package.md, runbook.md | MEKL can upload with no other file open; AI-disclosure step present | READY TO UPLOAD |
+| 8 | Publish package | child | publish/package.md (runbook is a section inside it) | MEKL can upload with no other file open; AI-disclosure step present; `·copy` suffixes on paste-able cells | READY TO UPLOAD |
 | 9 | Final read | **MEKL** | his verdict | he has read the manuscript | READY TO UPLOAD |
 | 10 | Upload | **MEKL** | ASIN entered in the dashboard | ~20 min, his account | LIVE |
 | 11 | Analytics | parent | sales/log.csv, sales/review-30d.done | 30-day sequel/kill decision | LIVE |

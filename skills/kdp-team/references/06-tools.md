@@ -55,6 +55,24 @@ Token-gated LAN dashboard over the whole `~/kdp/` tree:
   publicly without TLS + auth.
 - The token in `dashboard.token` is a capability URL. Never paste it anywhere.
 
+## Strings the dashboard parses (change these and the board lies)
+
+State is derived from files, so a brief that changes an artifact's wording
+silently breaks the board. Verified against the script 2026-10-01:
+
+- READY TO UPLOAD requires `qa/report.md` to contain BOTH `Verdict` and the
+  literal `**PASS**` (bold), AND `manuscript/book.epub` AND `cover/cover.jpg`.
+- The publish view renders `publish/package.md` only, labelled "PUBLISH
+  RUNBOOK"; without that file the detail page reads "runbook not written
+  yet". There is no `runbook.md` anywhere in the whitelist.
+- Download whitelist: book.epub, cover.jpg, preview_400.png,
+  publish/package.md, seo/listing.md, cover/brief.md, qa/report.md.
+- A table cell ending in ` ·copy` renders as a copy-to-clipboard button with
+  the suffix stripped. Use it on every value MEKL must paste.
+- Book title is scraped from `**Title:**` in `seo/listing.md`.
+- LIVE requires a non-PENDING ASIN in `sales/log.csv`, entered through the
+  dashboard form by MEKL. No agent writes it.
+
 ## scripts/kdp_watch.sh — live-state monitor
 
 Emits STABLE output (no timestamps, no day counters) for the monitor-gated

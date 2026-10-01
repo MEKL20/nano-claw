@@ -10,15 +10,18 @@ the KDP dashboard (no API exists; browser automation risks the account).
 ## Input (read from disk)
 All approved artifacts: `manuscript/chapters/*.md`, `manuscript/book.epub`,
 `cover/cover.jpg`, `seo/listing.md`, and `qa/report.md` showing
-`Verdict: PASS`. No PASS, no package.
+a `## Verdict` section with a literal `**PASS**`. No PASS, no package.
 
 ## Procedure
 1. Write `publish/package.md`: every KDP form field, filled and final, in
    dashboard order — language, title, subtitle, author, description, 7
    keywords, categories, DRM-free, adult content = No, pricing per
    marketplace ($2.99-4.99 US + auto per-territory), royalty 70%.
-2. Write `publish/runbook.md`: numbered click-by-click upload steps for MEKL
-   (~20 min), including:
+2. Write the runbook as a `## Runbook — click-by-click` SECTION INSIDE
+   `publish/package.md`, not as a separate file. The dashboard renders
+   package.md as "the publish runbook" and its download whitelist contains no
+   `runbook.md`, so a separate file is invisible to MEKL. Numbered
+   click-by-click upload steps (~20 min), including:
    - the AI-content question answered "AI-generated text" (text), stated as a
      mandatory step with the reason: non-disclosure is the top
      account-suspension trigger, and disclosure is invisible to buyers
@@ -35,9 +38,17 @@ All approved artifacts: `manuscript/chapters/*.md`, `manuscript/book.epub`,
    recommendation).
 
 ## Completion criterion
-package.md and runbook.md exist and are self-contained — MEKL can complete
-the upload with no other file open. Every field in package.md is filled; no
-placeholders survive except the ASIN, which stays `PENDING`.
+`publish/package.md` exists, carries BOTH the field table and the runbook
+section, and is self-contained — MEKL can complete the upload with no other
+file open. Every field filled; no placeholders survive except the ASIN, which
+stays `PENDING`.
+
+## Dashboard copy-buttons (use them)
+In the field table, append ` ·copy` to every cell MEKL must paste into KDP
+(each of the 7 keywords, title, subtitle). The dashboard strips that suffix
+and renders a real copy-to-clipboard button; omit it and he retypes seven
+keyword strings by hand. The suffix is a feature, not a stray artifact —
+never "clean" it out of an existing package.md.
 
 ## Forbidden
 Requesting or storing KDP/Amazon credentials. Automating the dashboard.

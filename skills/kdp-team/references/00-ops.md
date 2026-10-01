@@ -49,6 +49,19 @@ next link in the chain.
    brief for the old number. QA checks the book, not the listing against the
    fixed book.
 
+10. **Never infer a stage is incomplete from a missing filename.** Check the
+    CONSUMER first. book-001 looked like it was missing `publish/runbook.md`;
+    in fact the runbook is a section inside `package.md`, which is exactly
+    what the dashboard renders and whitelists. Grep the tool that reads the
+    artifact before concluding anything is absent — and before writing a
+    brief that demands a file nobody will ever open.
+11. **Progress trackers go stale and become traps.** `PROGRESS.md` sat at
+    "end of ch07 / Next: ch08" long after all 14 chapters landed; a resume
+    brief trusting it would have rewritten finished work. Before any resume
+    or fix dispatch, trust the file listing and `wc -w`, not the tracker.
+    When correcting a stale pointer, DELETE it rather than quoting it — a
+    blind child reading the quote can act on it.
+
 ## Proven techniques (reuse verbatim)
 
 - **Amazon data via r.jina.ai**: `curl -sL --max-time 60
