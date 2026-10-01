@@ -1,7 +1,7 @@
 ---
 name: coding-subagent
-version: 1.1.0
-description: "Spawn coding subagents that always load karpathy-guidelines."
+version: 1.1.1
+description: "Spawn coding subagents with Karpathy principles inlined."
 ---
 
 # Coding Subagent (karpathy-guidelines hard-wired)

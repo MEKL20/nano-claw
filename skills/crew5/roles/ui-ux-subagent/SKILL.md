@@ -1,6 +1,6 @@
 ---
 name: ui-ux-subagent
-version: 1.1.0
+version: 1.1.1
 description: "Spawn designer subagents: direction, UX critique, specs."
 ---
 
