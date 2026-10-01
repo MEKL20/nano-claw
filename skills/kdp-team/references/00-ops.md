@@ -199,6 +199,13 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     `KDP_COVER_OUT` / `KDP_FONT`. Verified 2026-10-01 by hashing book-001's
     cover before and after swapping the installed copy, then rendering to a
     temp dir.
+- **Never SAMPLE a physical-harm check.** QA's fact check was "sample 10
+    claims", which is right for general facts and wrong for anything a reader's
+    safety rests on — the temperature the sample skips is the one that hurts
+    someone. Safety numbers get enumerated by grep and checked one by one,
+    including the two failure modes a sample almost never catches: a number
+    that is correct for one food applied to another, and the same fact stated
+    inconsistently across chapters.
 - **Physical-harm claims are their own class, separate from "regulated
     advice".** The STOP list covered medical/legal/financial, which would have
     waved through a cookbook whose jerky chapter poisons someone. book-002's
