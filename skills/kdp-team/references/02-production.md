@@ -100,6 +100,12 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
 
        python3 -c "import zipfile; z=zipfile.ZipFile('manuscript/book.epub'); assert z.read('mimetype')==b'application/epub+zip'; print('docs:', len([n for n in z.namelist() if n.endswith('.xhtml')]))"
 
+   **Expected count = number of chapter files + 1.** The extra document is
+   `nav.xhtml`, the EPUB3 navigation doc (`properties="nav"` in the OPF, not in
+   the spine) — the builder emits it automatically. book-001: 14 files -> 15
+   docs. book-002: 11 files -> 12 docs. A count equal to your chapter total
+   means the nav doc is missing, which is the real defect to report.
+
 ## Cached safety facts for dehydrator/food-preservation titles
 
 Verified at USDA FSIS + USDA NIFA + UC ANR on 2026-10-01 — use these verbatim,
