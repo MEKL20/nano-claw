@@ -17,7 +17,7 @@ goal), metrics of previous games if any (metrics/log.csv paths).
    base mechanic (proven where?), twist (one sentence), why now, novelty
    check result (search portals + app stores for existing clones — cite
    what you found, including "nothing found" honestly), build-cost fit vs
-   pins (one-thumb, <8MB, 10 levels, AI-buildable).
+   pins (one-thumb, <8MB, solver-verifiable levels, AI-buildable).
 3. **Recommendation** — ONE pick + one runner-up. Pitch line for each.
    Evidence bullets (URL + date) why this can plausibly reach the portal's
    1-minute-conversion and session-length bar.

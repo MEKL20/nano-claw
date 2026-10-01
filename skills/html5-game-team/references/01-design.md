@@ -14,9 +14,13 @@ Read in context: the strategy summary + concept pin pasted by the parent.
 4. **First 30 seconds script** — what the player sees/does, second by
    second, from load. No text tutorial; teach by design (level 1 layout
    forces the lesson).
-5. **Level plan (10 levels)** — per level: what it teaches, gate colors,
-   car count, par moves. Difficulty must rise monotonically; each level
-   introduces exactly one new element.
+5. **Level plan** — the handcrafted tutorial set (one level per lesson,
+   each introducing exactly one new element) spelled out level by level:
+   what it teaches, gate colors, car count, par moves. Beyond the tutorial,
+   specify a RULE the generator can implement, not a hand list: difficulty
+   dial, how fast it ramps (game-001: one tier every 2 levels, MEKL's
+   standing rule), the measurable metrics that define "harder", and the
+   per-band caps. State the dial in terms a solver can measure.
 6. **Rewarded ad hooks (≥3)** — undo, continue-after-fail, skip-level, or
    better; each must feel like help, never a paywall.
 7. **Failure states** — what happens on a dead-end; how the player learns

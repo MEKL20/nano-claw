@@ -8,10 +8,17 @@ silently redesign.
 ## Deliverables (all under the project dir)
 - `build/index.html` + `build/js/*.js` — the game. Plain JS + Canvas. No
   frameworks, no build pipeline beyond optional minify. ES modules OK.
-- `build/levels/*.json` — the 10 levels, schema documented in `levels/README`
-  (grid, cars with color, gates with color, par, optional walls).
-- `build/tools/solver.js` — deterministic solver: reads level JSON, outputs
+- `build/levels/*.json` — levels per the GDD level plan, schema documented in
+  `levels/README` (grid, cars with color, gates with color, blocks, par,
+  `difficulty{}` with SOLVER-MEASURED metrics, optional walls). Handcrafted
+  tutorial levels stay handcrafted; bulk levels come from a seeded generator
+  (`tools/gen-levels.js`) — read references/08-levelgen.md before writing one.
+- `build/tools/solver.js` — deterministic solver for ONE level file: outputs
   SOLVED with move list or UNSOLVABLE. Node-runnable, zero deps.
+- `build/tools/check.js` — the gate: no args, walks every level file,
+  prints numbered criteria, ends `ALL CHECKS PASSED` or `N FAILURES`.
+  Whenever you relax a generator constraint, relax the matching criterion
+  here in the SAME change or the build fails with phantom regressions.
 - `build/js/sdk-adapter.js` — CrazyGames SDK v3 wrapper with a mock adapter:
   game runs identically with SDK absent (logs events to console). Events:
   gameplay_start, gameplay_stop, rewarded request/complete. The 3+ rewarded
@@ -36,4 +43,6 @@ silently redesign.
 ## Never
 - Never claim you played/tested the game — you did not. Static facts only.
 - Never invent solver results: run the solver, paste real output.
+- Never hand-edit a generated level file (fix the generator or seed-sweep
+  that one level), and never leave probe/driver scripts in `tools/`.
 - Never add scope beyond the GDD (no meta, no shop, no accounts).

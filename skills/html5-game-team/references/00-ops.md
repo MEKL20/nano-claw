@@ -3,7 +3,8 @@
 ## Delegation mechanics
 - Children cannot load skills or memory: paste the role brief + all needed
   context into task context. Repeat shared background in every task.
-- delegation.provider must stay custom:9router. child_timeout 1800.
+- delegation.provider must stay custom:9router (empty value → child HTTP 403).
+  child_timeout_seconds 3600 (config.yaml).
 - Long tasks: stub the output file first, tell child to append evidence as it
   lands; parent reads the file, not the chat summary.
 - Child reports are self-reports. Parent verifies on disk before relaying.
@@ -11,20 +12,23 @@
 ## Parent verification checklist
 - Design: gdd.md exists, has acceptance criteria + scope cuts, no engine
   debate.
-- Build: `ls build/` matches report; `du -sh build/` under budget; solver
-  run by parent once (`node tools/solver.js levels/*.json` → all SOLVED);
-  build-report.md numbers match disk.
+- Build: `ls build/` matches report; `du -sh build/` under budget;
+  `node tools/check.js` run by parent (no args, walks every level itself)
+  → must end `ALL CHECKS PASSED`; build-report.md numbers match disk.
+  `tools/solver.js levels/level-NNN.json` inspects ONE board — it is not the
+  gate and does not accept a glob.
 - QA: report has per-check evidence (file:line or command output), explicit
   PASS/FAIL verdict.
 - Ship: package.md fields complete, no credential material inside.
 
 ## Environment
-- Child timeout: delegation.child_timeout_seconds = 3600 (raised from 1800
-  on 2026-09-27 after 2 visual-fix children died at 30min mid-verification).
-  Single-child dispatches may now run the full QA&Tester job; still keep
-  verification cheap (scripts reuse qa/pt-* patterns).
-- Verify `node -v` exists before promising solver runs; fallback: python
-  check script (write one, put in tools/).
+- Child timeout 3600s (raised from 1800 on 2026-09-27 after 2 visual-fix
+  children died at 30min mid-verification). Single-child dispatches may run
+  the full QA&Tester job; still keep verification cheap (reuse qa/pt-*).
+- `node` v22 present. `zip` CLI is ABSENT — build archives with `python3`
+  `zipfile` (stdlib); `unzip` exists for verification.
+- check.js over 100 levels takes ~60s (BFS solver per level). Any wrapper
+  that calls it per HTTP request or per poll needs a cache or a timeout.
 - Local test server: `python3 -m http.server` in build/ (no build step).
 - Host is a laptop (CLEVO, no AVX2): nothing here needs AVX; fine.
 - Browser tooling (since 2026-09-27): Playwright chromium installed at
@@ -41,12 +45,33 @@
 ## Dashboard + publishing infra
 - games.mekl.my.id → cloudflared tunnel 'nano-bot' → 127.0.0.1:8792
   (~/games/tools/game_dashboard.py, systemd --user games-dashboard.service,
-  token in ~/games/dashboard.token). Status derived from files; SUBMITTED/
-  LIVE flags live in <slug>/ship/. Tunnel config edits: backup
+  token in ~/games/dashboard.token). Tunnel config edits: backup
   ~/.cloudflared/config.yml first, then `cloudflared tunnel route dns
   nano-bot <host>` + restart system cloudflared-tunnel.service.
-- GitHub push: no gh CLI, no stored PAT. MEKL pastes PAT in chat → throwaway
-  script → scrub token from disk after. Repo: github.com/MEKL20/nano-claw.
+- Board state is DERIVED from artifacts, in this precedence order:
+  live.flag > submitted.flag > QA `VERDICT: FAIL` > playtested.flag >
+  ship/package.md > QA `VERDICT: PASS` > qa/report.md exists >
+  build/index.html > design/*.md > research/pick.md > SETUP.
+  A FAIL outranks a finished package on purpose, so a post-Ship fix loop
+  shows as QA-FIX instead of sitting at READY forever.
+- Three flags in `<slug>/ship/` are MEKL-only, written by HIS click on the
+  board: `playtested.flag`, `submitted.flag`, `live.flag`. The publish page
+  keeps submit locked until the playtest flag exists. Never create one from
+  a script — that forges a human gate, the one failure nothing downstream
+  can detect. Adding a new state also needs a CHIP entry or the page raises
+  KeyError and renders blank.
+- The Agents panel reads delegation transcripts, so parent-executed work
+  leaves NO row and a dead child's old FAILED row keeps showing as current.
+  A PARENT row fixes that: it runs the real gate (`check.js`) and reports
+  that verdict, so the board shows measured state instead of the newest
+  child's self-report. Restart the unit after editing the dashboard
+  (`systemctl --user restart games-dashboard`) and verify through the
+  rendered page, not the source — see SKILL.md §Dashboard lessons for the
+  two bugs that hid behind a plausible-looking panel.
+- GitHub push: SSH key `~/.ssh/id_ed25519` (nano@mekl-clevo, on the MEKL20
+  account). No gh CLI. Never route a token through chat or a file — the SSH
+  path removes the need. Repo: github.com/MEKL20/nano-claw, clone at
+  ~/src/nano-claw.
 
 ## Lesson (game-001, 2026-09-27): never one monolithic Build child
 A single Build child given code+levels+solver+assets+report hit the 1800s
@@ -56,12 +81,13 @@ paths (~/arguments: [...], wrong slug dir) and engine.js came out corrupted
 good. Rules going forward:
 1. Split Build into 2 dispatches: (a) levels+tools+assets, (b) runtime
    modules (engine/render/sfx/adapter/main/index). Parent verifies (a) on
-   disk + runs solver BEFORE dispatching (b).
+   disk + runs `tools/check.js` BEFORE dispatching (b).
 2. Every build child: write one file per call, `node --check` after each
    .js, hard rule 'never write outside the project dir', and '2 consecutive
    tool failures = STOP and report'.
-3. Parent always re-runs solver + node --check after any build child —
-   corruption shows up in files, not in the child's summary.
+3. Parent always re-runs `tools/check.js` + `node --check` on every touched
+   .js after any build child — corruption shows up in files, not in the
+   child's summary.
 4. Garbage files can land in ~/ (e.g. 'arguments: ...' files, sibling slug
    dirs) — sweep after a degraded child dies.
 
@@ -81,5 +107,13 @@ good. Rules going forward:
   (cars may only exit through their color gate). Strategy file:
   ~/saas-blueocean/game-html5-strategi.md (this IS the research evidence;
   no separate research/pick.md for 001 — Research role starts at 002).
-- 10 handcrafted levels v1. Level file = JSON (grid, cars, gates, par).
+- Levels: 1-10 handcrafted tutorial (untouched), 11-100 generated by
+  `tools/gen-levels.js` with solver-measured difficulty per level. Level
+  file = JSON (grid, cars, gates, blocks, par, difficulty{}). Gate =
+  `tools/check.js` criteria 1-9. See references/08-levelgen.md before
+  touching the generator.
 - Submission target: CrazyGames. Copy in English (US audience).
+- Status 2026-09-30: 100 levels, `check.js` ALL CHECKS PASSED, ship/build.zip
+  rebuilt and verified from inside the archive, L100 play-verified in a real
+  browser. Open: MEKL playtest verdict, then MEKL submits. Both are MEKL's
+  gates — do not work around them.

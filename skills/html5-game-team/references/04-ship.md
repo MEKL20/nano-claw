@@ -13,7 +13,10 @@ handle credentials. Output under `ship/`.
    - Category + tags (5-8, matching portal taxonomy)
    - Controls line (one sentence) + orientation
    - Icon path (512px), 3+ screenshot paths (16:9), cover path
-   - Build zip path + exact byte size + compression used
+   - Build zip path + exact byte size + compression used. The `zip` CLI is
+     NOT installed on this host — archive with `python3` `zipfile` (stdlib),
+     exclude `tools/` and `qa/`, then verify by listing the archive's own
+     contents (level count, asset count) rather than the source directory.
    - SDK ID placeholders clearly marked for MEKL to fill
 2. `ship/runbook.md` — MEKL's manual steps in order (~30 min):
    a. CrazyGames developer account + payment onboarding (Tipalti) — needs
@@ -27,6 +30,9 @@ handle credentials. Output under `ship/`.
       (plays, 1-min conversion, plays/day trend) for the 30-day go/no-go.
 3. Screenshot/icon check: files exist, dimensions correct, under size caps.
    List actual px dimensions found.
+4. Re-archive and re-verify after ANY content change (levels, art, code).
+   A stale zip next to a fresh build is the default failure here: state the
+   archive's byte size and inner counts as measured AFTER the last change.
 
 ## Rules
 - No credentials, no account data, no payout info ever written into files.
