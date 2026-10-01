@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.5.1
+version: 1.5.2
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -87,6 +87,7 @@ Three rules keep retrieval honest:
 ```
 ~/kdp/<slug>/
   research/decision.md
+  research/*.json               fetch provenance (raw scraped rows, ASIN pools)
   seo/listing.md
   manuscript/chapters/chNN.md   one file per chapter (resumable)
   manuscript/book.epub
@@ -97,8 +98,14 @@ Three rules keep retrieval honest:
   sales/log.csv
 ```
 
-Nothing else belongs there. `book.md` as a single monolith is NOT the layout —
-chapters are separate files so a timeout costs one chapter, not the book.
+`book.md` as a single monolith is NOT the layout — chapters are separate files
+so a timeout costs one chapter, not the book.
+
+Sweep stray files before declaring a phase done, but **provenance is not
+litter**: a research child's raw scrape dumps under `research/*.json` let the
+parent re-check numbers without ~13 fresh proxy fetches, and they are the only
+record of candidates that were screened and rejected. Keep them. Delete probe
+scripts, nested `<slug>/<slug>/` dirs, and editor backups.
 
 ## Cycle
 
