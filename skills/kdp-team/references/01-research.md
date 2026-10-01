@@ -45,10 +45,15 @@ Either a topic brief from the parent, or the directive "pick from trends".
    `web_search` 403s intermittently — retry or rephrase, never stall.
    Judge on, in this order — BSR is the load-bearing signal because it is
    the one that actually resolves:
-   - demand: do 3+ titles show a BSR under 300,000? Count ONLY rows where you
-     read a real BSR. An UNKNOWN is not evidence of anything.
-   - competition: among rows whose review count DID resolve, are most under
-     ~500? If fewer than 4 counts resolved, label competition UNSCREENED and
+   - demand: do 3+ DISTINCT BOOKS show a BSR under 300,000? Count ONLY rows
+     where you read a real BSR. An UNKNOWN is not evidence of anything.
+   - **Count books, not listings.** Amazon gives the Kindle, paperback, and
+     spiral editions of one cookbook separate ASINs that SHARE a review
+     count. Counting rows turns three editions of one rival into three
+     rivals and inflates every tally. Group rows by title first, keep the
+     best BSR per book, and report both numbers (rows and distinct books).
+   - competition: among DISTINCT BOOKS whose review count DID resolve, are
+     most under ~500? If fewer than 4 counts resolved, label UNSCREENED and
      say so in the decision doc — absent data is not weak competition, and
      that is the mistake that makes a crowded niche look open. A star score
      with no count still proves the title HAS reviews; note it as such.
@@ -66,8 +71,11 @@ Either a topic brief from the parent, or the directive "pick from trends".
 ## Output: research/decision.md (required sections)
 - Winner niche + one-paragraph opportunity statement, stating plainly whether
   competition was SCREENED (>=4 review counts resolved) or UNSCREENED
-- Evidence table: >= 10 competitor rows (title, price, BSR, review count),
-  each row citing where the number came from (ASIN + fetch method)
+- Evidence table: >= 10 competitor rows (title, price, BSR + its category,
+  review count), each row citing where the number came from (ASIN + fetch
+  method). State the row count AND the distinct-book count; where one book
+  appears in several formats, say so rather than letting the rows imply
+  separate competitors.
 - Primary keyword + 5 secondary keywords observed in real autocomplete
 - 3 concrete book concepts inside the niche (angle differences)
 - Risks (seasonality, trend decay, saturation signs)

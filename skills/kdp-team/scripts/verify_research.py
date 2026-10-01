@@ -208,6 +208,34 @@ def verify(row):
     return out
 
 
+def title_key(title):
+    return re.sub(r"[^a-z0-9]", "", title.lower())[:26]
+
+
+def dedup_report(rows):
+    """Group rows that are the same BOOK in different formats.
+
+    Amazon lists Kindle / paperback / spiral editions under separate ASINs and
+    shares one review count between them. Counting rows therefore inflates
+    every competition tally: three editions of one cookbook look like three
+    rivals. The niche screen must run on distinct books.
+
+    Heuristic (normalised title prefix), so a human should glance at the
+    groups - but an inflated tally is the default failure, not the exception.
+    """
+    groups = {}
+    for r in rows:
+        groups.setdefault(title_key(r.get("title", "")), []).append(r)
+    books = []
+    for rs in groups.values():
+        bsrs = [r["rec_bsr"] for r in rs if isinstance(r["rec_bsr"], int)]
+        revs = [r["rec_reviews"] for r in rs if isinstance(r["rec_reviews"], int)]
+        books.append({"title": rs[0].get("title", "")[:44], "editions": len(rs),
+                      "best_bsr": min(bsrs) if bsrs else None,
+                      "reviews": revs[0] if revs else None})
+    return books
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("decision")
@@ -233,9 +261,20 @@ def main():
         tally[r["verdict"]] = tally.get(r["verdict"], 0) + 1
 
     if a.json:
-        print(json.dumps({"rows_in_table": len(rows), "checked": len(results),
-                          "regressions": len(bad), "zero_vs_stars": len(flagged),
-                          "tally": tally, "results": results}, indent=2))
+        books = dedup_report(rows)
+        revs = [b["reviews"] for b in books if b["reviews"] is not None]
+        print(json.dumps({
+            "rows_in_table": len(rows), "checked": len(results),
+            "regressions": len(bad), "zero_vs_stars": len(flagged),
+            "tally": tally,
+            "distinct_books": len(books),
+            "multi_edition_titles": [b for b in books if b["editions"] > 1],
+            "screen_on_distinct": {
+                "under_300k_bsr": sum(1 for b in books
+                                      if b["best_bsr"] and b["best_bsr"] < 300000),
+                "review_counts_resolved": len(revs),
+                "under_500_reviews": sum(1 for v in revs if v < 500)},
+            "results": results}, indent=2))
     else:
         print(f"table rows: {len(rows)}   checked: {len(results)}\n")
         for r in results:
@@ -246,6 +285,22 @@ def main():
             if r["note"]:
                 print(f"      {r['note']}")
         print("\n  " + "  ".join(f"{k}={v}" for k, v in sorted(tally.items())))
+
+        books = dedup_report(rows)
+        multi = [b for b in books if b["editions"] > 1]
+        if multi:
+            print(f"\nDISTINCT BOOKS: {len(books)} (from {len(rows)} rows) - "
+                  f"{len(multi)} title(s) listed in several formats:")
+            for b in multi:
+                print(f"  x{b['editions']}  {b['title']}")
+            u300 = sum(1 for b in books if b["best_bsr"] and b["best_bsr"] < 300000)
+            revs = [b["reviews"] for b in books if b["reviews"] is not None]
+            print(f"  screen on DISTINCT books: {u300} under 300k BSR, "
+                  f"{len(revs)} review counts resolved, "
+                  f"{sum(1 for v in revs if v < 500)} under 500")
+            print("  (row-based tallies overcount: editions share one review "
+                  "count, so they are not separate rivals)")
+
         print(f"\nregressions (fail): {len(bad)}")
         if flagged:
             print(f"zero-vs-stars (needs human judgment): {len(flagged)}")

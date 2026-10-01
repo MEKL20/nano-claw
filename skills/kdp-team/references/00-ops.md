@@ -68,7 +68,14 @@ next link in the chain.
     every print book cited by ISBN rather than a B0 ASIN — 5 of 18 rows in
     book-001, holding its largest review counts. Drive extraction off the
     table header, and always compare `table rows: N` against `checked: M`.
-13. **Test a checker against output a real child produced**, not against a
+14. **Count books, not listings.** Amazon gives the Kindle, paperback, and
+    spiral editions of one title separate ASINs that SHARE a review count, so
+    row counts inflate every competition tally. book-002's 13 evidence rows
+    were 9 distinct books: three editions of one cookbook read as three
+    rivals. `verify_research.py` now prints a DISTINCT BOOKS section and
+    re-runs the screen on it. A verifier that only checks per-row honesty
+    still passes a table whose CONCLUSION is overcounted.
+15. **Test a checker against output a real child produced**, not against a
     sample you wrote. Watching a live run's partial `decision.md` showed BSRs
     written as bare `496,607` with the category in its own column; the
     verifier demanded a `#` and nulled all 10 of them, which would have

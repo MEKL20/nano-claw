@@ -93,6 +93,11 @@ made the tool print "0 failures" while covering only a subset:
 Always read the printed `table rows: N   checked: M`. N > M means rows went
 unverified, and an unverified row is where a bad number survives.
 
+It also prints a **DISTINCT BOOKS** section whenever one title appears under
+several ASINs (Kindle / paperback / spiral share a review count), and re-runs
+the demand and competition screen on distinct books. Row tallies overcount
+rivals; the niche verdict must rest on the deduplicated numbers.
+
 Cell formats accepted, because children legitimately write all of these:
 `#45,120 in Books`, a bare `45,120` with the category in its own column,
 `unranked`, and annotated honesty like `UNKNOWN (stars 4.9 shown, no count
