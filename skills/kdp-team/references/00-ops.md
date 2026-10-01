@@ -20,7 +20,7 @@ how much each mattered:
 4. **Naming book-001's niche as a hard exclusion.** No overlap to unwind.
 
 What the child still got wrong, and the parent caught: row-based tallies that
-counted multi-format editions as separate rivals (see gotcha 14). A brief that
+counted multi-format editions as separate rivals (see gotcha 13). A brief that
 produces verifiable work does not produce a sound conclusion by itself — the
 parent's dedup and gate checks are not ceremony.
 
@@ -89,19 +89,33 @@ next link in the chain.
     every print book cited by ISBN rather than a B0 ASIN — 5 of 18 rows in
     book-001, holding its largest review counts. Drive extraction off the
     table header, and always compare `table rows: N` against `checked: M`.
-14. **Count books, not listings.** Amazon gives the Kindle, paperback, and
+13. **Count books, not listings.** Amazon gives the Kindle, paperback, and
     spiral editions of one title separate ASINs that SHARE a review count, so
     row counts inflate every competition tally. book-002's 13 evidence rows
     were 9 distinct books: three editions of one cookbook read as three
     rivals. `verify_research.py` now prints a DISTINCT BOOKS section and
     re-runs the screen on it. A verifier that only checks per-row honesty
     still passes a table whose CONCLUSION is overcounted.
-15. **Test a checker against output a real child produced**, not against a
+14. **Test a checker against output a real child produced**, not against a
     sample you wrote. Watching a live run's partial `decision.md` showed BSRs
     written as bare `496,607` with the category in its own column; the
     verifier demanded a `#` and nulled all 10 of them, which would have
     failed the ">=6 BSRs resolved" gate on work that was correct. The brief
     and the checker must agree about format, and only real output proves it.
+
+15. **Check briefs PAIRWISE: each stage's INPUT spec must match the previous
+    stage's OUTPUT spec.** Pre-flighting stage 3 before dispatching found that
+    `02-production` read its outline from a "chapter plan" in `listing.md`
+    that `03-seo` never told the child to write — book-001 only has one
+    because that run improvised it. The same brief ordered the SKELETON
+    dispatch to read `manuscript/chapters/*.md`, which cannot exist before
+    the manuscript. Neither defect is visible reading one brief; both appear
+    the moment you diff producer against consumer, or against a real artifact
+    from a past run.
+16. **Renumber a list by reading it back, not by patching neighbours.**
+    Inserting a lesson and bumping the one below it produced 1-12 then 14, 15
+    — a missing item 13 plus a cross-reference pointing at the wrong rule.
+    Enumerate the list after editing and confirm the sequence is contiguous.
 
 ## Proven techniques (reuse verbatim)
 
