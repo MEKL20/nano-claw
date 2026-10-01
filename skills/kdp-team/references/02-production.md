@@ -40,9 +40,22 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
    short intro promising the transformation, copyright notice, closing with
    an honest author bio.
 6. Cover: write `cover/brief.md` (style, palette, comps from the niche), then
-   produce `cover/cover.jpg` at **1600x2560** (portrait, W x H) with
-   `cover_build.py`. Also emit `cover/preview_400.png` and
-   `cover/thumb_100.png`.
+   produce `cover/cover.jpg` at **1600x2560** (portrait, W x H).
+
+   `~/kdp/tools/cover_build.py` is a TEMPLATE holding another book's palette
+   and text in module-level constants. **Copy it into this project and edit the
+   copy — never edit the installed file**, or you silently change the generator
+   every other book shares:
+
+       cp ~/kdp/tools/cover_build.py cover/cover_build.py
+       # edit cover/cover_build.py: palette, title, subtitle, tagline
+       KDP_FONT=~/kdp/tools/Montserrat.ttf \
+       KDP_COVER_OUT=$PWD/cover/cover.jpg \
+         python3 cover/cover_build.py
+
+   That writes `cover.jpg` plus `thumb_100.png` and `preview_400.png` beside
+   it. Keeping the edited copy in `cover/` also makes this book's cover
+   reproducible later — the shared template will have moved on.
 7. Build the EPUB:
 
        python3 ~/kdp/tools/epub_build.py --title "<title>" --author "<author>" \

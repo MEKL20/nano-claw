@@ -16,7 +16,8 @@ a `## Verdict` section with a literal `**PASS**`. No PASS, no package.
 1. Write `publish/package.md`: every KDP form field, filled and final, in
    dashboard order — language, title, subtitle, author, description, 7
    keywords, categories, DRM-free, adult content = No, pricing per
-   marketplace ($2.99-4.99 US + auto per-territory), royalty 70%.
+   marketplace (launch strategy $2.99-4.99 US + auto per-territory), royalty
+   70% — valid anywhere in the platform's $2.99-$12.99 band.
 2. Write the runbook as a `## Runbook — click-by-click` SECTION INSIDE
    `publish/package.md`, not as a separate file. The dashboard renders
    package.md as "the publish runbook" and its download whitelist contains no

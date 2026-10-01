@@ -25,7 +25,17 @@ Install copies to `~/kdp/tools/` (where book-001 ran them from).
 ## scripts/cover_build.py — eBook cover (Pillow)
 
 - Output is **1600x2560 JPG** (`W, H = 1600, 2560` at the top of the file),
-  type-forward. Edit the constants (palette, text, font path) per book.
+  type-forward.
+- **Per-book settings are module-level constants, so treat the installed file
+  as a read-only template: copy it to `<project>/cover/cover_build.py` and
+  edit there.** Editing `~/kdp/tools/cover_build.py` in place rewrites the
+  generator every other book shares, makes finished covers unreproducible, and
+  makes two concurrent books overwrite each other.
+- Output paths come from the environment, never from edited literals:
+  `KDP_COVER_OUT` (full path to cover.jpg; thumb and preview land beside it)
+  and `KDP_FONT`. An older installed copy hardcoded
+  `/home/mekl/kdp/book-001/cover/cover.jpg` — running that from another book
+  would have overwritten book-001's finished cover.
 - Fonts: DejaVu ships with the OS; `Montserrat.ttf` is already in
   `~/kdp/tools/` (variable TTF — `set_variation_by_name('Bold')` works).
 - Acceptance checks are numeric, because this host has no vision model:

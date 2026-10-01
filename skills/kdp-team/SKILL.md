@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.8.1
+version: 1.9.0
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -160,7 +160,8 @@ Any fix after stage 8 invalidates the package: re-run Publish, then re-verify.
 
 "Ga perlu approval dari gw, gw tinggal terima hasil jadi aja." The parent
 therefore decides and reports afterwards: niche and concept, title/subtitle/
-keywords/categories, launch price inside the pinned $2.99-4.99 band, KDP
+keywords/categories, launch price (strategy band $2.99-4.99; platform 70% band
+is $2.99-$12.99), KDP
 Select enrolment, every fix routing call and scope cut, manuscript acceptance,
 and the 30-day sequel/kill verdict.
 
@@ -214,8 +215,16 @@ worth sending is one whose answer no artifact can supply.
 - **No vision model on this host.** Never ask anyone to look at an image.
   Cover legibility is proven with numbers: pixel dims, margin math,
   grayscale contrast, a 100px thumbnail rendered and measured.
-- Market facts: Amazon.com, nonfiction how-to, 10-20k words, launch price
-  $2.99-4.99 (70% royalty band), payout ~60 days after month end.
+- Market facts: Amazon.com, nonfiction how-to, 10-20k words, payout ~60 days
+  after month end.
+- **Royalty band (platform constraint, verified at kdp.amazon.com 2026-10-01):**
+  70% royalty requires a list price of **$2.99-$12.99** — the ceiling rose from
+  $9.99 on 2026-07-07. 35% applies outside that range, and 70% carries an
+  average $0.06/unit delivery cost.
+- **Launch band $2.99-4.99 is OUR STRATEGY, not the platform's limit** — a
+  deliberate choice for a zero-review title, not a rule. Because the band
+  actually reaches $12.99, raising price after reviews accumulate keeps the 70%
+  rate; plan that as the normal path rather than treating $4.99 as a ceiling.
   **Upload cap: 2 new titles per FORMAT per week, reset Sundays 00:00 UTC**
   (tightened from 10 on 2026-09-21) — ebook/paperback/hardcover each have
   their own allowance. The cap is spent at TITLE CREATION in the dashboard, so

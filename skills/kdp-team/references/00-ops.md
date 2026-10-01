@@ -20,7 +20,7 @@ how much each mattered:
 4. **Naming book-001's niche as a hard exclusion.** No overlap to unwind.
 
 What the child still got wrong, and the parent caught: row-based tallies that
-counted multi-format editions as separate rivals (see gotcha 13), and a
+counted multi-format editions as separate rivals (see "Count books, not listings" below), and a
 summary tally that disagreed with its own table (it reported 11 of 13 BSRs
 resolved and named the two gaps, while a third row recorded BSR UNKNOWN — the
 cells were honest, the count was not). **Recompute every tally from the
@@ -94,76 +94,76 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
 
 ## Delegation gotchas (hard-won)
 
-1. **Children need the routing pinned**: `delegation.provider` must be
+- **Children need the routing pinned**: `delegation.provider` must be
    `custom:9router` + `delegation.model` `sm/glm-5.3-flash`. Empty provider
    fields send children to external fallbacks (gc2/growthcircle) which 403
    instantly; the gateway's "switch to <model>" hint is boilerplate and its
    suggested model 403s too. Parent survives on 9router — pin children to the
    same path.
-2. **`child_timeout_seconds: 3600`** (config, verified 2026-10-01). The old
+- **`child_timeout_seconds: 3600`** (config, verified 2026-10-01). The old
    600 killed a research run mid-flight with good evidence in context and
    nothing on disk.
-3. **Incremental writes are non-negotiable in every child brief**: "write
+- **Incremental writes are non-negotiable in every child brief**: "write
    files one at a time, never batch at the end; files survive, context may
    not." A timeout loses context but not files. Pass prior partial findings
    into the retry brief so nothing is re-derived.
-4. **Smoke test the pipe before long dispatches**: one `delegate_task` asking
+- **Smoke test the pipe before long dispatches**: one `delegate_task` asking
    for a fixed reply string costs ~25s and proves model + route.
-5. **`web_search` (Firecrawl keyless) 403s intermittently** — children should
+- **`web_search` (Firecrawl keyless) 403s intermittently** — children should
    retry/rephrase, not stall. Say so in the brief.
-6. **429 mid-run = resume, not restart**: upstream rate-limits under long
+- **429 mid-run = resume, not restart**: upstream rate-limits under long
    generation load (hit at ch09 of 15 files, 2026-09-25). Files on disk
    survive. On retry: inventory the project dir first, then dispatch a resume
    brief listing exactly what exists (do-not-rewrite) and what remains, and
    tell the child to read the last written chapter to match voice.
-7. **Tiny fix tasks: parent executes directly.** A 3-patch fix dispatch died
+- **Tiny fix tasks: parent executes directly.** A 3-patch fix dispatch died
    to 429 twice (2026-09-25); the parent doing the patches itself with `patch`
    + grep verification finished in one call. Mechanical edits under ~15
    minutes with deterministic verification go to the parent; dispatch only
    real reasoning work.
-8. **Fix briefs must inventory partial progress first.** Even the "failed"
+- **Fix briefs must inventory partial progress first.** Even the "failed"
    429 run had graded 2 of 5 fixes before dying — grep each finding's
    old/new text in the files before assigning fixes, or the child redoes or
    misses half-done items.
-9. **Cross-artifact consistency is a parent check too**: after fixes change
+- **Cross-artifact consistency is a parent check too**: after fixes change
    facts (e.g. 3 -> 4 benchmarks), grep the listing description and cover
    brief for the old number. QA checks the book, not the listing against the
    fixed book.
 
-10. **Never infer a stage is incomplete from a missing filename.** Check the
+- **Never infer a stage is incomplete from a missing filename.** Check the
     CONSUMER first. book-001 looked like it was missing `publish/runbook.md`;
     in fact the runbook is a section inside `package.md`, which is exactly
     what the dashboard renders and whitelists. Grep the tool that reads the
     artifact before concluding anything is absent — and before writing a
     brief that demands a file nobody will ever open.
-11. **Progress trackers go stale and become traps.** `PROGRESS.md` sat at
+- **Progress trackers go stale and become traps.** `PROGRESS.md` sat at
     "end of ch07 / Next: ch08" long after all 14 chapters landed; a resume
     brief trusting it would have rewritten finished work. Before any resume
     or fix dispatch, trust the file listing and `wc -w`, not the tracker.
     When correcting a stale pointer, DELETE it rather than quoting it — a
     blind child reading the quote can act on it.
 
-12. **A verifier that silently skips rows is worse than none.** It prints
+- **A verifier that silently skips rows is worse than none.** It prints
     "0 failures" while covering a subset, which reads as a clean bill of
     health. `verify_research.py` once skipped rows whose BSR was UNKNOWN and
     every print book cited by ISBN rather than a B0 ASIN — 5 of 18 rows in
     book-001, holding its largest review counts. Drive extraction off the
     table header, and always compare `table rows: N` against `checked: M`.
-13. **Count books, not listings.** Amazon gives the Kindle, paperback, and
+- **Count books, not listings.** Amazon gives the Kindle, paperback, and
     spiral editions of one title separate ASINs that SHARE a review count, so
     row counts inflate every competition tally. book-002's 13 evidence rows
     were 9 distinct books: three editions of one cookbook read as three
     rivals. `verify_research.py` now prints a DISTINCT BOOKS section and
     re-runs the screen on it. A verifier that only checks per-row honesty
     still passes a table whose CONCLUSION is overcounted.
-14. **Test a checker against output a real child produced**, not against a
+- **Test a checker against output a real child produced**, not against a
     sample you wrote. Watching a live run's partial `decision.md` showed BSRs
     written as bare `496,607` with the category in its own column; the
     verifier demanded a `#` and nulled all 10 of them, which would have
     failed the ">=6 BSRs resolved" gate on work that was correct. The brief
     and the checker must agree about format, and only real output proves it.
 
-15. **Check briefs PAIRWISE: each stage's INPUT spec must match the previous
+- **Check briefs PAIRWISE: each stage's INPUT spec must match the previous
     stage's OUTPUT spec.** Pre-flighting stage 3 before dispatching found that
     `02-production` read its outline from a "chapter plan" in `listing.md`
     that `03-seo` never told the child to write — book-001 only has one
@@ -172,12 +172,16 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     the manuscript. Neither defect is visible reading one brief; both appear
     the moment you diff producer against consumer, or against a real artifact
     from a past run.
-16. **Renumber a list by reading it back, not by patching neighbours.**
-    Inserting a lesson and bumping the one below it produced 1-12 then 14, 15
-    — a missing item 13 plus a cross-reference pointing at the wrong rule.
-    Enumerate the list after editing and confirm the sequence is contiguous.
+- **This list is deliberately UNNUMBERED — keep it that way.** It was numbered,
+    and three separate inserts broke the sequence (a missing 13, then 15, then
+    18) plus left a cross-reference pointing at the wrong rule. After the third
+    time the fix stopped being "renumber more carefully" and became "remove the
+    thing that breaks": an append-only list of lessons has no semantic order, so
+    numbers are pure maintenance debt. Cross-reference a lesson by QUOTING ITS
+    TITLE, never by index. Number only where position carries meaning — the
+    cycle table's stages and a brief's procedure steps.
 
-17. **Diff the INSTALLED copy of a script against the bundled one.** Cron and
+- **Diff the INSTALLED copy of a script against the bundled one.** Cron and
     the dashboard execute their own installed copies, so a skill can be
     perfectly up to date while the thing that actually runs is months old.
     `~/.hermes/scripts/kdp_watch.sh` still hardcoded an absolute KDP path long
@@ -186,7 +190,26 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     After replacing an installed monitor, re-run it and confirm the output
     hash is UNCHANGED, or the swap itself fires a spurious alert.
 
-18. **Check a rule's stated REASON against data before letting it block work.**
+- **A shared tool holding one project's constants is a cross-book hazard.**
+    `cover_build.py` keeps palette and cover text as module-level constants, and
+    the installed copy hardcoded book-001's OUTPUT path — so a second book's
+    production child running it would have overwritten book-001's finished
+    cover. Fix pattern: the installed script is a read-only template; each book
+    copies it into `<project>/cover/` and edits the copy, with output paths from
+    `KDP_COVER_OUT` / `KDP_FONT`. Verified 2026-10-01 by hashing book-001's
+    cover before and after swapping the installed copy, then rendering to a
+    temp dir.
+- **Label every constraint as PLATFORM or STRATEGY, and verify the platform
+    ones against the vendor's own docs.** This skill carried "$2.99-4.99 (70%
+    royalty band)" in five places. The real 70% band is $2.99-$12.99 (ceiling
+    raised from $9.99 on 2026-07-07); $2.99-4.99 was our launch strategy wearing
+    a platform constraint's clothes. Consequences were concrete: the QA gate
+    would have flagged a correct $6.99 price as a finding, and an SEO child
+    recommended $4.99 as "top of the band" — reasoning poisoned by the brief it
+    was given. A strategy can be overridden on judgment; a platform rule cannot.
+    Conflating them silently removes options (here, the post-review price raise
+    that keeps 70%).
+- **Check a rule's stated REASON against data before letting it block work.**
     A WIP limit here was justified as "parallel books burn the 2-per-format
     weekly cap" — but the cap is spent when MEKL creates a title in the KDP
     dashboard, not when the parent writes files locally, and book-001's title

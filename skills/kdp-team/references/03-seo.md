@@ -56,7 +56,10 @@ There is no `book.md` in either case.
    quotes, no price or promo talk.
    On SKELETON write only `TODO: needs final chapter list` here — the bullets
    must come from chapters that actually exist, not from the plan's intentions.
-6. Price recommendation: $2.99-4.99 launch (70% royalty band). Justify against
+6. Price recommendation: $2.99-4.99 launch. That is OUR strategy band for a
+   zero-review title, NOT the platform limit — the 70% royalty band runs
+   $2.99-$12.99 (ceiling raised 2026-07-07), so never describe $4.99 as "top of
+   the band" and never imply a higher price forfeits 70%. Justify against
    the competitor price table from the decision doc — use the parent's
    distinct-book appendix, and account for KU-enrolled rivals listing at $0.00
    to subscribers (borrow volume, not list price, drives revenue in that tier).
