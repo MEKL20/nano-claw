@@ -1,0 +1,27 @@
+# systemd --user unit for the bundled games dashboard.
+# Install:
+#   mkdir -p ~/.config/systemd/user
+#   cp templates/games-dashboard.service ~/.config/systemd/user/
+#   cp scripts/game_dashboard.py ~/games/tools/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now games-dashboard
+# %h expands to the user's home dir, so this unit has no personal paths.
+# Set Environment=GAMES_ROOT=... if the project root is not ~/games.
+#
+# NOTE: a `systemctl --user restart` kills child processes started from an
+# agent session in the same user slice. Restart this unit deliberately, not
+# as a reflex, and re-verify through the rendered page afterwards.
+
+[Unit]
+Description=Games dashboard (html5-game-team console)
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 %h/games/tools/game_dashboard.py --port 8792
+# Environment=GAMES_ROOT=%h/games
+# Environment=AGENTS_LIVE_DIR=%h/.hermes/cache/delegation/live
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

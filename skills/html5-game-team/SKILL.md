@@ -1,6 +1,6 @@
 ---
 name: html5-game-team
-version: 1.2.0
+version: 1.3.0
 description: "Use when building an HTML5 game for portal ad revenue."
 ---
 
@@ -82,10 +82,16 @@ children create them and they silently ship inside the zip.
 | 06-asset-design.md | Asset child (post-build) | |
 | 07-style-guide.md | Asset child (pre-build) | |
 | 08-levelgen.md | whoever touches the generator (often the parent) | |
+| 09-dashboard.md | nobody — parent operates the board | yes |
 
 Every child also needs, pasted verbatim: project dir path, the host facts
 below that touch its job, and the files it must read (children cannot load
 skills or memory, and cannot see this table).
+
+Bundled, so the pipeline needs nothing external:
+
+- `scripts/game_dashboard.py` — the console (stdlib only, no deps)
+- `templates/games-dashboard.service` — systemd --user unit, `%h` paths
 
 ## Host facts (cached — do not re-derive, do not let children rediscover)
 
@@ -190,12 +196,21 @@ editing a generator, not after the first wall.
 Headline: run the chain in the background, instrument rejected candidates
 before adjusting parameters, and treat `check.js` as the only gate.
 
-## Dashboard lessons
+## Dashboard
 
-- **Build poll URLs from the token, not `location.pathname`**: `/<token>` (no
-  trailing slash) + `'agents.json'` concatenates into `/<token>agents.json`, fails
-  the token check, and the 404 body gets painted into the panel as its content.
-  Use an absolute `/<token>/agents.json` and check `r.ok` so a failure reads as
-  "unavailable, retrying" instead of looking like real data.
-- **Age math**: rows carry seconds. Days = `minutes // 1440`, not `minutes // 24`
-  (the latter inflates every day figure 60x — 1.2 days rendered as "72d").
+The board is part of this bundle, not separate infrastructure:
+`scripts/game_dashboard.py` + `templates/games-dashboard.service`. Install:
+
+```sh
+cp scripts/game_dashboard.py ~/games/tools/
+cp templates/games-dashboard.service ~/.config/systemd/user/
+systemctl --user daemon-reload && systemctl --user enable --now games-dashboard
+```
+
+It derives every state from artifacts (precedence in the module docstring),
+serves the playtest frame, and is where MEKL records his two gates. Token in
+`$GAMES_ROOT/dashboard.token` is a capability URL — never paste it anywhere.
+
+Operating notes, the state-precedence rationale, and the bugs that hid behind
+a plausible-looking panel live in references/09-dashboard.md. Read it before
+editing the board; verify changes through the rendered page, never the source.
