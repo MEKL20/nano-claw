@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.14.0
+version: 1.15.0
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -100,6 +100,7 @@ Three rules keep retrieval honest:
   qa/report.md                  QA child owns this file — parent never writes it
   qa/safety-verification.md     parent's physical-harm re-check (when the niche has one)
   qa/acceptance.md              parent's stage-9 sign-off (replaces a human read)
+  publish/ai-disclosure.md      written at STAGE 0; QA checks it at stage 5
   publish/package.md            field table + runbook section in ONE file
   sales/log.csv
 ```
@@ -114,6 +115,16 @@ so no child invents its own layout):
 SLUG=book-00N
 mkdir -p ~/kdp/$SLUG/{research,seo,manuscript/chapters,cover,qa,publish,sales}
 printf 'date,slug,asin,price,notes\n' > ~/kdp/$SLUG/sales/log.csv
+cat > ~/kdp/$SLUG/publish/ai-disclosure.md <<'EOF'
+# AI content disclosure
+
+KDP form answer: **AI-generated text**.
+
+Non-negotiable on every title. Non-disclosure is the top account-suspension
+trigger (account-level enforcement since 2025); correct disclosure appears
+nowhere on the product page and carries no commercial penalty. Written at
+stage 0 so QA can verify it at stage 5; publish/package.md must agree.
+EOF
 ```
 
 Seed `log.csv` with the HEADER ONLY. The weekly-digest cron reads

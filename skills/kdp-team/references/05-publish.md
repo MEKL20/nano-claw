@@ -13,6 +13,9 @@ All approved artifacts: `manuscript/chapters/*.md`, `manuscript/book.epub`,
 a `## Verdict` section with a literal `**PASS**`. No PASS, no package.
 
 ## Procedure
+0. Read `publish/ai-disclosure.md` (written at stage 0) and carry its answer
+   into the package verbatim. It is the project's standing commitment; the
+   package restates it, never contradicts or re-decides it.
 1. Write `publish/package.md`: every KDP form field, filled and final, in
    dashboard order — language, title, subtitle, author, description, 7
    keywords, categories, DRM-free, adult content = No, pricing per

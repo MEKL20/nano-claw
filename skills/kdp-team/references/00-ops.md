@@ -207,6 +207,15 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **A gate may only check artifacts that exist at its own stage.** QA (stage 5)
+    was told to confirm the AI-disclosure plan, which `publish/package.md`
+    records at stage 8. Having nothing to verify, the child went looking and read
+    ANOTHER BOOK's `START-HERE.md` — one step from a false PASS carried on a
+    different title's artifact. Two fixes: the disclosure is now written at
+    stage 0 into `publish/ai-disclosure.md` so it is checkable throughout, and
+    every child brief states that a missing artifact is a FINDING, never a
+    licence to search outside the project dir. When auditing a brief, ask of
+    each check: does the file it names exist when this stage runs?
 - **Re-verify every safety number the CHILD sourced itself, not just the ones
     you cached.** A brief that caches six USDA figures invites the child to
     research adjacent ones (pasteurisation, pre-treatment dips, shelf life) and
