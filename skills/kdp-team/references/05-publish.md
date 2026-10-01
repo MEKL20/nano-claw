@@ -33,9 +33,11 @@ a `## Verdict` section with a literal `**PASS**`. No PASS, no package.
      per FORMAT per week, reset Sundays 00:00 UTC
 3. Append the launch row to `sales/log.csv`: date, slug, asin (literal
    `PENDING` until MEKL enters it), price, notes.
-4. Return a summary to the parent: file paths + anything MEKL must decide at
-   the dashboard (e.g. KDP Select enrollment yes/no, with a one-line
-   recommendation).
+4. Return a summary to the parent: file paths, plus every dashboard field that
+   is a judgment call (KDP Select enrolment, DRM, territories) ALREADY DECIDED
+   with a one-line reason each. The parent owns those calls — do not leave them
+   open for MEKL to resolve at the dashboard; he should only click through what
+   the package already states.
 
 ## Completion criterion
 `publish/package.md` exists, carries BOTH the field table and the runbook

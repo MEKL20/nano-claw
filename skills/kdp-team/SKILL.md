@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.7.1
+version: 1.8.0
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -65,15 +65,19 @@ Three rules keep retrieval honest:
    reaches MEKL on a child's word alone.
 2. **Separation of duties.** QA never fixes; production never certifies its
    own work; whoever fixes never re-checks the fix.
-3. **MEKL owns risk calls.** He approves the niche pick, the final
-   manuscript, and the price, and he performs the upload (his account, his
-   KYC). The KDP AI-content question is answered "AI-generated text" on EVERY
-   title — non-disclosure is the top account-suspension trigger (account-level
-   enforcement since 2025); correct disclosure shows nowhere on the product
-   page and carries no commercial penalty.
-4. **Human gates are human-only.** The upload click and the live-ASIN entry
-   are MEKL's actions. An agent writing an ASIN or a "published" flag
-   fabricates a state nobody can later detect as false.
+3. **The parent decides; MEKL receives finished work.** Niche, concept,
+   title, keywords, price, fixes, and manuscript acceptance are the parent's
+   calls on evidence (see Decision authority). The KDP AI-content question is
+   still answered "AI-generated text" on EVERY title — that is compliance, not
+   a preference: non-disclosure is the top account-suspension trigger
+   (account-level enforcement since 2025), while correct disclosure shows
+   nowhere on the product page and carries no commercial penalty.
+4. **The upload gate is physical, and no agent may forge it.** KDP has no
+   publishing API; the account and KYC are MEKL's; browser-automating the
+   dashboard risks the account. So the upload click and the live-ASIN entry
+   are his. An agent writing an ASIN or a "published" flag fabricates a state
+   nobody can detect as false later — the one failure this pipeline cannot
+   recover from.
 5. **Escalation guards.** Same failure twice = stop, report with evidence.
    Scope change (new niche mid-book) = back to a fresh decision doc.
 6. **Durable docs.** Every phase writes files into the project dir; chat only
@@ -94,6 +98,7 @@ Three rules keep retrieval honest:
   manuscript/PROGRESS.md        chapter-by-chapter word counts
   cover/brief.md, cover.jpg, preview_400.png, thumb_100.png
   qa/report.md
+  qa/acceptance.md              parent's stage-9 sign-off (replaces a human read)
   publish/package.md            field table + runbook section in ONE file
   sales/log.csv
 ```
@@ -114,7 +119,7 @@ Seed `log.csv` with the HEADER ONLY. The weekly-digest cron reads
 `sales/log.csv` for every `book-*` dir it finds, so a missing file forces that
 job to guess about a book that is simply pre-launch. The launch row is
 Publish's job (stage 8) — writing one earlier means inventing a slug and price
-before the niche gate has decided them.
+before stage 2 has decided them.
 
 After touching anything the board or a monitor reads, re-run
 `bash ~/.hermes/scripts/kdp_watch.sh` and confirm the output hash is unchanged;
@@ -135,21 +140,48 @@ verify by running something.
 |---|---|---|---|---|---|
 | 0 | Skeleton | parent | project dirs + `sales/log.csv` header | dirs exist, log.csv has a header and zero data rows, monitor hash unchanged | SETUP |
 | 1 | Research | child | research/decision.md | >=10 rows, >=6 real BSRs; `python3 ~/kdp/tools/verify_research.py <dir>/research/decision.md --all` exits 0, and the DISTINCT BOOKS screen still passes | RESEARCHED |
-| 2 | Niche gate | **MEKL** | approval in chat, logged in decision.md | explicit yes on niche + concept. No yes = no writing | RESEARCHED |
+| 2 | Niche decision | parent | verdict appended to decision.md (niche + concept + why) | verifier exits 0; >=3 DISTINCT books under 300k BSR; competition SCREENED, or UNSCREENED stated as a risk; no overlap with an existing `book-*`; not fiction or generic self-help | RESEARCHED |
 | 3 | SEO skeleton | child | seo/listing.md (TODO markers for TOC fields) | title + 7 keywords present, every char count computed with `len()` | WRITING |
 | 4 | Production | child | manuscript/chapters/, cover/, book.epub | word count >=10,000 counted by parent; EPUB zipfile self-check; cover is 1600x2560 | PACKAGING |
 | 5 | QA | child | qa/report.md | `## Verdict` + literal `**PASS**` (bold — the board greps it), zero BLOCKER/MAJOR, every check backed by evidence | IN QA |
 | 6 | Fix loop | production/SEO fixes, fresh QA re-checks | updated files + report status | re-run ALL checks, not just the fixed one; fixer never re-checks | IN QA |
 | 7 | SEO finalize | child | seo/listing.md complete | zero TODO markers; banned-term grep clean | IN QA |
 | 8 | Publish package | child | publish/package.md (runbook is a section inside it) | MEKL can upload with no other file open; AI-disclosure step present; `·copy` suffixes on paste-able cells | READY TO UPLOAD |
-| 9 | Final read | **MEKL** | his verdict | he has read the manuscript | READY TO UPLOAD |
-| 10 | Upload | **MEKL** | ASIN entered in the dashboard | ~20 min, his account | LIVE |
+| 9 | Acceptance | parent | `qa/acceptance.md` | parent read ch01 + final chapter end-to-end; grep clean for TODO/lorem/placeholder/"as an AI"; listing bullets trace to real chapters; disclaimers present where the niche needs them; EPUB + cover re-checked by command | READY TO UPLOAD |
+| 10 | Upload | **MEKL** | ASIN entered in the dashboard | the one human step: ~20 min, his account, no API exists | LIVE |
 | 11 | Analytics | parent | sales/log.csv, sales/review-30d.done | 30-day sequel/kill decision | LIVE |
 
-After the niche gate (2), the chain runs autonomously to stage 8 — report
-progress, do not ask permission for the next link. Stages 9-10 are MEKL's.
+Stages 0-9 run end to end without asking: each gate is a command the parent
+runs, not a message it sends. Stage 10 is MEKL's single click.
 
 Any fix after stage 8 invalidates the package: re-run Publish, then re-verify.
+
+## Decision authority (MEKL's standing order, 2026-10-01)
+
+"Ga perlu approval dari gw, gw tinggal terima hasil jadi aja." The parent
+therefore decides and reports afterwards: niche and concept, title/subtitle/
+keywords/categories, launch price inside the pinned $2.99-4.99 band, KDP
+Select enrolment, every fix routing call and scope cut, manuscript acceptance,
+and the 30-day sequel/kill verdict.
+
+**Notify, don't ask.** Progress messages are statements. The only message that
+requests anything is "package ready — runbook here", and the only question
+worth sending is one whose answer no artifact can supply.
+
+### STOP and report instead of deciding when
+
+1. **A gate fails twice** — verifier REGRESSION, the same QA finding surviving
+   a fix, a generator wall. Report with evidence; never lower a gate to let
+   the chain continue. A gate the parent can relax is not a gate.
+2. **The demand screen fails on distinct books** — report the 3 finalists with
+   their data instead of forcing a winner to keep moving.
+3. **The niche needs a regulated claim** (medical, legal, financial advice)
+   that a disclaimer cannot honestly cover.
+4. **A decision would spend money, touch account credentials, or write outside
+   `~/kdp/`.**
+5. **A package is already awaiting upload (WIP limit 1).** Finish that handoff
+   first — parallel books pile onto the single human step and burn the
+   2-per-format weekly cap without shipping anything.
 
 ## Fix loops (who fixes what)
 
@@ -208,7 +240,7 @@ research table before accepting the niche).
 New book = full cycle. Trend scan only = research brief alone. Cover/format
 fix = production + QA only, then re-run Publish because the package went
 stale. Skip roles whose risk is absent — never skip parent verification, the
-MEKL gates, or the AI disclosure.
+upload gate, or the AI disclosure.
 
 Dispatch one child per stage, sequentially: each one's input is the previous
 stage's artifact. Never two writers in the same directory.

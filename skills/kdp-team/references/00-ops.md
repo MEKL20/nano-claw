@@ -28,13 +28,69 @@ artifact's cells; never copy a number out of the final message.** A brief that
 produces verifiable work does not produce a sound conclusion by itself — the
 parent's dedup and gate checks are not ceremony.
 
-## Autonomous chain (default)
+## Autonomous chain (default since 2026-10-01)
 
-After MEKL approves niche + concept, run the pipeline without re-asking:
-research -> SEO skeleton -> production -> parent verify -> QA -> fix loop ->
-SEO finalize -> publish package. MEKL gates that remain: niche pick, final
-manuscript read, upload click. Report progress, don't ask permission for the
-next link in the chain.
+MEKL's standing order: no approvals, he receives finished work. On "go", run
+stages 0-9 without asking — skeleton -> research -> niche decision -> SEO
+skeleton -> production -> parent verify -> QA -> fix loop -> SEO finalize ->
+publish package -> acceptance. Then hand him ONE message: the package is ready,
+here is the runbook.
+
+The only remaining human step is the upload itself (stage 10), because KDP has
+no publishing API and the account is his. Never write an ASIN or a published
+flag to fake it.
+
+Every gate in that chain is a command, not a question. If a gate fails twice,
+stop and report with evidence — the autonomy is in deciding, never in relaxing
+a gate to keep the chain moving. Full stop conditions: SKILL.md "Decision
+authority".
+
+WIP limit 1: do not start a new book while a finished package waits for upload.
+Queued packages pile onto the one human step and burn the 2-per-format weekly
+cap without shipping.
+
+## Stage 9: acceptance (parent only, replaces MEKL's read)
+
+MEKL no longer reads the manuscript before upload, so this check is the last
+thing standing between a child's output and his account. It is commands, not
+impressions. Run from the project dir; write every result into
+`qa/acceptance.md` with the command output quoted, then state ACCEPTED or
+BLOCKED at the end.
+
+```sh
+cd ~/kdp/<slug>
+# 1. AI/placeholder slop that must never reach a buyer
+grep -rniE 'as an ai|language model|lorem ipsum|placeholder|TODO|TBD|\[insert|XXX' \
+  manuscript/chapters/ seo/listing.md publish/package.md
+# 2. size + packaging, by command
+wc -w manuscript/chapters/*.md | tail -1
+python3 -c "import zipfile;z=zipfile.ZipFile('manuscript/book.epub');assert z.read('mimetype')==b'application/epub+zip';print('xhtml:',len([n for n in z.namelist() if n.endswith('.xhtml')]))"
+python3 -c "from PIL import Image;print(Image.open('cover/cover.jpg').size)"
+# 3. title agreement across artifacts (a mismatch is a rejected upload)
+grep -m1 'Title:' seo/listing.md; grep -m1 '^# ' manuscript/chapters/ch00_front.md
+# 4. QA verdict is the bold literal the board greps
+grep -c '\*\*PASS\*\*' qa/report.md
+```
+
+Then three judgment checks the parent performs by reading, not grepping:
+
+- **Read ch01 and the final chapter end to end.** Openings and endings are
+  where a degraded child's prose collapses, and the sample MEKL would have
+  read. Note anything you would be embarrassed to publish.
+- **Every listing description bullet traces to a real chapter.** Bullets
+  promising content the book lacks are the top refund/1-star driver.
+- **Disclaimer present where the niche needs one** (health, legal, financial
+  adjacency). Absent = BLOCKED, not a MINOR note.
+
+BLOCKED routes back through the normal fix loop (stage 6) and then re-runs
+Publish, because any post-package fix staled the archive. Never accept with an
+open BLOCKER to keep the chain moving.
+
+Field-tested 2026-10-01 against book-001 (every command run, output real): slop
+grep exits 1 with no matches, `16681 total` words, `xhtml: 15`,
+`cover: (1600, 2560)`, listing `**Title:**` and `ch00_front.md`'s `# ` heading
+identical, `**PASS**` count 1. Note grep's exit code is inverted here — exit 1
+means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
 
 ## Delegation gotchas (hard-won)
 
