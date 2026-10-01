@@ -3,6 +3,27 @@
 Field-tested 2026-09-25 on book-001; host facts re-verified 2026-10-01. Read
 before dispatching children.
 
+## End-to-end field test (2026-10-01, research stage)
+
+One research child, dispatched against the revised brief, completed in 854s
+and cleared the stage-1 gate on the first try: 13 rows, 11 BSRs, verifier
+`13 checked / 12 MATCH / 0 REGRESSION`, exit 0. What made it work, in order of
+how much each mattered:
+
+1. **Pasting measured extraction patterns, not just the technique.** The child
+   never had to reverse-engineer the page shape.
+2. **The UNKNOWN rule stated with its consequence.** It wrote `UNKNOWN (4.9
+   stars shown, count string not rendered)` — annotated honesty — instead of
+   the zeros that would have corrupted the screen.
+3. **Incremental writes.** `decision.md` existed on disk at 1.7KB mid-run, so a
+   timeout would have cost rows, not the run.
+4. **Naming book-001's niche as a hard exclusion.** No overlap to unwind.
+
+What the child still got wrong, and the parent caught: row-based tallies that
+counted multi-format editions as separate rivals (see gotcha 14). A brief that
+produces verifiable work does not produce a sound conclusion by itself — the
+parent's dedup and gate checks are not ceremony.
+
 ## Autonomous chain (default)
 
 After MEKL approves niche + concept, run the pipeline without re-asking:
