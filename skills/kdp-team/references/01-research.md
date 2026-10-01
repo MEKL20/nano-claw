@@ -75,8 +75,10 @@ full-looking rows with invented numbers is the one failure that poisons every
 later stage. If the niche cannot clear the demand screen on the BSRs you did
 get, report the 3 finalists with their data instead of forcing a winner.
 
-The parent re-fetches 3 sampled ASINs and diffs your numbers, so write only
-what you actually retrieved.
+The parent re-fetches your rows with `scripts/verify_research.py` and diffs
+them against the live pages, so write only what you actually retrieved. A
+review count BELOW what the live page later shows is fine (titles grow); a
+count ABOVE it cannot come from a real page and will be caught.
 
 ## Forbidden
 Writing prose for the book. Picking fiction or a generic saturated niche.

@@ -55,6 +55,33 @@ Token-gated LAN dashboard over the whole `~/kdp/` tree:
   publicly without TLS + auth.
 - The token in `dashboard.token` is a capability URL. Never paste it anywhere.
 
+## scripts/verify_research.py — parent's evidence verifier
+
+The parent cannot accept a research child's table on its word. This re-fetches
+sampled rows through the proxy and diffs them:
+
+    python3 verify_research.py <project>/research/decision.md --all
+    python3 verify_research.py <decision.md> --sample 3 --json
+
+A decision table is a SNAPSHOT, so divergence alone is not dishonesty. The
+verdicts separate time drift from numbers that cannot have come from a page:
+
+| Verdict | Meaning | Fails? |
+|---|---|---|
+| MATCH | recorded == live | no |
+| DRIFT | live >= recorded reviews: ordinary growth | no |
+| REGRESSION | live materially BELOW recorded — counts do not shrink, so the recorded figure is unsupported | **yes, exit 1** |
+| ZERO_VS_STARS | recorded 0 but page shows stars: ratings exist NOW, may have been true THEN | human judgment |
+| UNVERIFIABLE | page rendered neither field (record UNKNOWN, not 0) | no |
+| STUB | ~400-byte "continue shopping" — the ASIN is wrong, the proxy is fine | no |
+
+BSR is printed but never fails a row: too volatile for single-sample evidence
+(a low-ranked title moves an order of magnitude in a day).
+
+Field test 2026-10-01 on book-001's 13 rows: 0 regressions, 3 MATCH, 2 DRIFT
+(24->32 and 109->110 reviews over six days), 5 ZERO_VS_STARS (new titles that
+had no ratings at research time), 3 UNVERIFIABLE.
+
 ## Strings the dashboard parses (change these and the board lies)
 
 State is derived from files, so a brief that changes an artifact's wording

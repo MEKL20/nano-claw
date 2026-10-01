@@ -84,8 +84,11 @@ next link in the chain.
   HTTP 200 with a ~400-byte "continue shopping" stub, which reads exactly
   like a bot wall. Diagnosing the proxy as dead from that is a fabricated
   blocker — always probe with an ASIN cited in an existing decision.md.
-- **Verification of child evidence**: re-fetch 3 sampled ASINs with the same
-  technique and diff BSR/reviews against the child's table.
+- **Verification of child evidence**: run
+  `python3 scripts/verify_research.py <project>/research/decision.md --all`.
+  Exit 1 only on REGRESSION (a recorded count above the live one — impossible
+  organically). DRIFT and UNVERIFIABLE are facts about Amazon, not faults in
+  the child's work; judging drift as fabrication is a false accusation.
 - **Builders, not packages**: EPUB via `scripts/epub_build.py`, cover via
   `scripts/cover_build.py`. No pandoc/calibre/epubcheck on this host and
   `dpkg` is broken for new installs — never apt-install for this pipeline.
