@@ -24,6 +24,11 @@ Either a topic brief from the parent, or the directive "pick from trends".
        BSR:     Best Sellers Rank:\s*#([\d,]+)\s+in\s+([^(\n\[]+)
        ratings: ([\d,]+)\s+global\s+ratings
        stars:   ([\d.]+)\s+out of 5 stars
+       title:   ^Title:\s*(.+)$          (then strip a leading 'Amazon.com: ')
+
+   The title comes from the proxy's own `Title:` header line (4/4 on sample).
+   Do NOT take the first markdown `#` heading — on Amazon pages that is
+   "Follow the author", not the book.
 
    Do NOT use `#(\d+) in Kindle Store` (misses titles ranked "in Books")
    and do NOT use `(\d[\d,]*) ratings` — that one matched 0 of 6 real pages.

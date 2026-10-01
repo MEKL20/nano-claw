@@ -74,6 +74,10 @@ next link in the chain.
       BSR      Best Sellers Rank:\s*#([\d,]+)\s+in\s+([^(\n\[]+)    4/6
       ratings  ([\d,]+)\s+global\s+ratings                          2/6
       stars    ([\d.]+)\s+out of 5 stars                            5/6
+      title    ^Title:\s*(.+)$                                      4/4
+
+  Strip a leading `Amazon.com: ` from the title. The first markdown heading
+  is "Follow the author", never the book title.
 
   `(\d[\d,]*) ratings` matched 0/6 — it was wrong in the original brief.
   `#N in Kindle Store` misses titles ranked "in Books". Gaps are UNKNOWN,
