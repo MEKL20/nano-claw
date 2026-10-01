@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.8.0
+version: 1.8.1
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -179,9 +179,13 @@ worth sending is one whose answer no artifact can supply.
    that a disclaimer cannot honestly cover.
 4. **A decision would spend money, touch account credentials, or write outside
    `~/kdp/`.**
-5. **A package is already awaiting upload (WIP limit 1).** Finish that handoff
-   first — parallel books pile onto the single human step and burn the
-   2-per-format weekly cap without shipping anything.
+5. **Stage 8 would build a SECOND package while one still awaits upload.**
+   Hold at stage 7 and report; do not stop earlier stages. Local work spends no
+   KDP capacity — the 2-per-format weekly cap is consumed when MEKL CREATES the
+   title in the dashboard, not when the parent writes files — so research,
+   writing, and QA may proceed on the next book. What packaging early does cost
+   is freshness: any later fix invalidates the archive, and every queued
+   package is another ~20 minutes of MEKL's time.
 
 ## Fix loops (who fixes what)
 
@@ -214,7 +218,9 @@ worth sending is one whose answer no artifact can supply.
   $2.99-4.99 (70% royalty band), payout ~60 days after month end.
   **Upload cap: 2 new titles per FORMAT per week, reset Sundays 00:00 UTC**
   (tightened from 10 on 2026-09-21) — ebook/paperback/hardcover each have
-  their own allowance.
+  their own allowance. The cap is spent at TITLE CREATION in the dashboard, so
+  pipeline work on this machine never consumes it; check the window against the
+  `date` column in each `sales/log.csv`, not against local file mtimes.
 - Delegation routing, timeouts, and the resume protocol: references/00-ops.md.
   Read it before every dispatch.
 

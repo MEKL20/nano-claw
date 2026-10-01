@@ -186,6 +186,15 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     After replacing an installed monitor, re-run it and confirm the output
     hash is UNCHANGED, or the swap itself fires a spurious alert.
 
+18. **Check a rule's stated REASON against data before letting it block work.**
+    A WIP limit here was justified as "parallel books burn the 2-per-format
+    weekly cap" — but the cap is spent when MEKL creates a title in the KDP
+    dashboard, not when the parent writes files locally, and book-001's title
+    predated the open window anyway. The rule was right to exist and wrong in
+    scope: it now blocks a second PACKAGE (stage 8), not a second book. A rule
+    whose reason does not survive measurement will either be obeyed wrongly or
+    quietly ignored.
+
 ## Proven techniques (reuse verbatim)
 
 - **Amazon data via r.jina.ai** (keyless; re-verified 2026-10-01, returns
