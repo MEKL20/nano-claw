@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.6.0
+version: 1.6.1
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -114,7 +114,7 @@ verify by running something.
 
 | # | Stage | Owner | Artifact | Exit gate (parent runs it) | Board |
 |---|---|---|---|---|---|
-| 1 | Research | child | research/decision.md | >=10 rows, >=6 real BSRs; `verify_research.py --all` exits 0 (no REGRESSION) | RESEARCHED |
+| 1 | Research | child | research/decision.md | >=10 rows, >=6 real BSRs; `python3 ~/kdp/tools/verify_research.py <dir>/research/decision.md --all` exits 0, and the DISTINCT BOOKS screen still passes | RESEARCHED |
 | 2 | Niche gate | **MEKL** | approval in chat, logged in decision.md | explicit yes on niche + concept. No yes = no writing | RESEARCHED |
 | 3 | SEO skeleton | child | seo/listing.md (TODO markers for TOC fields) | title + 7 keywords present, every char count computed with `len()` | WRITING |
 | 4 | Production | child | manuscript/chapters/, cover/, book.epub | word count >=10,000 counted by parent; EPUB zipfile self-check; cover is 1600x2560 | PACKAGING |

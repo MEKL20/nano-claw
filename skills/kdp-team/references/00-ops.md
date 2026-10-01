@@ -144,7 +144,9 @@ next link in the chain.
   like a bot wall. Diagnosing the proxy as dead from that is a fabricated
   blocker — always probe with an ASIN cited in an existing decision.md.
 - **Verification of child evidence**: run
-  `python3 scripts/verify_research.py <project>/research/decision.md --all`.
+  `python3 ~/kdp/tools/verify_research.py <project>/research/decision.md --all`.
+  (Install path, not the skill dir — a relative `scripts/...` path only works
+  with cwd set to the skill folder, which it never is mid-run.)
   Exit 1 only on REGRESSION (a recorded count above the live one — impossible
   organically). DRIFT and UNVERIFIABLE are facts about Amazon, not faults in
   the child's work; judging drift as fabrication is a false accusation.

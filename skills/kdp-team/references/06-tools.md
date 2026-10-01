@@ -1,7 +1,11 @@
 # KDP Tools (bundled scripts)
 
-Companion scripts for the kdp-team pipeline, bundled in the skill's
-`scripts/` dir. stdlib + Pillow only: this host has no pandoc, no calibre, no
+Companion scripts for the kdp-team pipeline, bundled in the skill's `scripts/`
+dir and installed to `~/kdp/tools/`. **Always invoke them by install path**
+(`python3 ~/kdp/tools/<script>.py`): a relative `scripts/...` path only
+resolves with cwd set to the skill folder, which it never is during a run.
+After adding a script here, copy it to `~/kdp/tools/` or every documented
+command for it fails. stdlib + Pillow only: this host has no pandoc, no calibre, no
 epubcheck, no tesseract, no `zip` CLI, and `dpkg` is broken for new installs.
 Install copies to `~/kdp/tools/` (where book-001 ran them from).
 
@@ -60,8 +64,8 @@ Token-gated LAN dashboard over the whole `~/kdp/` tree:
 The parent cannot accept a research child's table on its word. This re-fetches
 sampled rows through the proxy and diffs them:
 
-    python3 verify_research.py <project>/research/decision.md --all
-    python3 verify_research.py <decision.md> --sample 3 --json
+    python3 ~/kdp/tools/verify_research.py <project>/research/decision.md --all
+    python3 ~/kdp/tools/verify_research.py <decision.md> --sample 3 --json
 
 A decision table is a SNAPSHOT, so divergence alone is not dishonesty. The
 verdicts separate time drift from numbers that cannot have come from a page:
