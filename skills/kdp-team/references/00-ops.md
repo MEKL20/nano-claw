@@ -199,6 +199,14 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     `KDP_COVER_OUT` / `KDP_FONT`. Verified 2026-10-01 by hashing book-001's
     cover before and after swapping the installed copy, then rendering to a
     temp dir.
+- **"Safe HTML" without the whitelist is not a constraint.** The SEO brief said
+    "KDP-safe HTML" and named no tags, so nothing stopped a child using `<h2>`
+    or `<table>` — both silently stripped at upload, which is how a description
+    lands as one mangled paragraph. Worse, KDP's 4,000-char limit COUNTS the
+    markup, so a budget check on visible text passes copy that KDP rejects.
+    Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
+    stripped ones, and measure the raw string. book-001 happened to get both
+    right; nothing in the brief had required it.
 - **Never SAMPLE a physical-harm check.** QA's fact check was "sample 10
     claims", which is right for general facts and wrong for anything a reader's
     safety rests on — the temperature the sample skips is the one that hurts

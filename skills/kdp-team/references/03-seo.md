@@ -50,10 +50,23 @@ There is no `book.md` in either case.
    then a coverage check line confirming every beat the keywords promise is
    covered. Production writes against this outline, so vague entries become
    vague chapters.
-5. Description <= 4,000 characters, KDP-safe HTML: hook in the first two
-   sentences (the transformation), then what's inside (bullets from the
-   chapter list), then who it is for. No URLs, no contact info, no review
-   quotes, no price or promo talk.
+5. Description: hook in the first two sentences (the transformation), then
+   what's inside (bullets from the chapter list), then who it is for. No URLs,
+   no contact info, no review quotes, no price or promo talk.
+
+   **The 4,000-character limit COUNTS THE HTML TAGS** (verified at
+   kdp.amazon.com 2026-10-01). Bolding one word spends 7 characters before a
+   letter of copy. So measure `len()` on the RAW string including markup —
+   measuring visible text passes a description KDP then rejects.
+
+   **Allowed tags, all 12 — anything else is silently STRIPPED at upload:**
+   `br p b em i u h4 h5 h6 ol ul li`. Note what is NOT allowed: `h1 h2 h3` are
+   reserved by Amazon's own page layout, and `a img div span table` plus inline
+   styles are removed. A stripped `<table>` is how a description arrives as one
+   mangled paragraph. HTML entities (`&mdash;` `&ndash;`) are fine and count
+   toward the limit at full length.
+
+   Target 150-250 words of visible copy; the limit is a ceiling, not a goal.
    On SKELETON write only `TODO: needs final chapter list` here — the bullets
    must come from chapters that actually exist, not from the plan's intentions.
 6. Price recommendation: $2.99-4.99 launch. That is OUR strategy band for a
