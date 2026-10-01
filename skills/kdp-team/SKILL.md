@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.7.0
+version: 1.7.1
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -101,6 +101,25 @@ Three rules keep retrieval honest:
 `book.md` as a single monolith is NOT the layout — chapters are separate files
 so a timeout costs one chapter, not the book.
 
+**Stage 0, parent creates the skeleton before dispatching anyone** (one call,
+so no child invents its own layout):
+
+```sh
+SLUG=book-00N
+mkdir -p ~/kdp/$SLUG/{research,seo,manuscript/chapters,cover,qa,publish,sales}
+printf 'date,slug,asin,price,notes\n' > ~/kdp/$SLUG/sales/log.csv
+```
+
+Seed `log.csv` with the HEADER ONLY. The weekly-digest cron reads
+`sales/log.csv` for every `book-*` dir it finds, so a missing file forces that
+job to guess about a book that is simply pre-launch. The launch row is
+Publish's job (stage 8) — writing one earlier means inventing a slug and price
+before the niche gate has decided them.
+
+After touching anything the board or a monitor reads, re-run
+`bash ~/.hermes/scripts/kdp_watch.sh` and confirm the output hash is unchanged;
+otherwise the edit itself pages MEKL at 09:00 WIB.
+
 Sweep stray files before declaring a phase done, but **provenance is not
 litter**: a research child's raw scrape dumps under `research/*.json` let the
 parent re-check numbers without ~13 fresh proxy fetches, and they are the only
@@ -114,6 +133,7 @@ verify by running something.
 
 | # | Stage | Owner | Artifact | Exit gate (parent runs it) | Board |
 |---|---|---|---|---|---|
+| 0 | Skeleton | parent | project dirs + `sales/log.csv` header | dirs exist, log.csv has a header and zero data rows, monitor hash unchanged | SETUP |
 | 1 | Research | child | research/decision.md | >=10 rows, >=6 real BSRs; `python3 ~/kdp/tools/verify_research.py <dir>/research/decision.md --all` exits 0, and the DISTINCT BOOKS screen still passes | RESEARCHED |
 | 2 | Niche gate | **MEKL** | approval in chat, logged in decision.md | explicit yes on niche + concept. No yes = no writing | RESEARCHED |
 | 3 | SEO skeleton | child | seo/listing.md (TODO markers for TOC fields) | title + 7 keywords present, every char count computed with `len()` | WRITING |
