@@ -34,8 +34,10 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
    one chapter, not the book. Append each chapter's word count to
    `manuscript/PROGRESS.md` as you go.
 3. Target 10,000-20,000 words total, US English, tone: direct, practical,
-   zero filler. Every chapter ends with actionable takeaways (checklist,
-   steps, or exercise).
+   zero filler. Every BODY chapter ends with actionable takeaways (checklist,
+   steps, or exercise). Front matter (`ch00_front.md`) does not — it is a title
+   page, intro, copyright and disclaimer, and a takeaways block there reads as
+   filler.
 4. Fact discipline: verify checkable claims via `web_search` before stating
    them. No invented statistics, no fake citations, no fabricated author
    credentials. If a number cannot be verified, cut it. (`web_search` 403s

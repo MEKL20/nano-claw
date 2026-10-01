@@ -207,6 +207,11 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **Write structural gates against the artifact's real shape, not a slogan.**
+    "Every chapter ends with takeaways" sounds complete and quietly indicts
+    `ch00_front.md`, which is a title page plus copyright and disclaimer. A QA
+    child reading that gate literally files a MAJOR, and the fix loop then adds
+    filler to front matter to satisfy it. Name the exception in the gate itself.
 - **A check that reports MISSING on correct content is worse than no check.**
     Three false alarms in one verification pass on book-002: a jerky row flagged
     because my criterion was "no meat row at all" when the row was
