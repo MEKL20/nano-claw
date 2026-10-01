@@ -30,8 +30,8 @@ the principle blocks into any agent framework):
 
 | Skill | Purpose |
 | --- | --- |
-| [Crew5](./skills/crew5/) | A complete audited agent team - plan, design, build, test, secure - five specialist roles plus one human approval gate. |
-| [KDP Team](./skills/kdp-team/) | Five-role Amazon KDP publishing pipeline - research, production, SEO, QA, publish - with AI-disclosure compliance and manual-upload runbook. |
+| [Crew5](./skills/crew5/) | A complete audited agent team - plan, design, build, test, secure - five specialist roles as a 9-stage cycle where every stage has one owner, one durable artifact and an exit gate the parent re-runs itself; explicit CAG/RAG context protocol for blind children, a parent-only delegation runbook, and human gates no agent can write. |
+| [KDP Team](./skills/kdp-team/) | Five-role Amazon KDP publishing pipeline as an 11-stage cycle - research, SEO skeleton, production, QA, publish - with numeric exit gates (word count, EPUB self-check, cover pixels), AI-disclosure compliance, bundled stdlib-only EPUB/cover/dashboard scripts, and a manual-upload runbook whose ASIN gate only a human can set. |
 | [HTML5 Game Team](./skills/html5-game-team/) | HTML5 portal-game pipeline as an 11-stage cycle - research, design, style guide, build, QA, asset audit, ship - every stage with one owner, one artifact and an exit gate the parent re-runs itself; headless-browser QA probes, solver-in-the-loop level generation, and a bundled stdlib-only playtest/publish dashboard (script + systemd unit included) whose approval flags only a human can set. |
 
 ## Usage

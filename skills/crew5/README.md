@@ -18,7 +18,7 @@ before being written down.
 | Finder | security-subagent | vuln findings, PoCs, coverage ledger | fix, exceed scope |
 | Parent | your main agent | verify, route, triage, relay approvals | delegate verification |
 
-## The 5 non-negotiables
+## The 8 non-negotiables
 
 1. **Self-report is not evidence** — the parent re-verifies every child
    claim (re-run tests/repros/measurements) before it reaches the human.
@@ -28,15 +28,32 @@ before being written down.
 3. **The human owns risk calls** — PRD/stack/infra approval, design
    direction, dynamic security testing (per-run), destructive or external
    actions, production data. Children propose; the human decides.
-4. **Escalation guards, not infinite loops** — same failure twice = stop
+4. **Human gates are human-only** — an agent that writes its own approval
+   or sign-off flag fabricates consent. That is the one failure nobody can
+   detect afterwards.
+5. **Escalation guards, not infinite loops** — same failure twice = stop
    and escalate with evidence. Scope creep = back to the docs first.
-5. **Durable docs over chat** — reports/PRDs/decisions are markdown files
+6. **A stuck loop is a design signal** — after two failed attempts,
+   instrument what actually failed instead of tuning parameters again.
+7. **Durable docs over chat** — reports/PRDs/decisions are markdown files
    in the project. Chat is a notification; files are truth.
+8. **Context dies, files survive** — children write incrementally, resume
+   briefs inventory partial progress, evidence lives in the project.
+
+## Context protocol (CAG + RAG)
+
+Children start blind: no skills, no memory, no chat history, no ask-user
+tool. The parent owns both context channels — **CAG**, the role principles
+and cached environment facts pasted verbatim into every brief, and **RAG**,
+the specs and prior reports the child retrieves from disk when it needs
+them. Artifact outranks summary; inventory before re-dispatch; write
+incrementally. Details in SKILL.md.
 
 ## What's inside
 
 ```
 SKILL.md              router + rulebook (start here)
+references/00-ops.md  parent-only delegation runbook (read before dispatch)
 roles/                the five member skills (one SKILL.md each)
 design-rules/         antislop rule packs (core, ui, copywriting,
                       layout/mobile, human/a11y + contrast-check.py)
@@ -64,9 +81,12 @@ snapshot, not an endorsement forever.
 ```bash
 REPO=https://raw.githubusercontent.com/MEKL20/nano-claw/main/skills/crew5
 
-# router + member skills (each folder = one skill)
-mkdir -p ~/.hermes/skills/software-development/subagent-team
+# router + its parent-only ops runbook
+mkdir -p ~/.hermes/skills/software-development/subagent-team/references
 curl -sL $REPO/SKILL.md -o ~/.hermes/skills/software-development/subagent-team/SKILL.md
+curl -sL $REPO/references/00-ops.md -o ~/.hermes/skills/software-development/subagent-team/references/00-ops.md
+
+# member skills (each folder = one skill)
 for r in architect-subagent coding-subagent qa-subagent security-subagent ui-ux-subagent; do
   mkdir -p ~/.hermes/skills/software-development/$r
   curl -sL $REPO/roles/$r/SKILL.md -o ~/.hermes/skills/software-development/$r/SKILL.md
@@ -83,10 +103,13 @@ curl -sL $REPO/design-rules/antislop-code/SKILL.md -o ~/.hermes/skills/software-
 curl -sL $REPO/design-rules/antislop-human/contrast-check.py -o ~/.hermes/skills/creative/antislop-human/contrast-check.py
 curl -sL $REPO/design-rules/antislop-human/contrast-mcp.py -o ~/.hermes/skills/creative/antislop-human/contrast-mcp.py
 
-# qa report template lands inside the qa skill:
-mkdir -p ~/.hermes/skills/software-development/qa-subagent/templates
+# qa report template + worked example land inside the qa skill.
+# Filenames must match what roles/qa-subagent/SKILL.md cites, or the skill
+# points at files that are not there.
+mkdir -p ~/.hermes/skills/software-development/qa-subagent/templates \
+         ~/.hermes/skills/software-development/qa-subagent/examples
 curl -sL $REPO/qa-templates/qa-report-template.md -o ~/.hermes/skills/software-development/qa-subagent/templates/qa-report-template.md
-curl -sL $REPO/qa-templates/example-stats-cli.md -o ~/.hermes/skills/software-development/qa-subagent/examples/example-stats-cli.md
+curl -sL $REPO/qa-templates/example-stats-cli.md -o ~/.hermes/skills/software-development/qa-subagent/examples/2026-09-23-stats-cli.md
 ```
 
 ## Install (other agents)

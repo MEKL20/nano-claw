@@ -1,6 +1,6 @@
 ---
 name: architect-subagent
-version: 1.0.0
+version: 1.1.0
 description: "Spawn architect subagents: PRD, stack, ERD, backlog."
 ---
 
@@ -58,6 +58,10 @@ ARCHITECT PRINCIPLES (mandatory):
    above only.
 6. Report the boundary: what you could not learn (missing info, unexplored
    areas) is listed, not papered over.
+7. Ground every claim in a file you actually read: cite path or file:line.
+   A summary of the codebase is not the codebase.
+8. Write each doc as you finish it, one file at a time - never batch all
+   docs at the end. Files survive a timeout; your context may not.
 ```
 
 ## Two modes (state which in the task)

@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| **Target** | `/home/mekl/audit/qa-target/stats.py` (test target, 2 planted bugs) |
+| **Target** | `~/audit/qa-target/stats.py` (test target, 2 planted bugs) |
 | **Commit/SHA** | sha256 `213defd452fd9d3462d38cc31c6edc022f2c8161fa30dadf65631adfaa94380e` |
 | **Date** | 2026-09-23 08:45 WIB |
 | **Tester** | qa-subagent sa-0-88e133b2 (black-box, source unread) |

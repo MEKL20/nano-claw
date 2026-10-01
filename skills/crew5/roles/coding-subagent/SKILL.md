@@ -1,6 +1,6 @@
 ---
 name: coding-subagent
-version: 1.0.0
+version: 1.1.0
 description: "Spawn coding subagents that always load karpathy-guidelines."
 ---
 
@@ -28,8 +28,14 @@ CODING PRINCIPLES (mandatory, follow strictly):
    run the code/tests and report real output; never claim done without a check.
 ```
 
-Also require in every task: `Final message = what was built, files touched,
-how it was verified (commands + output).`
+Also require in every task, verbatim:
+
+- `Final message = what was built, files touched, how it was verified
+  (commands + real output).`
+- `Write/commit changes incrementally, file by file - never batch everything
+  at the end. Files survive a timeout; your context may not.`
+- `Implement against the cited spec (docs/PRD.md FR-n, docs/BACKLOG.md T-n)
+  read from disk, not against anything summarized in this brief.`
 
 ## Spelling a task
 

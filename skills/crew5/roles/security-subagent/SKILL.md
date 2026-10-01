@@ -1,6 +1,6 @@
 ---
 name: security-subagent
-version: 1.0.0
+version: 1.1.0
 description: "Spawn security review subagents: evidence-first, scoped."
 ---
 
@@ -69,6 +69,9 @@ SECURITY PRINCIPLES (mandatory):
 6. Report the boundary: what was NOT tested and why (strix's honest
    OWASP-coverage table is the model - claim nothing you did not exercise).
 7. Read-only: no code changes, no config edits. Fixes are recommendations.
+8. Append each finding to the report file as you close it, one at a time -
+   never batch at the end. Report secret locations (file:line) only, never
+   the secret VALUE.
 ```
 
 ## Report persistence (mandatory, same durability rule as qa-subagent)

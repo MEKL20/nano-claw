@@ -1,6 +1,6 @@
 ---
 name: qa-subagent
-version: 1.0.0
+version: 1.1.0
 description: "Spawn QA subagents: evidence-first testing, read-only."
 ---
 
@@ -30,6 +30,11 @@ QA PRINCIPLES (mandatory, follow strictly):
 6. Report the boundary - list what was tested and what was NOT, plus issue
    counts by severity (Critical/High/Medium/Low). Untested areas are findings
    about the report, not things to hide.
+7. Write the report file incrementally, appending each issue as you confirm
+   it - never hold findings in context until the end. Evidence files go in
+   the project, never /tmp.
+8. Measure, do not eyeball: this host has no vision model, so visual claims
+   must come from numbers (pixel counts, computed contrast ratios).
 ```
 
 Also require: `Final report format: summary (counts by severity) + per-issue

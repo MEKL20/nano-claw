@@ -1,6 +1,6 @@
 ---
 name: ui-ux-subagent
-version: 1.0.0
+version: 1.1.0
 description: "Spawn designer subagents: direction, UX critique, specs."
 ---
 
@@ -42,6 +42,12 @@ DESIGNER PRINCIPLES (mandatory):
    outputs (DESIGN.md, critique report). Route implementation through the
    parent to coding-subagent.
 6. Report the boundary: what was reviewed / what was not.
+7. This host has no vision model: never ask anyone to look at an image, and
+   never assert a contrast ratio. Compute it with
+   `python3 ~/.hermes/skills/creative/antislop-human/contrast-check.py` and
+   quote the number.
+8. Write DESIGN.md / the review file incrementally as sections finish -
+   never batch at the end. Files survive a timeout; your context may not.
 ```
 
 ## Two modes (state which in the task)
