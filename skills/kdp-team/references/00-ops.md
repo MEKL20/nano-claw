@@ -62,6 +62,13 @@ next link in the chain.
     When correcting a stale pointer, DELETE it rather than quoting it — a
     blind child reading the quote can act on it.
 
+12. **A verifier that silently skips rows is worse than none.** It prints
+    "0 failures" while covering a subset, which reads as a clean bill of
+    health. `verify_research.py` once skipped rows whose BSR was UNKNOWN and
+    every print book cited by ISBN rather than a B0 ASIN — 5 of 18 rows in
+    book-001, holding its largest review counts. Drive extraction off the
+    table header, and always compare `table rows: N` against `checked: M`.
+
 ## Proven techniques (reuse verbatim)
 
 - **Amazon data via r.jina.ai** (keyless; re-verified 2026-10-01, returns

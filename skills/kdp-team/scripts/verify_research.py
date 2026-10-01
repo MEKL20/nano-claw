@@ -44,6 +44,7 @@ RE_BSR = re.compile(r"Best Sellers Rank:\s*#([\d,]+)\s+in\s+([^(\n\[]+)", re.I)
 RE_RATINGS = re.compile(r"([\d,]+)\s+global\s+ratings", re.I)
 RE_STARS = re.compile(r"([\d.]+)\s+out of 5 stars", re.I)
 RE_ASIN = re.compile(r"\b(B0[A-Z0-9]{8})\b")
+RE_DP = re.compile(r"/dp/([A-Z0-9]{10})", re.I)
 STUB_MARK = "continue shopping"
 
 
@@ -61,32 +62,74 @@ def fetch(asin, timeout=55):
         return ""
 
 
+def cells_of(line):
+    return [c.strip() for c in line.strip().strip("|").split("|")]
+
+
+def read_bsr(cell):
+    """'#45,120 in Books' -> 45120 | 'unranked' -> 'unranked' | 'UNKNOWN' -> None"""
+    hit = re.search(r"#([\d,]+)", cell)
+    if hit:
+        return num(hit.group(1))
+    if "unranked" in cell.lower():
+        return "unranked"
+    return None
+
+
+def read_reviews(cell):
+    """Distinguish an absent count from a recorded zero - the whole point."""
+    c = cell.strip()
+    if c.upper() in ("UNKNOWN", "UNK", "?", "-", "--", "\u2014", ""):
+        return "UNKNOWN" if c.upper().startswith("UNK") else None
+    hit = re.fullmatch(r"([\d,]+)", c)
+    return num(hit.group(1)) if hit else None
+
+
+def find_asin(line):
+    """Prefer an explicit B0 ASIN; fall back to any /dp/<id> (print ISBNs)."""
+    m = RE_ASIN.search(line)
+    if m:
+        return m.group(1)
+    m = RE_DP.search(line)
+    return m.group(1).upper() if m else None
+
+
 def parse_rows(md):
-    """Pull (asin, recorded_bsr, recorded_reviews) out of a markdown table."""
-    rows = []
-    for line in md.splitlines():
-        if not line.strip().startswith("|"):
+    """Pull (asin, recorded_bsr, recorded_reviews) from the evidence table.
+
+    Header-driven: a decision doc holds several tables (scorecards, keyword
+    lists), and column order is not fixed. Guessing BSR/review columns by
+    position silently skips rows whose BSR is UNKNOWN - and a skipped row is
+    an unverified row, which is exactly what a fabricated number needs.
+    """
+    lines = md.splitlines()
+    rows, seen = [], set()
+    for i, line in enumerate(lines):
+        if i + 1 >= len(lines) or not line.strip().startswith("|"):
             continue
-        m = RE_ASIN.search(line)
-        if not m:
-            continue
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        bsr = reviews = None
-        bsr_idx = None
-        for i, c in enumerate(cells):
-            if bsr is None and ("#" in c or "unranked" in c.lower()):
-                bsr_idx = i
-                hit = re.search(r"#([\d,]+)", c)
-                bsr = num(hit.group(1)) if hit else "unranked"
-        if bsr_idx is not None:
-            for c in cells[bsr_idx + 1:]:
-                if re.fullmatch(r"[\d,]+", c):
-                    reviews = num(c)
-                    break
-                if c.upper() == "UNKNOWN":
-                    reviews = "UNKNOWN"
-                    break
-        rows.append({"asin": m.group(1), "rec_bsr": bsr, "rec_reviews": reviews})
+        if not re.match(r"^\|[\s\-:|]+\|$", lines[i + 1].strip()):
+            continue  # not a header (next line is not a separator)
+        hdr = [h.lower() for h in cells_of(line)]
+        bsr_i = next((j for j, h in enumerate(hdr) if "bsr" in h or "rank" in h), None)
+        rev_i = next((j for j, h in enumerate(hdr)
+                      if "review" in h or "rating" in h), None)
+        ttl_i = next((j for j, h in enumerate(hdr) if "title" in h), None)
+        if bsr_i is None and rev_i is None:
+            continue  # scorecard or keyword table, not evidence
+        for body in lines[i + 2:]:
+            if not body.strip().startswith("|"):
+                break
+            c = cells_of(body)
+            asin = find_asin(body)
+            if not asin or asin in seen:
+                continue
+            seen.add(asin)
+            rows.append({
+                "asin": asin,
+                "title": (c[ttl_i][:60] if ttl_i is not None and ttl_i < len(c) else ""),
+                "rec_bsr": read_bsr(c[bsr_i]) if bsr_i is not None and bsr_i < len(c) else None,
+                "rec_reviews": read_reviews(c[rev_i]) if rev_i is not None and rev_i < len(c) else None,
+            })
     return rows
 
 

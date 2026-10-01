@@ -78,9 +78,26 @@ verdicts separate time drift from numbers that cannot have come from a page:
 BSR is printed but never fails a row: too volatile for single-sample evidence
 (a low-ranked title moves an order of magnitude in a day).
 
-Field test 2026-10-01 on book-001's 13 rows: 0 regressions, 3 MATCH, 2 DRIFT
-(24->32 and 109->110 reviews over six days), 5 ZERO_VS_STARS (new titles that
-had no ratings at research time), 3 UNVERIFIABLE.
+Row extraction is driven off the TABLE HEADER (`bsr`/`rank`, `review`/`rating`,
+`title` columns), not column position. Two holes this closed, both of which
+made the tool print "0 failures" while covering only a subset:
+
+- a row whose BSR cell said `UNKNOWN` — the very format the research brief
+  mandates — had its review count skipped entirely;
+- print books cited as `/dp/<ISBN>` instead of a `B0...` ASIN were skipped
+  wholesale. In book-001 those were 5 of 18 rows and carried the table's
+  LARGEST review counts (1,384 / 1,865 / 230 / 52 / 80), i.e. the rows where
+  a fabricated number does the most damage. The proxy resolves print ISBNs
+  fine (260-280KB per page).
+
+Always read the printed `table rows: N   checked: M`. N > M means rows went
+unverified, and an unverified row is where a bad number survives.
+
+Field test 2026-10-01 on book-001: 18 rows parsed (13 under the old
+positional parser), 0 REGRESSION anywhere. 6 MATCH, 4 DRIFT (e.g. 24->32 and
+1,384->1,427 reviews over six days), 5 ZERO_VS_STARS (new titles that truly
+had no ratings at research time), 3 UNVERIFIABLE. Conclusion: book-001's
+evidence table contains no fabricated numbers.
 
 ## Strings the dashboard parses (change these and the board lies)
 
