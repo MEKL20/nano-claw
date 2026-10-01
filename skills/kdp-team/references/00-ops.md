@@ -207,6 +207,18 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **A check that reports MISSING on correct content is worse than no check.**
+    Three false alarms in one verification pass on book-002: a jerky row flagged
+    because my criterion was "no meat row at all" when the row was
+    self-qualifying ("after pre-treatment", drying temp only, pointing at the
+    safety chapter); `130°F` reported MISSING because the prose correctly writes
+    the range `130–140°F` with an en-dash; an authority reported uncited because
+    the book spells out "National Center for Home Food Preservation" instead of
+    the acronym I grepped. Each nearly triggered a "fix" to correct work, which
+    is how a pipeline damages a good manuscript. So: match the form prose
+    actually uses (ranges, en-dashes `–`, spelled-out names), and ALWAYS print
+    the surrounding line with a finding so it can be falsified at a glance. An
+    unfalsifiable MISSING trains you to ignore the checker.
 - **Never SAMPLE a physical-harm check.** QA's fact check was "sample 10
     claims", which is right for general facts and wrong for anything a reader's
     safety rests on — the temperature the sample skips is the one that hurts
