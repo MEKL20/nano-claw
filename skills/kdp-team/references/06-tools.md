@@ -93,6 +93,12 @@ made the tool print "0 failures" while covering only a subset:
 Always read the printed `table rows: N   checked: M`. N > M means rows went
 unverified, and an unverified row is where a bad number survives.
 
+Cell formats accepted, because children legitimately write all of these:
+`#45,120 in Books`, a bare `45,120` with the category in its own column,
+`unranked`, and annotated honesty like `UNKNOWN (stars 4.9 shown, no count
+rendered)`. Requiring the `#` once nulled every BSR in a table that split the
+category out — while still printing a confident-looking report.
+
 Field test 2026-10-01 on book-001: 18 rows parsed (13 under the old
 positional parser), 0 REGRESSION anywhere. 6 MATCH, 4 DRIFT (e.g. 24->32 and
 1,384->1,427 reviews over six days), 5 ZERO_VS_STARS (new titles that truly

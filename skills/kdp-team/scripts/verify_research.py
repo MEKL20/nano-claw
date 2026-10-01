@@ -67,21 +67,32 @@ def cells_of(line):
 
 
 def read_bsr(cell):
-    """'#45,120 in Books' -> 45120 | 'unranked' -> 'unranked' | 'UNKNOWN' -> None"""
-    hit = re.search(r"#([\d,]+)", cell)
-    if hit:
-        return num(hit.group(1))
-    if "unranked" in cell.lower():
+    """'#45,120 in Books' | '45,120' | 'unranked' | 'UNKNOWN' -> int|'unranked'|None
+
+    A bare number must parse: tables legitimately put the rank in its own
+    column with the category split out, and requiring the '#' nulled every
+    BSR in such a table while still printing a confident-looking report.
+    """
+    c = cell.strip()
+    if "unranked" in c.lower():
         return "unranked"
-    return None
+    hit = re.search(r"#\s*([\d,]+)", c) or re.fullmatch(r"([\d,]+)", c)
+    return num(hit.group(1)) if hit else None
 
 
 def read_reviews(cell):
-    """Distinguish an absent count from a recorded zero - the whole point."""
+    """Distinguish an absent count from a recorded zero - the whole point.
+
+    UNKNOWN often arrives annotated ("UNKNOWN (stars 4.9 shown, no count
+    rendered)"), which is the honest form the brief asks for, so match on the
+    prefix rather than the exact word.
+    """
     c = cell.strip()
-    if c.upper() in ("UNKNOWN", "UNK", "?", "-", "--", "\u2014", ""):
-        return "UNKNOWN" if c.upper().startswith("UNK") else None
-    hit = re.fullmatch(r"([\d,]+)", c)
+    if c.upper().startswith(("UNKNOWN", "UNK", "N/A")):
+        return "UNKNOWN"
+    if c in ("", "-", "--", "\u2014", "?"):
+        return None
+    hit = re.fullmatch(r"([\d,]+)", c) or re.match(r"([\d,]+)\b", c)
     return num(hit.group(1)) if hit else None
 
 

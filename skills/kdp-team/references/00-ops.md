@@ -68,6 +68,12 @@ next link in the chain.
     every print book cited by ISBN rather than a B0 ASIN — 5 of 18 rows in
     book-001, holding its largest review counts. Drive extraction off the
     table header, and always compare `table rows: N` against `checked: M`.
+13. **Test a checker against output a real child produced**, not against a
+    sample you wrote. Watching a live run's partial `decision.md` showed BSRs
+    written as bare `496,607` with the category in its own column; the
+    verifier demanded a `#` and nulled all 10 of them, which would have
+    failed the ">=6 BSRs resolved" gate on work that was correct. The brief
+    and the checker must agree about format, and only real output proves it.
 
 ## Proven techniques (reuse verbatim)
 
