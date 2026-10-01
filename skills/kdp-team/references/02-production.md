@@ -132,6 +132,21 @@ do not re-derive, and cite USDA in the text:
   recipes must repeat the temperature that applies to THAT meat — a reader
   cooking turkey jerky off a 160°F beef instruction is the exact failure mode.
 
+Also verified from source 2026-10-01, so future food/preservation titles do not
+re-derive them (cite the authority in the text):
+
+- **Pasteurising outdoor/sun-dried produce** (University of Minnesota
+  Extension): oven preheated to **160°F for 30 minutes**, single layer, stir
+  halfway; OR freezer at **0°F or below for 48 hours**.
+- **Ascorbic-acid browning dip** (extension standard): **2½ tbsp per quart** of
+  water = **3¾ tsp per 2 cups** = 1.875 tsp/cup; or twenty 500 mg vitamin C
+  tablets crushed. Dip 10 minutes. State whichever batch size suits the recipe —
+  the concentration is what matters.
+- **Dried-food storage** (NCHFP): 4 months to 1 year overall; fruit **1 year at
+  60°F, 6 months at 80°F**; vegetables about **half** the fruit shelf life;
+  mouldy food is discarded, not salvaged. Fruit conditions at ~20% moisture,
+  vegetables at ~10% need no conditioning.
+
 ## Completion criterion
 Report four measured numbers: total word count (>=10,000, `wc -w` across
 chapters), xhtml doc count from the EPUB self-check, `Image.open(...).size`

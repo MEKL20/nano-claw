@@ -207,6 +207,22 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **Re-verify every safety number the CHILD sourced itself, not just the ones
+    you cached.** A brief that caches six USDA figures invites the child to
+    research adjacent ones (pasteurisation, pre-treatment dips, shelf life) and
+    those arrive with no parent check behind them. On book-002 all of them held
+    up — UMN Extension confirmed 160°F/30min and 0°F/48h verbatim, and the
+    ascorbic dip proved to be the canonical 2½ tbsp/quart re-expressed as 3¾ tsp
+    per 2 cups (1.875 tsp/cup both ways) — but "held up" is a result, not an
+    assumption. Write the evidence to `qa/safety-verification.md`, a parent-owned
+    file: never into `qa/report.md`, which the QA child owns.
+- **Unit equivalence can verify a number no page will serve you.** When every
+    extension domain 403s, converting the book's figure into the canonical unit
+    settles it by arithmetic. Prefer it to another fetch attempt.
+- **For authority pages, expect `web_extract` to 403 and go straight to the
+    reader proxy** (`curl -sL "https://r.jina.ai/<url>"`), which returned 12-15KB
+    of clean text from Clemson and UMN Extension after five straight 403s. Find
+    the page by SEARCH first — constructed NCHFP slugs 404'd.
 - **Write structural gates against the artifact's real shape, not a slogan.**
     "Every chapter ends with takeaways" sounds complete and quietly indicts
     `ch00_front.md`, which is a title page plus copyright and disclaimer. A QA

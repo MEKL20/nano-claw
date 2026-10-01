@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.13.3
+version: 1.14.0
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -97,7 +97,8 @@ Three rules keep retrieval honest:
   manuscript/book.epub
   manuscript/PROGRESS.md        chapter-by-chapter word counts
   cover/brief.md, cover.jpg, preview_400.png, thumb_100.png
-  qa/report.md
+  qa/report.md                  QA child owns this file — parent never writes it
+  qa/safety-verification.md     parent's physical-harm re-check (when the niche has one)
   qa/acceptance.md              parent's stage-9 sign-off (replaces a human read)
   publish/package.md            field table + runbook section in ONE file
   sales/log.csv
