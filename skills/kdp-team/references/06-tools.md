@@ -134,5 +134,24 @@ silently breaks the board. Verified against the script 2026-10-01:
 
 ## scripts/kdp_watch.sh — live-state monitor
 
+**Install exception: this one goes to `~/.hermes/scripts/`, NOT `~/kdp/tools/`.**
+Cron resolves a job's `monitor_script` from that directory, so a copy anywhere
+else is never executed. Honours `$KDP_ROOT` (default `~/kdp`) so it can be
+tested against a fixture dir instead of live data.
+
 Emits STABLE output (no timestamps, no day counters) for the monitor-gated
-`kdp-live-detector` cron. Unstable output makes the cron fire every tick.
+`kdp-live-detector` cron: one `SLUG|ASIN|live_date|review_due` line per LIVE
+book. Unstable output makes the cron fire every tick.
+
+**No live book = empty output = the sha256 of the empty string**
+(`e3b0c442...b852b855`). That state is ambiguous by construction: "nothing is
+live yet" and "the script is missing or broken" look identical in the stored
+monitor hash. So never conclude the detector works from a quiet hash — prove
+it with a fixture:
+
+    KDP_ROOT=$(mktemp -d) # then write book-001/sales/log.csv with a real ASIN
+    bash ~/.hermes/scripts/kdp_watch.sh
+
+Verified 2026-10-01: a fixture ASIN yields
+`book-001|B0ABCDEFGH|2026-10-01|2026-10-31`, whose hash differs from the quiet
+state — so the detector does fire when MEKL enters an ASIN.

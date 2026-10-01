@@ -121,6 +121,15 @@ next link in the chain.
     — a missing item 13 plus a cross-reference pointing at the wrong rule.
     Enumerate the list after editing and confirm the sequence is contiguous.
 
+17. **Diff the INSTALLED copy of a script against the bundled one.** Cron and
+    the dashboard execute their own installed copies, so a skill can be
+    perfectly up to date while the thing that actually runs is months old.
+    `~/.hermes/scripts/kdp_watch.sh` still hardcoded an absolute KDP path long
+    after the bundled version took `$KDP_ROOT` — which also meant a fixture
+    test silently read live data and "passed" with empty output both times.
+    After replacing an installed monitor, re-run it and confirm the output
+    hash is UNCHANGED, or the swap itself fires a spurious alert.
+
 ## Proven techniques (reuse verbatim)
 
 - **Amazon data via r.jina.ai** (keyless; re-verified 2026-10-01, returns
