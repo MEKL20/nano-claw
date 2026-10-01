@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.9.0
+version: 1.10.0
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 
@@ -177,7 +177,11 @@ worth sending is one whose answer no artifact can supply.
 2. **The demand screen fails on distinct books** — report the 3 finalists with
    their data instead of forcing a winner to keep moving.
 3. **The niche needs a regulated claim** (medical, legal, financial advice)
-   that a disclaimer cannot honestly cover.
+   that a disclaimer cannot honestly cover — or a PHYSICAL-HARM instruction
+   (food safety temperatures, dosages, tool limits) that no named authority
+   confirms. A disclaimer transfers liability, not risk: if the number cannot
+   be sourced, the instruction gets cut, and if the book cannot exist without
+   it, the niche is wrong.
 4. **A decision would spend money, touch account credentials, or write outside
    `~/kdp/`.**
 5. **Stage 8 would build a SECOND package while one still awaits upload.**

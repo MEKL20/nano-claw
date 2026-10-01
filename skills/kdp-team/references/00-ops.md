@@ -199,6 +199,14 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     `KDP_COVER_OUT` / `KDP_FONT`. Verified 2026-10-01 by hashing book-001's
     cover before and after swapping the installed copy, then rendering to a
     temp dir.
+- **Physical-harm claims are their own class, separate from "regulated
+    advice".** The STOP list covered medical/legal/financial, which would have
+    waved through a cookbook whose jerky chapter poisons someone. book-002's
+    chapter plan said "160°F pre-cook" — correct for beef, and WRONG for the
+    poultry and venison the same plan covers (165°F, and boiling for game).
+    Cache verified authority numbers in the brief rather than letting a child
+    recall them, and re-check each one at stage 9. A disclaimer transfers
+    liability, never risk.
 - **Label every constraint as PLATFORM or STRATEGY, and verify the platform
     ones against the vendor's own docs.** This skill carried "$2.99-4.99 (70%
     royalty band)" in five places. The real 70% band is $2.99-$12.99 (ceiling

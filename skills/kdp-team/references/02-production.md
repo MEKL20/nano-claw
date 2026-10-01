@@ -22,8 +22,12 @@ new installs: install nothing. EPUB comes from `~/kdp/tools/epub_build.py`
 host — never ask anyone to look at an image; prove visual claims with numbers.
 
 ## Procedure
-1. Outline from the decision doc: 6-10 chapters, each solving one part of the
-   reader's problem, ordered simple -> complex.
+1. Your outline is ALREADY DECIDED: the numbered chapter plan in
+   `seo/listing.md` §4. Write one chapter file per plan entry, in that order,
+   covering that entry's scope note. Do not invent, merge, split, or reorder
+   chapters — the listing description and the EPUB TOC are built from that plan,
+   and SEO chose it to match validated keywords. If a plan entry turns out
+   unwritable, stop and report it; do not quietly substitute your own.
 2. Write **one file per chapter**: `manuscript/chapters/ch00_front.md`,
    `ch01.md` ... `chNN_end.md`. Save each chapter the moment it is finished —
    never hold chapters in context to write at the end. A timeout must cost
@@ -36,6 +40,15 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
    them. No invented statistics, no fake citations, no fabricated author
    credentials. If a number cannot be verified, cut it. (`web_search` 403s
    intermittently — retry or rephrase, do not stall.)
+
+   **PHYSICAL-HARM CLASS — the one place "probably right" is unacceptable.**
+   Any number a reader's safety depends on (food temperatures and times,
+   dosages, electrical or tool limits, load ratings) must come from a named
+   authority you actually read in this run — never from recall, never from a
+   competitor's book. Name the authority in the text ("USDA recommends...").
+   If you cannot verify such a number, you cut the instruction, not the
+   citation. Being wrong here hurts a person, and a disclaimer does not undo
+   it. The parent re-checks every one of these at stage 9.
 5. Front/back matter: title page (title text identical to the listing title),
    short intro promising the transformation, copyright notice, closing with
    an honest author bio.
@@ -64,6 +77,30 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
    Then self-check it (do not trust the exit code):
 
        python3 -c "import zipfile; z=zipfile.ZipFile('manuscript/book.epub'); assert z.read('mimetype')==b'application/epub+zip'; print('docs:', len([n for n in z.namelist() if n.endswith('.xhtml')]))"
+
+## Cached safety facts for dehydrator/food-preservation titles
+
+Verified at USDA FSIS + USDA NIFA + UC ANR on 2026-10-01 — use these verbatim,
+do not re-derive, and cite USDA in the text:
+
+- **Pre-heat before drying:** meat to **160°F (71°C)**, poultry to **165°F
+  (74°C)**, measured with a food thermometer. Wet heat is what kills the
+  bacteria; after drying, bacteria become far more heat resistant.
+- **Game meat (venison):** USDA NIFA says heat in the marinade to boiling
+  (212°F). Do not reuse marinade. Marinate in the refrigerator, never on the
+  counter; defrost in the refrigerator.
+- **During drying:** hold **130-140°F** — fast enough to beat spoilage, dry
+  enough that microorganisms cannot grow.
+- **Post-dry alternative:** heat finished strips at **275°F for 10 minutes**
+  (required practice for GROUND-meat jerky). Do not return meat to the
+  dehydrator afterwards — cross-contamination.
+- **Machine limits:** most home dehydrators top out at 140°F, which does NOT
+  kill bacteria on meat. Never trust the dial — check each tray with a
+  thermometer. A dehydrator that cannot reach 160°F and has no fan must not be
+  used for meat at all. Microwaves cannot make safe jerky.
+- Chapter 5 must carry this as its spine, and chapter 10's poultry/game
+  recipes must repeat the temperature that applies to THAT meat — a reader
+  cooking turkey jerky off a 160°F beef instruction is the exact failure mode.
 
 ## Completion criterion
 Report four measured numbers: total word count (>=10,000, `wc -w` across
