@@ -233,6 +233,14 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     plainly, so the attribution went and the times stayed, with the uncertainty
     written into the text. For a SAFETY number the opposite holds: cut the
     instruction.
+- **Never write into a project a child is actively reading.** The parent created
+    `publish/ai-disclosure.md` while a QA child was mid-run, so that report
+    carries both a BLOCKER (`publish/` was empty when checked) and a separate
+    mid-run re-check row clearing it. The child behaved correctly — it recorded
+    both rather than rewriting history — but the report is now harder to read and
+    the finding count needs a footnote. Either create the artifact BEFORE
+    dispatching, or wait and let the re-test see a clean tree. The same rule
+    blocks cosmetic edits: a stale header is not worth muddying a verdict.
 - **A gate may only check artifacts that exist at its own stage.** QA (stage 5)
     was told to confirm the AI-disclosure plan, which `publish/package.md`
     records at stage 8. Having nothing to verify, the child went looking and read
