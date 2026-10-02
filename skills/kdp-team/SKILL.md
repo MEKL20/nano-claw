@@ -1,6 +1,6 @@
 ---
 name: kdp-team
-version: 1.17.0
+version: 1.17.1
 description: "Five-role KDP subagent team: research to publish pipeline."
 ---
 

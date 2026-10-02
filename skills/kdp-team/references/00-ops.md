@@ -207,6 +207,13 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **An urgent notice must go where the DASHBOARD renders, then be fetched to
+    prove it.** The parent wrote a "re-download the EPUB" warning into
+    `~/kdp/START-HERE.md`, which the dashboard never reads — it renders
+    `publish/package.md` at `/<token>/<slug>/publish`. The warning existed and was
+    invisible. Put reader-facing notices at the TOP of `package.md`, then
+    `curl` that exact route and grep for your own words; probing the book page or
+    the shelf proves nothing, because neither renders the runbook.
 - **A rendering defect is invisible to every source-level check.** Two QA rounds
     and every parent sweep read the markdown and passed it. The EPUB carried
     **338 literal `**` sequences across 137 list items** because `epub_build.py`
