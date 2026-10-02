@@ -11,6 +11,15 @@ Install copies to `~/kdp/tools/` (where book-001 ran them from).
 
 ## scripts/epub_build.py — EPUB 3 builder (stdlib only)
 
+**Fixed 2026-10-02 (do not regress):** inline `**bold**` / `*italic*` conversion
+ran only in the paragraph path. The `<li>` and heading branches returned early
+with bare `html.escape()`, so list items and headings shipped literal asterisks
+— 338 of them in book-002, 172 in book-001. Chapter TITLES are also stripped of
+`** * ``` ` now, because `<title>` and nav labels cannot hold `<strong>`.
+Any EPUB built before this date must be rebuilt. Verify with:
+
+    python3 -c "import zipfile,re; z=zipfile.ZipFile('manuscript/book.epub'); b=''.join(z.read(n).decode('utf-8','ignore') for n in z.namelist() if n.endswith(('.xhtml','.opf','.ncx'))); print('literal **:', b.count('**')); print('strong in li:', bool(re.search(r'<li>[^<]*<strong>', b))); print(re.search(r'<dc:title[^>]*>([^<]*)<', b).group(1))"
+
     python3 epub_build.py --title "T" --author "A" --out book.epub \
         chapters/ch00_front.md chapters/ch01.md ... chapters/ch13_end.md
 

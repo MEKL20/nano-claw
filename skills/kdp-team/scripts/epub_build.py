@@ -16,9 +16,15 @@ def md_line(line):
     for pat, tag in MD:
         m = re.match(pat, line)
         if m:
-            return f'<{tag}>{html.escape(m.group(1))}</{tag}>'
+            h = html.escape(m.group(1))
+            for ipat, irep in INLINE:
+                h = re.sub(ipat, irep, h)
+            return f'<{tag}>{h}</{tag}>'
     if re.match(r'^[-*] (.+)$', line):
-        return f'<li>{html.escape(re.match(r"^[-*] (.+)$", line).group(1))}</li>'
+        li = html.escape(re.match(r"^[-*] (.+)$", line).group(1))
+        for pat, rep in INLINE:
+            li = re.sub(pat, rep, li)
+        return f'<li>{li}</li>'
     if not line.strip():
         return ''
     out = html.escape(line)
@@ -92,7 +98,7 @@ def parse_md_file(path):
     title = 'Chapter'
     for ln in lines:
         if ln.startswith('# '):
-            title = ln[2:].strip(); break
+            title = re.sub(r'\*\*|\*|`', '', ln[2:]).strip(); break
     return title, '\n'.join(lines)
 
 if __name__ == '__main__':

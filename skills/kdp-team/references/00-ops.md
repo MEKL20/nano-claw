@@ -207,6 +207,28 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **A rendering defect is invisible to every source-level check.** Two QA rounds
+    and every parent sweep read the markdown and passed it. The EPUB carried
+    **338 literal `**` sequences across 137 list items** because `epub_build.py`
+    applied inline bold in the paragraph path but returned early for `<li>` and
+    headings. book-001, already READY TO UPLOAD, had 172 — visible asterisks in a
+    reader, one click from publication. Grep the text of the BUILT artifact, not
+    only the sources, and do it for every book the builder has ever touched.
+- **Markdown markers hide defects from raw-string searches.** The parent called a
+    QA finding unreproducible because `"in a oven"` appeared nowhere; the line
+    actually reads `in a **oven`, which renders as the error. Strip inline markers
+    (`\*\*|\*|`` ` ``|_`) before any prose sweep, and when a child cites a
+    `file:line`, read that line RENDERED before declaring it phantom. QA was
+    right and the parent was wrong — the sweep, not the finding, was broken.
+- **Read metadata back out of the artifact you just built.** A rebuild wrote
+    `dc:title` **"Untitled"** because the parent's regex looked for `| Title |`
+    while `package.md` writes `| Book title |`. Exit code 0, valid EPUB, wrong
+    book — on the title awaiting upload. Parse the OPF (`dc:title`, `dc:creator`)
+    after every build; never let a build's exit code stand as verification.
+- **A contradiction fixed in prose can survive in a table.** ch09's recipe
+    stopped blanching alliums while the reference table in the SAME chapter still
+    gave "Onion, leek | 2 min". Tables are a second home for every fact; after
+    fixing prose, re-sweep rows for the same claim.
 - **A locale sweep takes two passes and a protect list.** Fixing British
     spelling with exact-word pairs cleared 75 tokens and still missed six
     inflections (`flavoured`, `fibres`, `moulds`, `neighbouring`). A broad stem
