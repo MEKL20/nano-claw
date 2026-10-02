@@ -1,6 +1,6 @@
 ---
 name: coding-subagent
-version: 1.1.1
+version: 1.2.0
 description: "Spawn coding subagents with Karpathy principles inlined."
 ---
 
@@ -72,6 +72,18 @@ Parent decides which tier per task.
 
 - Verify claims yourself: child summaries are self-reports. Re-run the test
   command or check the artifact exists before reporting success upward.
+- **Check the BUILT artifact, not only the sources.** A build or render step can
+  introduce a defect every source-level check passes - and a builder bug is
+  retroactive, so re-verify every artifact that builder has produced, including
+  ones already marked done.
+- **Read identity fields back out of what was built.** Exit code 0 plus a valid
+  output file is not verification: a regex that misses its field produces a
+  well-formed artifact describing the wrong thing.
+- **Mechanical sweeps (renames, locale fixes, API migrations) take two passes
+  and a protect list.** Exact-match replacement misses inflected and compound
+  forms; a broad stem pass catches those and threatens correct identifiers
+  containing the same stem. Write the protect list before replacing anything,
+  then verify on the rebuilt output.
 - Vetting an external skill/repo first? untrusted-repo-audit skill.
 
 ## Comment hygiene (antislop-code, audited 2026-09-23)

@@ -59,6 +59,64 @@ child -> parent -> MEKL -> parent -> child, logged in `docs/CLARIFICATIONS.md`.
 - Sweep the project dir before declaring a phase done: probe scripts, nested
   `<slug>/<slug>/` dirs, and stray evidence files are created by degraded
   children and silently ship.
+- Recompute every number a child reports, from its own cells. Children count
+  their own rows wrong in a consistent direction: favourably. Cells honest,
+  summary inflated is the normal failure, not fabrication.
+- Test every command you ship inside a brief, by running it. A brief that
+  hands a child a command with a quoting bug, a wrong expected count, or a
+  path that only resolves from one directory burns a full dispatch cycle.
+
+## Lessons (each one cost a dispatch or shipped a defect)
+
+- **The parent never certifies its own fix.** Mechanical edits with
+    deterministic verification belong to the parent, not a dispatch — but then a
+    FRESH child re-tests, and re-runs EVERY check, not only the fixed items.
+    Fixes routinely break what they did not intend to touch, and the fixer is
+    structurally unable to find its own blind spot.
+- **Never write into a project a child is actively reading.** Creating a missing
+    artifact mid-run forces the child to report both the original finding and a
+    re-check that clears it; the record now needs a footnote to read, and a
+    finding count that needs explaining is a finding count nobody trusts. Create
+    it before dispatching, or wait. This also forbids cosmetic edits mid-run.
+- **A gate may only check artifacts that exist at its own stage.** Ask of every
+    check in a brief: does the file it names exist when this stage runs? Given
+    nothing to verify, a child goes looking — and satisfying a check from a
+    DIFFERENT project's files is one step from a false pass.
+- **Never edit code or prose to satisfy a finding you cannot reproduce.** Record
+    it as unreproducible and pass it to the re-test. Rewriting correct work to
+    close a phantom finding is how a pipeline degrades what it was built to
+    protect. If the re-test still reports it, the sweep is what is broken.
+- **Markers and escaping hide defects from raw-string searches.** `in a **oven`
+    renders as "in a oven" while a grep for `"in a oven"` finds nothing. Strip
+    markup before any text sweep, and when a child cites `file:line`, read that
+    line RENDERED before calling it phantom.
+- **Grep the BUILT artifact, not only the sources.** A rendering or compile step
+    can introduce a defect that every source-level check passes. Run the sweep on
+    the output, and on every artifact the same builder has ever produced — a
+    builder bug is retroactive across all of them.
+- **Read metadata back out of what you just built.** Exit code 0 plus a valid
+    file is not verification: a regex that misses its field writes a correct,
+    well-formed artifact describing the wrong thing. Parse the output's own
+    identity fields and compare them to the source of truth.
+- **A fix applied in one representation survives in the others.** Prose fixed,
+    table still wrong; code fixed, docs still wrong; artifact fixed, README still
+    quotes the old value. After any fix that changes a fact, grep the other
+    representations for the stale one.
+- **Mechanical sweeps take two passes and a protect list.** Exact-match
+    replacement leaves inflected and compound forms behind; a broad stem scan
+    catches those and threatens correct words containing the same stem. Write the
+    protect list BEFORE replacing anything, then verify on the rebuilt output.
+- **When a stage starts producing NUMBERED artifacts, grep for every reader of
+    the old single filename.** A consumer pinned to `report.md` keeps reporting
+    round 1's verdict while round 3 passes, and the work looks stuck for reasons
+    that have nothing to do with the work.
+- **A PASS verdict is not permission to ship.** Gate the shipping state on the
+    deliverable existing too, not on the verdict alone, or a phase announces
+    itself ready with nothing to hand over.
+- **A check that reports MISSING on correct content is worse than no check.**
+    False alarms teach the next reader to skim the gate, and the fix loop then
+    damages correct work to satisfy it. When a check fires, verify the finding
+    before acting on it; three of mine were my own criteria being wrong.
 
 ## Evidence storage
 

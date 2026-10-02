@@ -1,6 +1,6 @@
 ---
 name: qa-subagent
-version: 1.1.1
+version: 1.2.0
 description: "Spawn QA subagents: evidence-first testing, read-only."
 ---
 
@@ -68,6 +68,17 @@ that expectation into the task explicitly.
 - Forward fixes to a coding-subagent task - do not ask the QA child to fix.
 - Re-run QA after the fix lands; a fix is verified by a passing re-test, not
   by the coder's claim.
+- **If the PARENT made the fix, the parent still cannot certify it.** Small
+  mechanical fixes with deterministic verification are the parent's job rather
+  than a dispatch, but a fresh QA child must then re-test. The fixer is
+  structurally unable to audit its own blind spot - that is the whole reason
+  this role exists.
+- **A re-test re-runs EVERY check, not only the fixed items.** Fixes break what
+  they did not intend to touch; a scoped re-test hides the breakage it caused.
+- **Verify a finding before acting on it.** A report can cite content that does
+  not exist, or flag correct work because its criterion was wrong. Reproduce
+  first; if you cannot, record it as unreproducible and carry it into the next
+  round rather than editing to satisfy it.
 
 ## Fix cycle (standard loop after a QA report)
 
@@ -98,7 +109,13 @@ Loop guards:
 Chat summary is not a report - it dies with the session. Every QA run MUST
 also write a durable markdown report:
 
-- Path: `<project-root>/qa-reports/YYYY-MM-DD-<area>.md`
+- Path: `<project-root>/qa-reports/YYYY-MM-DD-<area>.md`, and for a re-test on
+  the same day and area append the round: `...-<area>-r2.md`, `-r3.md`. Rounds
+  are routine, a date alone is not unique, and round 2 silently overwriting
+  round 1 destroys the record of what was originally found.
+- **Every consumer that greps the report must resolve the NEWEST round**, not a
+  fixed filename. A dashboard or status check pinned to the first report keeps
+  announcing its verdict long after a later round passed.
 - Structure: header (date, target, commit/sha if a repo, tester = qa
   subagent id) + summary counts by severity + one section per issue (title,
   severity, repro steps, expected vs actual, evidence paths) + not-tested
