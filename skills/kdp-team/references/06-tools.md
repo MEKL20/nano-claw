@@ -68,11 +68,15 @@ Token-gated LAN dashboard over the whole `~/kdp/` tree:
   `/<token>/raw/<slug>/<relpath>` whitelisted download.
 - Shelf status is DERIVED from the project tree, never set by hand: SETUP ->
   RESEARCHED (decision.md) -> WRITING (chapters exist) -> PACKAGING
-  (book.epub) -> IN QA (qa/report.md) -> READY TO UPLOAD (QA verdict PASS +
-  epub + cover) -> LIVE (ASIN != PENDING in sales/log.csv). New `book-NNN`
+  (book.epub) -> IN QA (any qa/report*.md) -> QA PASSED (newest report PASS) ->
+  READY TO UPLOAD (newest report PASS + package.md +
+  epub + cover) -> LIVE (ASIN != PENDING in sales/log.csv). QA runs in ROUNDS:
+  `latest_qa_report()` resolves the highest-numbered `qa/report*.md`, so
+  `report3.md` supersedes `report.md`. New `book-NNN`
   dirs appear automatically.
 - The set-asin form is MEKL's gate. Agents never write an ASIN.
-- Download whitelist per book: book.epub, cover.jpg, preview_400.png,
+- Download whitelist per book (plus every `qa/report*.md`, `qa/fix-log*.md` and
+  `qa/safety-verification.md`, globbed): book.epub, cover.jpg, preview_400.png,
   publish/package.md, seo/listing.md, cover/brief.md, qa/report.md.
   Everything else 404s (verified: cross-book fetch, `../../` traversal, and
   token-file fetch all 404).

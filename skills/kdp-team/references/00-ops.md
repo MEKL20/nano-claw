@@ -207,6 +207,19 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **When QA runs in rounds, the CONSUMER must learn it too.** `book_status()`
+    grepped `qa/report.md` for `**PASS**`. book-002's PASS landed in
+    `report3.md`, so a fully passing book would have sat at IN QA forever while
+    round 1's FAIL spoke for it. The dashboard now resolves the newest
+    `qa/report*.md` by round number, and whitelists every round plus the fix-logs
+    and `safety-verification.md` for download. Whenever a stage starts producing
+    numbered artifacts, grep for every reader of the old single filename.
+- **A PASS verdict is not permission to upload.** The old status rule promoted a
+    book to READY TO UPLOAD on verdict + epub + cover, with no `package.md` — so
+    it could announce "ready" with nothing for MEKL to copy into KDP. There is now
+    an intermediate **QA PASSED** state; READY TO UPLOAD additionally requires
+    `publish/package.md`. A status that overstates readiness wastes the one
+    manual step in the pipeline.
 - **An urgent notice must go where the DASHBOARD renders, then be fetched to
     prove it.** The parent wrote a "re-download the EPUB" warning into
     `~/kdp/START-HERE.md`, which the dashboard never reads — it renders

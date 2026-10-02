@@ -58,16 +58,30 @@ def book_stats(slug):
             if p[2] and p[2] != 'PENDING': asin = p[2]
     return {'chapters': len(chaps), 'words': words, 'price': price or '—', 'asin': asin}
 
+def latest_qa_report(b):
+    """Newest qa/report*.md. QA runs in rounds: report3.md supersedes report.md."""
+    reps = glob.glob(os.path.join(b, 'qa', 'report*.md'))
+    if not reps:
+        return os.path.join(b, 'qa', 'report.md')
+    def rnd(p):
+        m = re.search(r'report(\d*)\.md$', os.path.basename(p))
+        return int(m.group(1)) if (m and m.group(1)) else 1
+    return max(reps, key=rnd)
+
+
 def book_status(slug):
     b = os.path.join(ROOT, slug)
     st = book_stats(slug)
     if st['asin']:
         return 'LIVE', 'live'
-    qa = read1(os.path.join(b, 'qa/report.md'))
+    qa = read1(latest_qa_report(b))
     if 'Verdict' in qa and '**PASS**' in qa:
-        if os.path.isfile(os.path.join(b, 'manuscript/book.epub')) and os.path.isfile(os.path.join(b, 'cover/cover.jpg')):
+        if (os.path.isfile(os.path.join(b, 'manuscript/book.epub'))
+                and os.path.isfile(os.path.join(b, 'cover/cover.jpg'))
+                and os.path.isfile(os.path.join(b, 'publish/package.md'))):
             return 'READY TO UPLOAD', 'ready'
-    if os.path.isfile(os.path.join(b, 'qa/report.md')):
+        return 'QA PASSED', 'writing'
+    if glob.glob(os.path.join(b, 'qa', 'report*.md')):
         return 'IN QA', 'qa'
     if st['chapters'] > 0:
         return ('WRITING' if not os.path.isfile(os.path.join(b, 'manuscript/book.epub')) else 'PACKAGING'), 'writing'
@@ -405,7 +419,10 @@ def publish_page(slug):
 def safe_files(slug):
     b = os.path.join(ROOT, slug)
     cands = ['manuscript/book.epub', 'cover/cover.jpg', 'cover/preview_400.png',
-             'publish/package.md', 'seo/listing.md', 'cover/brief.md', 'qa/report.md']
+             'publish/package.md', 'seo/listing.md', 'cover/brief.md']
+    cands += [os.path.relpath(p, b) for p in glob.glob(os.path.join(b, 'qa', 'report*.md'))]
+    cands += [os.path.relpath(p, b) for p in glob.glob(os.path.join(b, 'qa', 'fix-log*.md'))]
+    cands += [os.path.relpath(p, b) for p in glob.glob(os.path.join(b, 'qa', 'safety-verification.md'))]
     return {os.path.normpath(os.path.join(b, rel)) for rel in cands
             if os.path.isfile(os.path.join(b, rel))}
 
