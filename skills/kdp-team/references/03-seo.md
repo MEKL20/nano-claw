@@ -43,6 +43,14 @@ There is no `book.md` in either case.
      "for seniors", use-case phrasing)
    - NO trademarks, brand names, author names, "best", "free", "sale", or
      subjective claims — these violate KDP metadata rules
+   - **every slot must be RELEVANT to content the book actually contains.** On
+     SKELETON the chapters do not exist yet, so a keyword is a commitment the
+     chapter plan must cover; on FINALIZE, count each slot's terms in
+     `manuscript/chapters/*.md` and report the counts. A keyword promising
+     content the book lacks is a metadata-relevance violation (refund and
+     review risk), not a harmless copy gap — book-002 shipped
+     `homemade dehydrated chicken dog treats` through three QA rounds with zero
+     dog or pet content in the book.
 3. Categories: one realistic niche category (rankable top-20) + one slightly
    broader category for credibility.
 4. **Chapter plan (SKELETON only — this is the handoff to Production).**

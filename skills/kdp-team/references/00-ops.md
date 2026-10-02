@@ -313,6 +313,28 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     `ch00_front.md`, which is a title page plus copyright and disclaimer. A QA
     child reading that gate literally files a MAJOR, and the fix loop then adds
     filler to front matter to satisfy it. Name the exception in the gate itself.
+- **Never delete a clause from prose with a regex — rewrite the whole line.** A
+    `[^;.]*` pattern aimed at one clause stopped at the period inside "ch. 10",
+    leaving orphaned debris (`10 note (safe-fruit treats).`) and a now-false
+    sentence (`All keyword promises covered.`) standing in a published artifact.
+    Prose has sentence punctuation inside its tokens; character-class patterns do
+    not respect that. Read the FULL line, compose the replacement explicitly, and
+    print the result back — the same discipline as reading metadata out of a file
+    you just built.
+- **Check keyword relevance against the manuscript, exhaustively, and count the
+    terms.** book-002 carried `homemade dehydrated chicken dog treats` through
+    three QA rounds; the book has zero dog or pet content. Keywords get read as
+    strategy and never cross-checked against the text, which is how one survives
+    a full pipeline. Count every slot's terms in the chapter files and print the
+    counts — and use LOOSE patterns: my own sweep first reported `air fryer
+    dehydrate mode` unsupported because the book writes "air-fryer-style
+    machines", which a space-separated pattern misses. Two of seven slots
+    flagged, one was my false alarm.
+- **When a keyword cannot be honestly supported, re-point it and SAY SO.** The
+    replacement must be a phrase the manuscript verifiably covers (count it), and
+    the listing records what changed and why. Also name the chapters no keyword
+    serves instead of writing a coverage check that implies full coverage —
+    book-002's ch07 troubleshooting is unclaimed, and the listing now says it.
 - **When two formulas are both defensible, publish the FORMULA, not just the
     number.** "Combined chars" flip-flopped three times: the child wrote 115
     (`len(title + " " + subtitle)`), QA filed a MINOR for 114 (`len(title) +
