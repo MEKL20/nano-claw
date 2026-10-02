@@ -313,6 +313,14 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     `ch00_front.md`, which is a title page plus copyright and disclaimer. A QA
     child reading that gate literally files a MAJOR, and the fix loop then adds
     filler to front matter to satisfy it. Name the exception in the gate itself.
+- **When two formulas are both defensible, publish the FORMULA, not just the
+    number.** "Combined chars" flip-flopped three times: the child wrote 115
+    (`len(title + " " + subtitle)`), QA filed a MINOR for 114 (`len(title) +
+    len(subtitle)`), the parent "fixed" it to 114 and left the 115 formula beside
+    it — a line contradicting itself. Neither number was wrong; the ambiguity
+    was. State the inputs and the operation, and say which limit actually
+    applies (KDP counts title and subtitle as separate fields, so the total is
+    informational).
 - **A check that reports MISSING on correct content is worse than no check.**
     Three false alarms in one verification pass on book-002: a jerky row flagged
     because my criterion was "no meat row at all" when the row was
