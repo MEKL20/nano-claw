@@ -33,11 +33,20 @@ host — never ask anyone to look at an image; prove visual claims with numbers.
    never hold chapters in context to write at the end. A timeout must cost
    one chapter, not the book. Append each chapter's word count to
    `manuscript/PROGRESS.md` as you go.
-3. Target 10,000-20,000 words total, US English, tone: direct, practical,
+3. Target 10,000-20,000 words total, tone: direct, practical,
    zero filler. Every BODY chapter ends with actionable takeaways (checklist,
    steps, or exercise). Front matter (`ch00_front.md`) does not — it is a title
    page, intro, copyright and disclaimer, and a takeaways block there reads as
    filler.
+
+   **US English, and "US English" alone does not achieve it.** book-002 came
+   back from QA with 70 British tokens despite the instruction, so write these
+   spellings deliberately: mold (not mould), color, flavor, center, labeling,
+   pasteurization, sulfur, behavior, neighbor, fiber, liter, meter, gray,
+   -ize/-ization endings (organize, realize, recognize, analyze). Watch the
+   inflections too — molds, flavored, fibers, neighboring. Amazon.com is a US
+   store; British spelling in the listing reads as careless and leaks into
+   chapter titles, which propagate to the EPUB TOC and the listing's plan.
 4. Fact discipline: verify checkable claims via `web_search` before stating
    them. No invented statistics, no fake citations, no fabricated author
    credentials. If a number cannot be verified, cut it. (`web_search` 403s

@@ -207,6 +207,32 @@ means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
     Name the 12 allowed tags (`br p b em i u h4 h5 h6 ol ul li`), name the
     stripped ones, and measure the raw string. book-001 happened to get both
     right; nothing in the brief had required it.
+- **A locale sweep takes two passes and a protect list.** Fixing British
+    spelling with exact-word pairs cleared 75 tokens and still missed six
+    inflections (`flavoured`, `fibres`, `moulds`, `neighbouring`). A broad stem
+    scan catches those — and immediately threatens correct US words that happen
+    to contain the stem: `microorganisms` and `organisms` (8 occurrences) would
+    have been destroyed by a careless `organis-` rule. So: pass 1 exact words,
+    pass 2 stem scan, and an explicit protect list before any replacement.
+    Verify by searching the REBUILT EPUB text, not the sources.
+- **A fix that changes a chapter title stales two other artifacts.** The EPUB
+    must be rebuilt and the listing's chapter plan re-aligned, or the TOC and the
+    description promise a chapter the book no longer contains. After any title
+    edit, diff plan entries against real chapter headings.
+- **Never edit prose to satisfy a finding you cannot reproduce.** QA cited an
+    article error at a specific `file:line`; the quoted string existed nowhere in
+    the project and a sweep for that error class found nothing. Record it as
+    unreproducible and pass it to the re-test. Rewriting correct prose to close a
+    phantom finding is how a pipeline degrades a manuscript it was meant to
+    protect.
+- **An unverifiable attribution is the defect — drop the claim, keep the
+    number** (when the number is not safety-critical). A blanch-time table was
+    introduced as "the standard extension-service values per NCHFP"; three fetch
+    attempts across two routes could not confirm those per-vegetable times.
+    Citing an authority that may not say it is worse than stating the figures
+    plainly, so the attribution went and the times stayed, with the uncertainty
+    written into the text. For a SAFETY number the opposite holds: cut the
+    instruction.
 - **A gate may only check artifacts that exist at its own stage.** QA (stage 5)
     was told to confirm the AI-disclosure plan, which `publish/package.md`
     records at stage 8. Having nothing to verify, the child went looking and read
