@@ -124,3 +124,19 @@ Evidence belongs in the project (`qa-reports/<date>-<area>-evidence/`,
 `security-reports/...`), never `/tmp` - a report citing `/tmp` is broken by
 the next reboot. Never paste discovered secret VALUES into a report or a
 message: file and line only.
+
+## Native infra: Hermes profiles + kanban (since 2026-10-17)
+
+- Crew5 roles exist as PERSISTENT Hermes profiles on the host:
+  crew5-coder, crew5-qa, crew5-security, crew5-architect, crew5-uiux
+  (~/.hermes/profiles/). Each has own memories/, skills/, SOUL.md.
+- Work queue = kanban board: `hermes kanban create <title> --assignee
+  crew5-<role> --workspace dir:<repo>` -> `hermes kanban dispatch` ->
+  `hermes kanban show <id>` for the result. Optional spawner daemon:
+  `hermes kanban daemon`.
+- Clone gap: child profile configs lack the parent `providers` block -
+  copy `providers` + `fallback_providers` from parent config.yaml or the
+  child dies with "Unknown provider". (Fixed on this host 2026-10-17.)
+- Board run outputs are SELF-REPORTS: parent still re-verifies and gates
+  releases. Ephemeral delegate_task stays fine for quick parallel bursts;
+  profiles+kanban for durable, queueable, resumable work.
