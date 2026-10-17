@@ -1,6 +1,6 @@
 ---
 name: security-subagent
-version: 1.1.1
+version: 1.3.0
 description: "Spawn security review subagents: evidence-first, scoped."
 ---
 
@@ -19,19 +19,18 @@ scope is a liability, not a tool.
 ## THE SCOPE GATE (absolute, non-negotiable)
 
 Every task MUST carry a written scope list (paths, localhost URLs, staging
-hosts owned by MEKL). The child:
+hosts owned by the owner's team). The child:
 
 - tests ONLY what is listed; anything else it notices goes in the report as
   an observation, never as a test target;
-- NEVER touches production, third-party services, or any host MEKL does not
+- NEVER touches production, third-party services, or any host the team does not
   own - no exceptions, no "just one quick probe";
 - uses NO destructive payloads: no DoS/flood, no data deletion, no account
   lockouts. Validation = minimal safe PoC;
 - NEVER pastes discovered secret VALUES into reports or messages - report
   file + line only (same rule as untrusted-repo-audit).
 
-DYNAMIC testing (running/exploiting an app) additionally requires MEKL's
-explicit per-run approval relayed in the task: `dynamic approved by MEKL
+DYNAMIC testing (running/exploiting an app) additionally requires the owner's explicit per-run approval relayed in the task: `dynamic approved by the owner
 for: <targets>`. No line, no dynamic work - white-box only.
 
 ## Two modes (state which in the task)
@@ -43,9 +42,9 @@ for: <targets>`. No line, no dynamic work - white-box only.
 - **DYNAMIC (gated):** against LOCAL/authorized running targets only:
   reproduce suspected findings with minimal PoCs (curl-level), proxy-free,
   no tool installs at scan time - tools must already exist or be approved
-  by MEKL (supply-chain rule: no `pip install` mid-scan without approval).
+  by the owner (supply-chain rule: no `pip install` mid-scan without approval).
   Full exploitation toolchains (Kali, strix sandbox) are OUT of scope for
-  this subagent; if a real pentest is needed, MEKL installs strix
+  this subagent; if a real pentest is needed, the owner installs strix
   separately and this skill's report format still applies.
 
 ## Rule (task context block, paste verbatim)
@@ -88,14 +87,14 @@ SECURITY PRINCIPLES (mandatory):
 ## Parent duties (cannot be delegated)
 
 - Hold the scope gate: no scope list in the task = abort and re-spell it.
-  Dynamic mode without MEKL's explicit approval line = abort.
+  Dynamic mode without the owner's explicit approval line = abort.
 - Re-verify Critical/High findings yourself: re-run the PoC command, or in
   white-box read the cited lines. A finding is a claim until then.
 - Route fixes to coding-subagent (finding text = the task context), then
   re-dispatch security-subagent to re-test - a fix is verified by a
   passing re-test, never by the coder's claim.
-- Escalate to MEKL immediately: any live secret found, any finding that
-  suggests MEKL's own machines/accounts are compromised, anything outside
+- Escalate to the owner immediately: any live secret found, any finding that
+  suggests the owner's own machines/accounts are compromised, anything outside
   scope that a child touched anyway (that is also a trust failure to log).
 - Provenance: design reference = usestrix/strix, audited clean 2026-09-23.
 
@@ -103,4 +102,4 @@ SECURITY PRINCIPLES (mandatory):
 
 Subagents cannot call skill_view and have no ask-user tool: scope and
 approvals travel inside the task prompt; questions flow child -> parent ->
-MEKL -> parent -> child.
+owner -> parent -> child.

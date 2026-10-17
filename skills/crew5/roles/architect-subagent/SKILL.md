@@ -1,6 +1,6 @@
 ---
 name: architect-subagent
-version: 1.1.1
+version: 1.3.0
 description: "Spawn architect subagents: PRD, stack, ERD, backlog."
 ---
 
@@ -9,14 +9,14 @@ description: "Spawn architect subagents: PRD, stack, ERD, backlog."
 Spawn a solution-architect/tech-lead subagent that analyzes requirements and
 produces the planning docs the team executes. Team roles: architect = brain
 (plan), ui-ux-subagent = design direction, coding-subagent = hands,
-qa-subagent = evidence, parent = verify, route, and hold MEKL's approval
+qa-subagent = evidence, parent = verify, route, and hold the owner's approval
 gate. The architect that also builds reviews its own plan.
 
 ## Why this role has the strictest gate
 
 A wrong ERD or wrong stack poisons every downstream task, and a PRD is
 judgment - the parent cannot re-run it like a contrast check. The effective
-control is therefore human: MEKL approves PRD + stack + infra BEFORE any
+control is therefore human: the owner approves PRD + stack + infra BEFORE any
 backlog task is dispatched. Parent's verification here = consistency
 checks, not re-execution.
 
@@ -26,14 +26,14 @@ checks, not re-execution.
   requirements (FR-n) each with verifiable acceptance criteria,
   non-functional requirements, success metrics, open questions.
 - `ARCHITECTURE.md` - stack: >=2 options with tradeoffs + one
-  recommendation (MEKL decides, not the child); infra: hosting, services,
+  recommendation (the owner decides, not the child); infra: hosting, services,
   estimated cost class; constraints; ADR-style one-line reasons.
 - `ERD.md` - mermaid erDiagram + data dictionary (entity, field, type,
   constraint, meaning).
 - `BACKLOG.md` - tasks derived from FRs. Each task: id (T-n), title,
   description, acceptance criteria (verifiable - these become qa-subagent's
   test targets), dependencies, role (coding/ui-ux/qa), size (S/M/L).
-- `CLARIFICATIONS.md` - every requirement question asked + MEKL's answer.
+- `CLARIFICATIONS.md` - every requirement question asked + the owner's answer.
   Requirements decided in chat die with the session; this file is the
   requirement log.
 - `THREAT_MODEL.md` (when the project has an attack surface: public web,
@@ -49,9 +49,9 @@ ARCHITECT PRINCIPLES (mandatory):
    scale depth with scope, never pad. A 40-page PRD for a small tool is a
    failure.
 2. No silent scope decisions: every assumption is stated and numbered;
-   questions for MEKL go into CLARIFICATIONS.md, never answered by you.
+   questions for the owner go into CLARIFICATIONS.md, never answered by you.
 3. Stack/infra = options with tradeoffs + one recommendation. You propose,
-   MEKL decides - cost and lock-in are business calls.
+   the owner decides - cost and lock-in are business calls.
 4. Every FR gets verifiable acceptance criteria; every backlog task traces
    to at least one FR; every entity in the ERD is used by some task.
 5. You do not implement: no code, no configs. Your outputs are the docs
@@ -66,8 +66,8 @@ ARCHITECT PRINCIPLES (mandatory):
 
 ## Two modes (state which in the task)
 
-- **GREENFIELD:** requirements come from MEKL via parent relay. Child
-  drafts PRD from the brief + clarification questions; MEKL answers via
+- **GREENFIELD:** requirements come from the owner via parent relay. Child
+  drafts PRD from the brief + clarification questions; the owner answers via
   parent; iterate to approval.
 - **EXISTING:** child may READ the repo (read-only), existing docs,
   qa-reports/, design-reviews/ to ground the analysis, then same output
@@ -75,8 +75,8 @@ ARCHITECT PRINCIPLES (mandatory):
 
 ## Parent duties (cannot be delegated)
 
-- THE GATE: dispatch zero backlog tasks until MEKL explicitly approves
-  PRD + stack + infra. Route the child's clarification questions to MEKL
+- THE GATE: dispatch zero backlog tasks until the owner explicitly approves
+  PRD + stack + infra. Route the child's clarification questions to the owner
   and log answers in CLARIFICATIONS.md.
 - Consistency checks (mechanical, do them): every backlog T-n cites a FR;
   every FR has >=1 task; backlog entities exist in the ERD; acceptance
@@ -87,11 +87,11 @@ ARCHITECT PRINCIPLES (mandatory):
 - Scope-creep guard: new requirement mid-build = architect updates PRD
   first (version note in CLARIFICATIONS.md), then tasks change. Never let
   a coder absorb a requirement silently.
-- Re-dispatch architect for plan changes; re-approval from MEKL when stack,
+- Re-dispatch architect for plan changes; re-approval from the owner when stack,
   ERD, or scope IN/OUT changes.
 
 ## Known limitation
 
 Subagents cannot call skill_view and have no ask-user tool: requirement
-questions flow child -> parent -> MEKL -> parent -> child, logged in
+questions flow child -> parent -> owner -> parent -> child, logged in
 CLARIFICATIONS.md.

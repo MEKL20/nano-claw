@@ -1,6 +1,6 @@
 ---
 name: qa-subagent
-version: 1.2.0
+version: 1.3.0
 description: "Spawn QA subagents: evidence-first testing, read-only."
 ---
 
@@ -82,7 +82,7 @@ that expectation into the task explicitly.
 
 ## Fix cycle (standard loop after a QA report)
 
-1. Triage first, with MEKL if scope is unclear: fix now (Critical/High),
+1. Triage first, with the owner if scope is unclear: fix now (Critical/High),
    backlog (Medium/Low), or WONTFIX (record reason in the report). Never fix
    blindly off the raw bug list.
 2. Dispatch coding-subagent: one task per fix batch, each issue's repro +
@@ -97,7 +97,7 @@ that expectation into the task explicitly.
 
 Loop guards:
 
-- If the same issue fails re-test TWICE, stop the loop and escalate to MEKL
+- If the same issue fails re-test TWICE, stop the loop and escalate to the owner
   with both fix diffs - something structural is wrong; more retries just
   churn.
 - New bugs found during re-test follow the same triage; a report only
@@ -131,7 +131,7 @@ also write a durable markdown report:
 - Use `templates/qa-report-template.md` (in this skill dir) as the report
   skeleton; `examples/2026-09-23-stats-cli.md` is a filled worked example.
 
-Upgrade path if MEKL wants more: GitHub Issues via gh CLI for repos on
+Upgrade path if the owner wants more: GitHub Issues via gh CLI for repos on
 GitHub, Obsidian note for personal tracking. Default stays plain markdown -
 local, greppable, no moving parts.
 

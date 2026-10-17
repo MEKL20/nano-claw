@@ -31,7 +31,7 @@ Every brief carries, verbatim:
 
 Children cannot call `skill_view`, cannot read memory, cannot ask the user.
 Anything missing from the brief does not exist for them. Questions flow
-child -> parent -> MEKL -> parent -> child, logged in `docs/CLARIFICATIONS.md`.
+child -> parent -> owner -> parent -> child, logged in `docs/CLARIFICATIONS.md`.
 
 ## Failure modes and the response
 

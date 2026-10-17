@@ -1,6 +1,6 @@
 ---
 name: ui-ux-subagent
-version: 1.1.1
+version: 1.3.0
 description: "Spawn designer subagents: direction, UX critique, specs."
 ---
 
@@ -55,7 +55,7 @@ DESIGNER PRINCIPLES (mandatory):
 - **DESIGN mode:** produce/extend the project's `DESIGN.md` + a build spec
   for coding-subagent (palette, type, motif, dials ENERGY/RHYTHM/MOTION,
   copy brief, component notes). Child proposes direction questions when
-  direction is missing; parent relays to MEKL; child never answers for
+  direction is missing; parent relays to the owner; child never answers for
   the user.
 - **AUDIT mode (antislop AFTER):** review an existing UI (code and/or
   screenshots) and output a numbered findings list, each with severity,
@@ -70,7 +70,7 @@ DESIGNER PRINCIPLES (mandatory):
 - `context`: principles block + file paths / URLs + screenshots available
   + any existing DESIGN.md + hard constraints (no implementation, agreed
   output files only).
-- Parent relays user answers between MEKL and the child - the child has
+- Parent relays user answers between the owner and the child - the child has
   no ask-user tool.
 
 ## Parent duties (cannot be delegated)
@@ -79,5 +79,5 @@ DESIGNER PRINCIPLES (mandatory):
   verify claimed pattern matches in the actual files. Self-reports only.
 - Route fixes: DESIGN.md -> coding-subagent implements; audit findings ->
   triage (like qa fix-cycle) -> coding-subagent -> qa/ui-ux re-check.
-- Escalate to MEKL when the child proposes direction choices - taste and
-  brand calls belong to MEKL, not to a subagent.
+- Escalate to the owner when the child proposes direction choices - taste and
+  brand calls belong to the owner, not to a subagent.

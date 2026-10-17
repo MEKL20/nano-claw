@@ -1,6 +1,6 @@
 ---
 name: subagent-team
-version: 1.2.0
+version: 1.3.0
 description: "One audited agent team: plan, design, build, test, secure."
 ---
 
@@ -22,7 +22,7 @@ BEFORE every dispatch.
 | Hands | `coding-subagent` | implement, Karpathy + comment hygiene | self-verify as final |
 | Evidence | `qa-subagent` | black-box testing, bug reports, re-tests | fix |
 | Finder | `security-subagent` | vuln findings, PoCs, coverage ledger | fix, exceed scope |
-| Parent | your main agent | verify, route, triage, relay MEKL | delegate verification |
+| Parent | your main agent | verify, route, triage, relay the owner | delegate verification |
 
 ## Context protocol (what a child knows: CAG + RAG)
 
@@ -37,7 +37,7 @@ re-derived by the child:**
 3. the cached host facts that touch this task (see Host facts below);
 4. hard constraints: forbidden actions, scope list, read-only areas;
 5. the approval line when one is required
-   (`dynamic approved by MEKL for: <targets>`).
+   (`dynamic approved by the owner for: <targets>`).
 
 Re-derivation is a failure mode, not thoroughness: a child that discovers
 tooling by trial burns the run and sometimes installs things. Facts the
@@ -64,16 +64,16 @@ Three rules make retrieval trustworthy:
 
 1. **Self-report is not evidence.** Every child claim is re-verified by the
    parent: re-run the test/repro/measurement, read the cited lines. Nothing
-   reaches MEKL on a child's word alone.
+   reaches the owner on a child's word alone.
 2. **Separation of duties.** The producer never certifies: QA does not fix,
    the designer does not implement, the coder does not re-test their own fix,
    security does not patch. One agent doing both grades its own homework.
-3. **The human owns risk calls.** MEKL approves: PRD/stack/infra, design
+3. **The human owns risk calls.** the owner approves: PRD/stack/infra, design
    direction, dynamic security testing (per run), destructive or external
    actions, anything touching production data. Children propose, parent
-   relays, MEKL decides.
+   relays, the owner decides.
 4. **Human gates are human-only.** An approval, sign-off, or playtest flag is
-   recorded by MEKL's own action. An agent writing one fabricates consent -
+   recorded by the owner's own action. An agent writing one fabricates consent -
    the one failure this pipeline cannot detect afterwards.
 5. **Escalation guards, not infinite loops.** Same failure twice = stop and
    escalate with evidence. Scope creep = back to the architect's docs first.
@@ -95,9 +95,9 @@ verify by running something. No stage is done on a child's summary.
 
 | # | Stage | Owner | Artifact | Exit gate (parent runs it) |
 |---|---|---|---|---|
-| 1 | Intake | parent | `docs/CLARIFICATIONS.md` | every open question answered by MEKL or logged as a numbered assumption |
+| 1 | Intake | parent | `docs/CLARIFICATIONS.md` | every open question answered by the owner or logged as a numbered assumption |
 | 2 | Plan | architect | `docs/PRD.md`, `ARCHITECTURE.md`, `ERD.md`, `BACKLOG.md`, `THREAT_MODEL.md` if attack surface | every FR has testable criteria; every T-n cites an FR; every ERD entity is used |
-| 3 | Approval | **MEKL** | approval logged in `CLARIFICATIONS.md` | explicit yes on PRD + stack + infra. No yes = zero build dispatches |
+| 3 | Approval | **owner** | approval logged in `CLARIFICATIONS.md` | explicit yes on PRD + stack + infra. No yes = zero build dispatches |
 | 4 | Design direction (UI projects) | ui-ux | `DESIGN.md` | every decision carries a one-line reason; contrast gates computed, not asserted |
 | 5 | Build | coding | code, tests, migrations | parent re-runs build/lint/test and reads real output; `node --check`-class syntax gate per file |
 | 6 | QA | qa | `qa-reports/YYYY-MM-DD-<area>.md` | verdict stated; every issue has repro + expected/actual + evidence path; parent re-runs each Critical/High repro |
@@ -114,7 +114,7 @@ decision the parent records, not a default.
   **fresh QA** re-tests everything in scope. Report status becomes FIXED
   (re-tested <date>) / STILL BROKEN / WONTFIX + reason.
 - Security finding -> parent re-verifies -> coding fixes -> **security**
-  re-tests. Live secret found = escalate to MEKL immediately.
+  re-tests. Live secret found = escalate to the owner immediately.
 - Design audit finding -> coding implements -> ui-ux re-audits the measured
   claims (re-run `contrast-check.py` on the cited pairs).
 - Mechanical edit under ~15 minutes with deterministic verification: the
@@ -173,6 +173,20 @@ Other agents: any framework with (a) spawned sub-conversations, (b) file read
 access for children, (c) a human channel for the parent to relay approvals.
 Paste each member skill's principle block as the child's system prompt or
 task preamble; the workflow contracts are framework-agnostic.
+
+## Field updates (2026-10)
+
+- **AGENTS.md reaches children automatically.** Hermes subagents get the
+  workspace repo's AGENTS.md injected into their system prompt (SOUL.md stays
+  parent-only). Keep repo-level hard rules in AGENTS.md and deep context in
+  `docs/STATE.md`; briefs stay short ("read docs/STATE.md, do X").
+- **Paste-blocks stay mandatory.** Auto-injection covers repo conventions,
+  NOT role principles - children still cannot load skills. The principle
+  block still travels verbatim in every brief (CAG channel unchanged).
+- **Solo-orchestrator drift is real.** A parent that "already knows the
+  context" will drift into doing everything itself; that is a protocol
+  violation here. Route implementation/QA through the roles; the parent
+  triages, briefs, re-verifies, and gates releases.
 
 ## Adaptation notes for other agents
 
