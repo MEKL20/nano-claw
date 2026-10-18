@@ -1,6 +1,6 @@
 ---
 name: architect-subagent
-version: 1.5.0
+version: 1.5.1
 description: "Spawn architect subagents: PRD, stack, ERD, backlog."
 ---
 
