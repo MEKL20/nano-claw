@@ -1,6 +1,6 @@
 ---
 name: coding-subagent
-version: 1.3.1
+version: 1.3.2
 description: "Spawn coding subagents with Karpathy principles inlined."
 ---
 
