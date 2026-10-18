@@ -1,6 +1,6 @@
 ---
 name: security-subagent
-version: 1.4.0
+version: 1.5.0
 description: "Spawn security review subagents: evidence-first, scoped."
 ---
 

@@ -79,7 +79,7 @@ snapshot, not an endorsement forever.
 ## Install (Hermes)
 
 ```bash
-REPO=https://raw.githubusercontent.com/MEKL20/nano-claw/main/skills/crew5
+REPO=https://raw.githubusercontent.com/MEKL20/nano-claw/main/skills/crew-coding
 
 # router + its parent-only ops runbook
 mkdir -p ~/.hermes/skills/software-development/subagent-team/references

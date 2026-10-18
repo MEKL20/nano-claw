@@ -22,7 +22,7 @@ Every brief carries, verbatim:
 
 1. the role principle block from the member skill;
 2. project dir path, files to READ, files to WRITE (exact paths);
-3. the cached host facts this task touches (crew5 SKILL.md "Host facts");
+3. the cached host facts this task touches (crew-coding SKILL.md "Host facts");
 4. forbidden actions / scope list / read-only areas;
 5. `write files one at a time, never batch at the end - files survive, context
    may not`;
@@ -128,10 +128,10 @@ message: file and line only.
 ## Native infra: Hermes profiles + kanban (since 2026-10-17)
 
 - Crew5 roles exist as PERSISTENT Hermes profiles on the host:
-  crew5-coder, crew5-qa, crew5-security, crew5-architect, crew5-uiux
+  crew-coding-coder, crew-coding-qa, crew-coding-security, crew-coding-architect, crew-coding-uiux
   (~/.hermes/profiles/). Each has own memories/, skills/, SOUL.md.
 - Work queue = kanban board: `hermes kanban create <title> --assignee
-  crew5-<role> --workspace dir:<repo>` -> `hermes kanban dispatch` ->
+  crew-coding-<role> --workspace dir:<repo>` -> `hermes kanban dispatch` ->
   `hermes kanban show <id>` for the result. Optional spawner daemon:
   `hermes kanban daemon`.
 - Clone gap: child profile configs lack the parent `providers` block -

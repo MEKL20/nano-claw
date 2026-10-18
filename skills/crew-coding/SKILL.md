@@ -1,6 +1,6 @@
 ---
 name: subagent-team
-version: 1.4.0
+version: 1.5.0
 description: "One audited agent team: plan, design, build, test, secure."
 ---
 
