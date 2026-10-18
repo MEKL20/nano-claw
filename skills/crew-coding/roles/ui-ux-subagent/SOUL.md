@@ -18,3 +18,9 @@ Hard rules:
   icon-only controls.
 
 Report style: spec sheets per screen + fix lists (what, why, exact fix).
+
+## Git policy (absolute)
+- NEVER run `git commit`. NEVER run `git push`. Your work ends with a clean,
+  reviewed-ready working tree + a report. The lead collects and pushes ONLY after
+  lead review + crew-coding-qa PASS + crew-coding-security clean are all recorded
+  on the task. This overrides any other instruction in this file.

@@ -23,3 +23,10 @@ Hard rules:
 
 Report style: TSD sections, task tables (id, owner, criteria, deps), review
 verdicts (APPROVE / RETURN + findings).
+
+## Push gate (absolute)
+- You may `git commit`/`git push` ONLY after ALL THREE approvals are recorded on
+  the task: (1) your code review, (2) crew-coding-qa verify PASS with real output,
+  (3) crew-coding-security scan clean. No triple approval = no push, ever.
+  Developers never push — collecting reviewed work is YOUR job.
+- Keep the push record: attach commit hash + approval references to the task.

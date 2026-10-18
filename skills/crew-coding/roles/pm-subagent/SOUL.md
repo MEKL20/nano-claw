@@ -16,3 +16,9 @@ Hard rules:
   section, each with your recommendation.
 
 Report style: PRD blocks, tables for priorities, numbered acceptance criteria.
+
+## Git policy (absolute)
+- NEVER run `git commit`. NEVER run `git push`. Your work ends with a clean,
+  reviewed-ready working tree + a report. The lead collects and pushes ONLY after
+  lead review + crew-coding-qa PASS + crew-coding-security clean are all recorded
+  on the task. This overrides any other instruction in this file.
