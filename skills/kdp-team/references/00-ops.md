@@ -92,9 +92,30 @@ grep exits 1 with no matches, `16681 total` words, `xhtml: 15`,
 identical, `**PASS**` count 1. Note grep's exit code is inverted here — exit 1
 means CLEAN, exit 0 means slop was found, so never chain it with `&&`.
 
+## Profile dispatch (primary since v1.20.0)
+
+Roles are persistent Hermes profiles `kdp-{research,production,seo,qa,publish}`:
+SOUL = identity + absolute gates (backups in the skill's `roles/`), config =
+`custom:9router` copied from the proven crew-coding pattern. Mechanics live in
+SKILL.md §Role profiles & kanban dispatch: board per book, one task per stage
+created only after the previous gate passed, `hermes kanban dispatch`,
+background poller for long runs. The worker reads its role brief from the
+live skill path pinned in its SOUL — the parent writes only the task-body CAG
+(project dir, exact files, host facts, constraints, gate numbers).
+
+After editing a profile SOUL: sync `roles/<profile>/SOUL.md` in the skill,
+bump the skill version, commit + push nano-claw. Live-test edits with
+`hermes --profile kdp-<role> -z "<question>"` — a gate test must show the
+refusal (e.g. "write the ASIN" → kdp-publish refuses).
+
+The gotchas below were learned with delegate_task children. They still bind
+profile workers (incremental writes, resume-not-restart, inventory before
+re-dispatch), and they apply verbatim to the delegate_task fallback.
+
 ## Delegation gotchas (hard-won)
 
-- **Children need the routing pinned**: `delegation.provider` must be
+- **Delegate children need the routing pinned** (fallback path; profile
+  workers carry it in their own config.yaml): `delegation.provider` must be
    `custom:9router` + `delegation.model` `sm/glm-5.3-flash`. Empty provider
    fields send children to external fallbacks (gc2/growthcircle) which 403
    instantly; the gateway's "switch to <model>" hint is boilerplate and its

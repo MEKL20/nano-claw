@@ -1,26 +1,29 @@
 ---
 name: html5-game-team
-version: 1.3.0
+version: 1.4.0
 description: "Use when building an HTML5 game for portal ad revenue."
 ---
 
 # HTML5 Game Team: research - design - build - qa - asset - ship
 
-Subagent team for HTML5 portal games (CrazyGames primary, Poki second),
-run by nano (parent). Children cannot load skills: nano pastes the matching
-reference brief into each `delegate_task` task context. Every game run is one
-project directory under `~/games/<slug>/`.
+Persistent agent team for HTML5 portal games (CrazyGames primary, Poki
+second), run by nano (parent). Each role is its own Hermes profile —
+`game-{research,design,build,qa,ship,asset}` — with a role SOUL carrying
+identity + absolute gates (crew-coding pattern). Dispatch = kanban task →
+profile worker; the worker reads its own role brief from this skill's live
+`references/` path (pinned in its SOUL), so the parent no longer pastes
+briefs. Every game run is one project directory under `~/games/<slug>/`.
 
-| Role | Brief | Does | Never does |
-|---|---|---|---|
-| Research | references/05-research.md | trend scan of portals, 3 candidate concepts, evidence-based pick + risks | build, design levels, invent popularity numbers |
-| Design | references/01-design.md | GDD: core loop, twist, level plan, rewarded slots, acceptance criteria, scope cuts | pick engine (pinned), approve itself |
-| Build | references/02-build.md | full game code, levels JSON, solver tool, SDK wrapper, build report | claim play-tested, invent results |
-| QA & Tester | references/03-qa.md | ONE quality gate: static+spec+solver+draw-path audit THEN real-browser playtest (playthrough, feel, orientation continuity, mobile, persistence), single PASS/FAIL | fix anything, report without measured evidence |
-| Ship | references/04-ship.md | submission package, portal copy, MEKL runbook, metrics plan | touch credentials, submit |
-| Asset | references/06-asset-design.md + 07-style-guide.md | PRE-build: style guide (hex-level art spec, contrast gates). POST-build: icon 512, real-gameplay screenshots, cover, pixel audit vs style guide | touch js/levels/tools, fake gameplay images, skip contrast gates |
+| Role | Profile | Brief (worker self-loads) | Does | Never does |
+|---|---|---|---|---|
+| Research | game-research | references/05-research.md | trend scan of portals, 3 candidate concepts, evidence-based pick + risks | build, design levels, invent popularity numbers |
+| Design | game-design | references/01-design.md | GDD: core loop, twist, level plan, rewarded slots, acceptance criteria, scope cuts | pick engine (pinned), approve itself |
+| Build | game-build | references/02-build.md | full game code, levels JSON, solver tool, SDK wrapper, build report | claim play-tested, invent results |
+| QA & Tester | game-qa | references/03-qa.md | ONE quality gate: static+spec+solver+draw-path audit THEN real-browser playtest (playthrough, feel, orientation continuity, mobile, persistence), single PASS/FAIL | fix anything, report without measured evidence, write human flags |
+| Ship | game-ship | references/04-ship.md | submission package, portal copy, MEKL runbook, metrics plan | touch credentials, submit, write human flags |
+| Asset | game-asset | references/06-asset-design.md + 07-style-guide.md | PRE-build: style guide (hex-level art spec, contrast gates). POST-build: icon 512, real-gameplay screenshots, cover, pixel audit vs style guide | touch js/levels/tools, fake gameplay images, skip contrast gates |
 
-Parent (nano): verify children, route fixes, relay MEKL, track metrics.
+Parent (nano): verify workers, route fixes, relay MEKL, track metrics.
 Autonomy (MEKL standing order, 2026-09-27): parent DECIDES game pick, GDD
 approval, asset acceptance, and fix routing without asking. MEKL touches
 the pipeline twice: playtest verdict (quality) and portal submission
@@ -30,7 +33,7 @@ checks, not permission requests.
 ## Non-negotiables
 
 1. **Self-report is not evidence.** Parent re-verifies: build exists, size
-   budget, solver output, report files. Nothing reaches MEKL on a child's word.
+   budget, solver output, report files. Nothing reaches MEKL on a worker's word.
 2. **Separation of duties.** QA never fixes; Build never certifies; whoever
    fixes never re-checks the fix.
 3. **Parent owns judgment calls.** Pick, GDD sign-off, asset acceptance,
@@ -67,33 +70,72 @@ checks, not permission requests.
 
 Nothing else belongs in the project dir. Sweep leftovers (probe scripts,
 nested `<slug>/<slug>/` dirs) before declaring a phase done — degraded
-children create them and they silently ship inside the zip.
+degraded workers create them and they silently ship inside the zip
 
-## Reference index (what the parent pastes into which child)
+## Reference index (which worker self-loads which brief)
 
-| Reference | Pasted into | Parent-only |
+| Reference | Read by (worker self-loads via its SOUL pin) | Parent-only |
 |---|---|---|
 | 00-ops.md | nobody — parent reads before EVERY dispatch | yes |
-| 01-design.md | Design child | |
-| 02-build.md | Build children (both dispatches) | |
-| 03-qa.md | QA & Tester child | |
-| 04-ship.md | Ship child | |
-| 05-research.md | Research child | |
-| 06-asset-design.md | Asset child (post-build) | |
-| 07-style-guide.md | Asset child (pre-build) | |
+| 01-design.md | game-design | |
+| 02-build.md | game-build (both dispatches) | |
+| 03-qa.md | game-qa | |
+| 04-ship.md | game-ship | |
+| 05-research.md | game-research | |
+| 06-asset-design.md | game-asset (post-build) | |
+| 07-style-guide.md | game-asset (pre-build) | |
 | 08-levelgen.md | whoever touches the generator (often the parent) | |
 | 09-dashboard.md | nobody — parent operates the board | yes |
 
-Every child also needs, pasted verbatim: project dir path, the host facts
-below that touch its job, and the files it must read (children cannot load
-skills or memory, and cannot see this table).
+Every task body still carries: project dir path, the host facts below that
+touch the job, and the exact files to read/write — workers get zero
+conversation context and cannot see this table.
 
 Bundled, so the pipeline needs nothing external:
 
 - `scripts/game_dashboard.py` — the console (stdlib only, no deps)
 - `templates/games-dashboard.service` — systemd --user unit, `%h` paths
 
-## Host facts (cached — do not re-derive, do not let children rediscover)
+## Role profiles & kanban dispatch (since v1.4.0)
+
+Profiles `game-{research,design,build,qa,ship,asset}` under
+`~/.hermes/profiles/`, built on the proven crew-coding pattern: config.yaml =
+`custom:9router` (empty provider fields → workers 403), SOUL.md = role
+profiling + absolute gates (including the human-flag forgery ban on every
+role), `roles/` in this skill = portable SOUL backup. Edit one SOUL → sync
+the backup → bump this skill's version → push nano-claw.
+
+One board per game run:
+
+```sh
+hermes kanban boards create game-<slug> --default-workdir ~/games/<slug> --switch
+```
+
+One stage = one task, created ONLY after the previous stage's gate passed —
+the parent's sequential cadence is the anti-premature-spawn guard (park
+not-yet-startable work in triage, never in ready). Task body = the CAG:
+project dir, exact files to read/write, host facts that touch the job,
+forbidden actions, gate numbers. Example (stage 4a):
+
+```sh
+hermes kanban create "stage-4a build: levels + tools + assets" \
+  --body "ROLE: build (dispatch 4a). Project dir: ~/games/<slug>. READ: design/gdd.md, design/style-guide.md. WRITE: build/levels/*.json, build/tools/{solver.js,check.js,gen-levels.js}, build/assets/. GATES: node tools/check.js ends ALL CHECKS PASSED; node --check every .js. HOST: node v22, no zip CLI, check.js ~60s on 100 levels. RULES: one file per call; 2 consecutive tool failures = STOP; never write outside the project dir. FORBIDDEN: js/ runtime (that is 4b), qa/, git commit/push, messaging MEKL." \
+  --assignee game-build --workspace dir:$HOME/games/<slug> --json
+hermes kanban dispatch
+```
+
+Watch long runs with a background poller on `hermes kanban list --json`
+(crew-coding recipe), never a foreground sleep loop. The task result + the
+artifacts on disk are the report; the parent re-runs the stage gate itself
+before creating the next task. `hermes --profile game-<role> -z "<question>"`
+is for identity/gate tests only, never for real work.
+
+Fallback if the kanban/profile stack is broken: `delegate_task` still works —
+paste the role brief + the full CAG + the SOUL gates verbatim into the task
+context (delegate children cannot load skills or read the SOUL), and pin
+`delegation.provider` to `custom:9router` (see 00-ops).
+
+## Host facts (cached — do not re-derive, do not let workers rediscover)
 
 - `node` v22 present. `zip` CLI is **absent**; package with `python3`
   `zipfile` (stdlib). `unzip` exists for verification.
@@ -116,19 +158,19 @@ Bundled, so the pipeline needs nothing external:
 ## Cycle
 
 One stage = one owner, one durable artifact, one exit gate the parent can
-verify by running something. No stage is "done" on a child's summary, and
+verify by running something. No stage is "done" on a worker's summary, and
 the dashboard state is derived from the artifacts, never set by hand.
 
 | # | Stage | Owner | Artifact | Exit gate (parent runs it) | Board |
 |---|---|---|---|---|---|
-| 1 | Research | child | research/pick.md | pick has cited evidence + named risks | RESEARCHED |
-| 2 | Design | child | design/gdd.md | acceptance criteria measurable + scope cuts listed | DESIGNED |
-| 3 | Style guide | Asset child | design/style-guide.md | every contrast gate COMPUTED, not asserted | DESIGNED |
-| 4 | Build a | child | levels/, tools/, assets/ | `node tools/check.js` → ALL CHECKS PASSED | BUILDING |
-| 5 | Build b | child | js/, index.html | `node --check` each file; game boots and accepts input | BUILDING |
-| 6 | QA & Tester | child | qa/report.md | `VERDICT: PASS`, every check backed by command output | PLAYTEST |
-| 7 | Asset post-build | Asset child | assets-out/ | pixel audit vs the declared gates, real game pixels | PLAYTEST |
-| 8 | Ship | child | ship/package.md, runbook.md, build.zip | fields complete; archive verified from INSIDE the zip | READY |
+| 1 | Research | worker | research/pick.md | pick has cited evidence + named risks | RESEARCHED |
+| 2 | Design | worker | design/gdd.md | acceptance criteria measurable + scope cuts listed | DESIGNED |
+| 3 | Style guide | game-asset | design/style-guide.md | every contrast gate COMPUTED, not asserted | DESIGNED |
+| 4 | Build a | worker | levels/, tools/, assets/ | `node tools/check.js` → ALL CHECKS PASSED | BUILDING |
+| 5 | Build b | worker | js/, index.html | `node --check` each file; game boots and accepts input | BUILDING |
+| 6 | QA & Tester | worker | qa/report.md | `VERDICT: PASS`, every check backed by command output | PLAYTEST |
+| 7 | Asset post-build | game-asset | assets-out/ | pixel audit vs the declared gates, real game pixels | PLAYTEST |
+| 8 | Ship | worker | ship/package.md, runbook.md, build.zip | fields complete; archive verified from INSIDE the zip | READY |
 | 9 | Playtest | **MEKL** | ship/playtested.flag | his verdict — board unlocks submit | PLAYTESTED |
 | 10 | Submit | **MEKL** | ship/submitted.flag | portal submission, his account | SUBMITTED |
 | 11 | Metrics | parent | metrics/log.csv | 30-day go/no-go | LIVE |
@@ -174,10 +216,10 @@ re-run Ship because the archive went stale. Trend scan or concept
 exploration = Research brief alone. Skip roles whose risk is absent — never
 skip parent verification, the MEKL gates, or the `check.js` gate.
 
-Dispatch one child per stage, sequentially: each one's input is the previous
-stage's artifact. Parallel children only for genuinely independent work
-(e.g. Asset post-build while Ship drafts copy), and never two writers in the
-same directory.
+One task per stage, dispatched sequentially: each worker's input is the
+previous stage's artifact. Parallel tasks only for genuinely independent work
+(e.g. game-asset post-build while game-ship drafts copy), and never two
+workers in the same directory.
 
 ## Metrics (parent role, no subagent)
 

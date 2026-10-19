@@ -1,46 +1,60 @@
 ---
 name: kdp-team
-version: 1.19.1
-description: "Five-role KDP subagent team: research to publish pipeline."
+version: 1.20.0
+description: "Five-role KDP team as persistent Hermes profiles: research to publish pipeline."
 ---
 
 # KDP Team: research - produce - seo - qa - publish
 
-Subagent team for Amazon KDP self-publishing, run by nano (parent). Children
-cannot load skills or read memory: nano pastes the matching reference brief
-from this skill into each `delegate_task` context. Every book run is one
-project directory under `~/kdp/<slug>/`.
+Persistent agent team for Amazon KDP self-publishing, run by nano (parent).
+Each role is its own Hermes profile — `kdp-{research,production,seo,qa,publish}` —
+with a role SOUL carrying identity + absolute gates (crew-coding pattern).
+Dispatch = kanban task → profile worker; the worker reads its own role brief
+from this skill's live `references/` path (pinned in its SOUL), so the parent
+no longer pastes briefs. Every book run is one project directory under
+`~/kdp/<slug>/`.
 
 Skill dir: `~/.hermes/skills/productivity/kdp-team/` — paths below are
 relative to it.
 
-| Role | Brief | Does | Never does |
-|---|---|---|---|
-| Research | references/01-research.md | niche + trend validation, BSR/competition evidence, book decision | write, promise sales |
-| Production | references/02-production.md | manuscript chapters, cover, EPUB | self-certify, invent facts |
-| SEO | references/03-seo.md | title/subtitle, 7 keywords, categories, description, price | rewrite manuscript body |
-| QA | references/04-qa.md | guidelines, fact spot-check, EPUB + cover checks, verdict | fix anything |
-| Publish | references/05-publish.md | package.md: KDP field table + inlined click-by-click runbook | touch credentials, automate dashboard, split the runbook into its own file |
+| Role | Profile | Brief (worker self-loads) | Does | Never does |
+|---|---|---|---|---|
+| Research | kdp-research | references/01-research.md | niche + trend validation, BSR/competition evidence, book decision | write, promise sales |
+| Production | kdp-production | references/02-production.md | manuscript chapters, cover, EPUB | self-certify, invent facts |
+| SEO | kdp-seo | references/03-seo.md | title/subtitle, 7 keywords, categories, description, price | rewrite manuscript body |
+| QA | kdp-qa | references/04-qa.md | guidelines, fact spot-check, EPUB + cover checks, verdict | fix anything |
+| Publish | kdp-publish | references/05-publish.md | package.md: KDP field table + inlined click-by-click runbook | touch credentials, automate dashboard, split the runbook, write an ASIN |
 
-Parent (nano): verify children, route fixes, run analytics, relay MEKL.
+Parent (nano): verify workers, route fixes, run analytics, relay MEKL.
 
-## Context protocol (what a child knows: CAG + RAG)
+## Context protocol (what a worker knows: SOUL + CAG + RAG)
 
-Children start blind — no skills, no memory, no chat history, no ask-user
-tool. Two channels, both owned by the parent.
+Workers are persistent profiles but start every task without conversation
+context — no chat history, no parent memory, no ask-user tool. Three
+channels:
 
-**CAG — pasted verbatim into the brief, cached by the parent, never
-re-derived by the child:**
+**SOUL — travels with the profile (the enforcement point):** identity, hard
+rules, absolute gates (never self-certify, never write an ASIN, QA never
+fixes...). Live copy: `~/.hermes/profiles/<profile>/SOUL.md`; portable
+backup: this skill's `roles/<profile>/SOUL.md`. Edit one, sync the other,
+bump this skill's version, push nano-claw (crew-coding convention).
 
-1. the role brief from `references/`;
-2. project dir path + exact files to READ and to WRITE;
-3. the host facts this task touches (see below) — tool availability is
+**CAG — the kanban task body, written by the parent, never re-derived by the
+worker:**
+
+1. project dir path + exact files to READ and to WRITE;
+2. the host facts this task touches (see below) — tool availability is
    settled knowledge here, not something to discover by trial;
-4. hard constraints and forbidden actions;
-5. the numbers that gate completion (word count floor, char limits, cover
+3. hard constraints and forbidden actions beyond the SOUL's;
+4. the numbers that gate completion (word count floor, char limits, cover
    pixel dims).
 
-**RAG — the child retrieves from disk when it needs it:**
+The role brief is no longer pasted: every SOUL pins its own
+`references/0N-*.md` live path and the worker reads it first. The parent
+still checks briefs PAIRWISE before dispatch (00-ops rule) — a worker with a
+current brief and a stale task body still fails.
+
+**RAG — the worker retrieves from disk when it needs it:**
 
 - `research/decision.md` = the validated niche and keyword evidence;
 - `seo/listing.md` = the title/keyword skeleton written BEFORE the manuscript;
@@ -58,11 +72,51 @@ Three rules keep retrieval honest:
 - **Write incrementally**, one chapter/file at a time, never batched at the
   end. Files survive a timeout; context does not.
 
+## Role profiles & kanban dispatch (since v1.20.0)
+
+Profiles `kdp-{research,production,seo,qa,publish}` under `~/.hermes/profiles/`,
+built on the proven crew-coding pattern: config.yaml = `custom:9router`
+(empty provider fields → workers 403), SOUL.md = role profiling + absolute
+gates, `roles/` in this skill = portable SOUL backup.
+
+One board per book run:
+
+```sh
+hermes kanban boards create kdp-<slug> --default-workdir ~/kdp/<slug> --switch
+```
+
+One stage = one task, created ONLY after the previous stage's gate passed —
+the parent's sequential cadence is the anti-premature-spawn guard (park
+not-yet-startable work in triage, never in ready):
+
+```sh
+hermes kanban create "stage-4 production: chapters + cover + EPUB" \
+  --body "ROLE: production. Project dir: ~/kdp/<slug>. READ: seo/listing.md,
+research/decision.md, last written chapter (voice). WRITE: manuscript/chapters/*.md
+(one file per chapter, incremental), manuscript/PROGRESS.md, cover/, manuscript/book.epub.
+GATES: >=10,000 words; EPUB zipfile self-check + OPF dc:title readback; cover 1600x2560.
+HOST: no pandoc/epubcheck/zip CLI; builders per references/06-tools.md; use the PER-BOOK
+copy of cover_build.py. FORBIDDEN: qa/, seo/, git commit/push, messaging MEKL." \
+  --assignee kdp-production --workspace dir:$HOME/kdp/<slug> --json
+hermes kanban dispatch
+```
+
+Watch long runs with a background poller on `hermes kanban list --json`
+(crew-coding recipe), never a foreground sleep loop. The task result + the
+artifacts on disk are the report; the parent re-runs the stage gate itself
+before creating the next task. `hermes --profile kdp-<role> -z "<question>"`
+is for identity/gate tests only, never for real work.
+
+Fallback if the kanban/profile stack is broken: `delegate_task` still works —
+paste the role brief + the full CAG + the SOUL gates verbatim into the task
+context (delegate children cannot load skills or read the SOUL), and pin
+`delegation.provider` to `custom:9router` (see 00-ops).
+
 ## Non-negotiables
 
 1. **Self-report is not evidence.** Parent re-verifies: word counts, EPUB
    validation, keyword char limits, cover pixel dims, sampled facts. Nothing
-   reaches MEKL on a child's word alone.
+   Nothing reaches MEKL on a worker's word alone.
 2. **Separation of duties.** QA never fixes; production never certifies its
    own work; whoever fixes never re-checks the fix.
 3. **The parent decides; MEKL receives finished work.** Niche, concept,
@@ -97,7 +151,7 @@ Three rules keep retrieval honest:
   manuscript/book.epub
   manuscript/PROGRESS.md        chapter-by-chapter word counts
   cover/brief.md, cover.jpg, preview_400.png, thumb_100.png
-  qa/report.md                  QA child owns this file — parent never writes it
+  qa/report.md                  QA worker owns this file — parent never writes it
   qa/safety-verification.md     parent's physical-harm re-check (when the niche has one)
   qa/acceptance.md              parent's stage-9 sign-off (replaces a human read)
   publish/ai-disclosure.md      written at STAGE 0; QA checks it at stage 5
@@ -109,7 +163,7 @@ Three rules keep retrieval honest:
 so a timeout costs one chapter, not the book.
 
 **Stage 0, parent creates the skeleton before dispatching anyone** (one call,
-so no child invents its own layout):
+so no worker invents its own layout):
 
 ```sh
 SLUG=book-00N
@@ -138,7 +192,7 @@ After touching anything the board or a monitor reads, re-run
 otherwise the edit itself pages MEKL at 09:00 WIB.
 
 Sweep stray files before declaring a phase done, but **provenance is not
-litter**: a research child's raw scrape dumps under `research/*.json` let the
+litter**: a research worker's raw scrape dumps under `research/*.json` let the
 parent re-check numbers without ~13 fresh proxy fetches, and they are the only
 record of candidates that were screened and rejected. Keep them. Delete probe
 scripts, nested `<slug>/<slug>/` dirs, and editor backups.
@@ -151,14 +205,14 @@ verify by running something.
 | # | Stage | Owner | Artifact | Exit gate (parent runs it) | Board |
 |---|---|---|---|---|---|
 | 0 | Skeleton | parent | project dirs + `sales/log.csv` header | dirs exist, log.csv has a header and zero data rows, monitor hash unchanged | SETUP |
-| 1 | Research | child | research/decision.md | >=10 rows, >=6 real BSRs; `python3 ~/kdp/tools/verify_research.py <dir>/research/decision.md --all` exits 0, and the DISTINCT BOOKS screen still passes | RESEARCHED |
+| 1 | Research | worker | research/decision.md | >=10 rows, >=6 real BSRs; `python3 ~/kdp/tools/verify_research.py <dir>/research/decision.md --all` exits 0, and the DISTINCT BOOKS screen still passes | RESEARCHED |
 | 2 | Niche decision | parent | verdict appended to decision.md (niche + concept + why) | verifier exits 0; >=3 DISTINCT books under 300k BSR; competition SCREENED, or UNSCREENED stated as a risk; no overlap with an existing `book-*`; not fiction or generic self-help | RESEARCHED |
-| 3 | SEO skeleton | child | seo/listing.md (TODO markers for TOC fields) | title + 7 keywords present, every char count computed with `len()` | WRITING |
-| 4 | Production | child | manuscript/chapters/, cover/, book.epub | word count >=10,000 counted by parent; EPUB zipfile self-check; cover is 1600x2560 | PACKAGING |
-| 5 | QA | child | qa/report.md | `## Verdict` + literal `**PASS**` (bold — the board greps it), zero BLOCKER/MAJOR, every check backed by evidence | IN QA |
+| 3 | SEO skeleton | worker | seo/listing.md (TODO markers for TOC fields) | title + 7 keywords present, every char count computed with `len()` | WRITING |
+| 4 | Production | worker | manuscript/chapters/, cover/, book.epub | word count >=10,000 counted by parent; EPUB zipfile self-check; cover is 1600x2560 | PACKAGING |
+| 5 | QA | worker | qa/report.md | `## Verdict` + literal `**PASS**` (bold — the board greps it), zero BLOCKER/MAJOR, every check backed by evidence | IN QA |
 | 6 | Fix loop | production/SEO fixes, fresh QA re-checks | updated files + report status | re-run ALL checks, not just the fixed one; fixer never re-checks | IN QA |
-| 7 | SEO finalize | child | seo/listing.md complete | zero TODO markers; banned-term grep clean | IN QA |
-| 8 | Publish package | child | publish/package.md (runbook is a section inside it) | MEKL can upload with no other file open; AI-disclosure step present; `·copy` suffixes on paste-able cells | READY TO UPLOAD |
+| 7 | SEO finalize | worker | seo/listing.md complete | zero TODO markers; banned-term grep clean | IN QA |
+| 8 | Publish package | worker | publish/package.md (runbook is a section inside it) | MEKL can upload with no other file open; AI-disclosure step present; `·copy` suffixes on paste-able cells | READY TO UPLOAD |
 | 9 | Acceptance | parent | `qa/acceptance.md` | parent read ch01 + final chapter end-to-end; grep clean for TODO/lorem/placeholder/"as an AI"; listing bullets trace to real chapters; disclaimers present where the niche needs them; EPUB + cover re-checked by command | READY TO UPLOAD |
 | 10 | Upload | **MEKL** | ASIN entered in the dashboard | the one human step: ~20 min, his account, no API exists | LIVE |
 | 11 | Analytics | parent | sales/log.csv, sales/review-30d.done | 30-day sequel/kill decision | LIVE |
@@ -251,14 +305,14 @@ worth sending is one whose answer no artifact can supply.
 
 ## Reference index
 
-| Reference | Pasted into | Parent-only |
+| Reference | Read by (worker self-loads via its SOUL pin) | Parent-only |
 |---|---|---|
 | 00-ops.md | nobody — parent reads before EVERY dispatch | yes |
-| 01-research.md | Research child | |
-| 02-production.md | Production child | |
-| 03-seo.md | SEO child (both dispatches) | |
-| 04-qa.md | QA child | |
-| 05-publish.md | Publish child | |
+| 01-research.md | kdp-research | |
+| 02-production.md | kdp-production | |
+| 03-seo.md | kdp-seo (both stages) | |
+| 04-qa.md | kdp-qa | |
+| 05-publish.md | kdp-publish | |
 | 06-tools.md | whoever runs the builders (often the parent) | |
 
 Bundled so the pipeline needs nothing external: `scripts/epub_build.py`,
@@ -273,8 +327,8 @@ fix = production + QA only, then re-run Publish because the package went
 stale. Skip roles whose risk is absent — never skip parent verification, the
 upload gate, or the AI disclosure.
 
-Dispatch one child per stage, sequentially: each one's input is the previous
-stage's artifact. Never two writers in the same directory.
+One task per stage, dispatched sequentially: each worker's input is the
+previous stage's artifact. Never two workers in the same directory.
 
 ## Analytics (parent role, no subagent)
 

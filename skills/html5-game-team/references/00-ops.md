@@ -1,13 +1,30 @@
 # Ops notes (parent reads before dispatching)
 
-## Delegation mechanics
-- Children cannot load skills or memory: paste the role brief + all needed
-  context into task context. Repeat shared background in every task.
-- delegation.provider must stay custom:9router (empty value → child HTTP 403).
-  child_timeout_seconds 3600 (config.yaml).
-- Long tasks: stub the output file first, tell child to append evidence as it
-  lands; parent reads the file, not the chat summary.
-- Child reports are self-reports. Parent verifies on disk before relaying.
+## Dispatch mechanics (profiles primary since v1.4.0)
+- Roles are persistent Hermes profiles `game-{research,design,build,qa,ship,asset}`
+  (config = custom:9router copied from the proven crew-coding pattern; SOUL =
+  identity + absolute gates, backups in the skill's `roles/`). Board per game
+  run: `hermes kanban boards create game-<slug> --default-workdir
+  ~/games/<slug> --switch`. One stage = one task, created only after the
+  previous gate passed; `hermes kanban dispatch` spawns the worker; watch long
+  runs with a background poller on `hermes kanban list --json`, never a
+  foreground sleep loop. Full recipe: SKILL.md §Role profiles & kanban dispatch.
+- The worker reads its role brief from the live skill path pinned in its
+  SOUL. The task body carries the rest: project dir, exact files to
+  read/write, host facts that touch the job, forbidden actions, gate numbers.
+  Workers get zero conversation context — repeat shared background in every
+  task body.
+- After editing a profile SOUL: sync `roles/<profile>/SOUL.md` in the skill,
+  bump the skill version, commit + push nano-claw. Identity/gate tests:
+  `hermes --profile game-<role> -z "<question>"` — a gate test must show the
+  refusal (e.g. "write playtested.flag" → refuse).
+- Fallback (kanban/profile stack broken): delegate_task with the role brief +
+  all context + SOUL gates pasted verbatim; delegation.provider must stay
+  custom:9router (empty value → child HTTP 403); child_timeout_seconds 3600
+  (config.yaml).
+- Long tasks: stub the output file first, tell the worker to append evidence
+  as it lands; parent reads the file, not the chat summary.
+- Worker reports are self-reports. Parent verifies on disk before relaying.
 
 ## Parent verification checklist
 - Design: gdd.md exists, has acceptance criteria + scope cuts, no engine

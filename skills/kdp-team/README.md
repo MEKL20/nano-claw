@@ -2,7 +2,10 @@
 
 A five-role Amazon KDP publishing pipeline, shipped as installable agent skills.
 Built on [Hermes Agent](https://github.com/NousResearch/hermes-agent), portable
-to any agent framework with a spawn/delegate primitive.
+to any agent framework with a spawn/delegate primitive. On the reference host
+each role is a persistent Hermes profile (`kdp-{research,production,seo,qa,publish}`)
+dispatched through the kanban board; `roles/<profile>/SOUL.md` is the role
+profiling — identity plus absolute gates — and its portable backup.
 
 Research a niche, write the book, build the cover and EPUB, QA it, and hand the
 human a finished package. Every rule here was learned by running the pipeline,
@@ -10,14 +13,14 @@ not by planning it.
 
 ## Roles
 
-| Role | Does | Never does |
-|---|---|---|
-| Research | niche screening, competitor evidence, demand/competition verdict | pick the niche alone |
-| SEO | title, subtitle, 7 keywords, categories, chapter plan, description | edit the manuscript |
-| Production | chapters, front matter, cover, EPUB | certify its own output |
-| QA | evidence-first testing, verdict that gates publish | fix anything |
-| Publish | the KDP field package + click-by-click runbook | write an ASIN or a "published" flag |
-| Parent | decides, verifies, routes fixes, runs mechanical work | delegate verification |
+| Role | Profile | Does | Never does |
+|---|---|---|---|
+| Research | kdp-research | niche screening, competitor evidence, demand/competition verdict | pick the niche alone |
+| SEO | kdp-seo | title, subtitle, 7 keywords, categories, chapter plan, description | edit the manuscript |
+| Production | kdp-production | chapters, front matter, cover, EPUB | certify its own output |
+| QA | kdp-qa | evidence-first testing, verdict that gates publish | fix anything |
+| Publish | kdp-publish | the KDP field package + click-by-click runbook | write an ASIN or a "published" flag |
+| Parent | nano (orchestrator) | decides, verifies, routes fixes, runs mechanical work | delegate verification |
 
 ## The cycle
 
@@ -50,13 +53,18 @@ that flag fabricates a fact nobody can detect as false later.
 6. **Context dies, files survive.** Children write incrementally; resume briefs
    inventory partial progress first.
 
-## Context protocol (CAG + RAG)
+## Context protocol (SOUL + CAG + RAG)
 
-Children start blind: no skills, no memory, no chat history, no ask-user tool.
-The parent owns both channels — **CAG**, the role brief and cached host facts
-pasted verbatim into every dispatch, and **RAG**, the artifacts the child reads
-from disk (`research/decision.md`, `seo/listing.md`, `manuscript/chapters/*.md`).
-Anything missing from the brief does not exist for the child.
+Workers start every task without conversation context: no chat history, no
+parent memory, no ask-user tool. **SOUL** travels with the profile (identity,
+hard rules, absolute gates) and pins the role brief's live path — the worker
+reads its own brief first. **CAG** is the kanban task body the parent writes:
+project dir, exact files to read/write, cached host facts, constraints, the
+numbers that gate completion. **RAG** is what the worker retrieves from disk
+(`research/decision.md`, `seo/listing.md`, `manuscript/chapters/*.md`).
+Anything missing from the task body does not exist for the worker. Frameworks
+without persistent profiles: paste brief + gates verbatim instead (the
+delegate fallback in references/00-ops.md).
 
 ## What's inside
 
@@ -71,6 +79,8 @@ references/05-publish.md package + runbook contract
 references/06-tools.md   bundled script docs and install paths
 scripts/                 epub_build, cover_build, kdp_dashboard, kdp_watch,
                          verify_research
+roles/<profile>/SOUL.md  role profiling (identity + absolute gates), one per
+                         Hermes profile; portable backup of the live SOULs
 ```
 
 ## Install (Hermes)
@@ -87,6 +97,10 @@ done
 for s in epub_build.py cover_build.py kdp_dashboard.py verify_research.py kdp_watch.sh; do
   curl -sL $REPO/scripts/$s -o $SKILL/scripts/$s
 done
+for r in kdp-research kdp-production kdp-seo kdp-qa kdp-publish; do
+  mkdir -p $SKILL/roles/$r
+  curl -sL $REPO/roles/$r/SOUL.md -o $SKILL/roles/$r/SOUL.md
+done
 
 # Tools run from ~/kdp/tools/, NOT from the skill dir: the briefs and the cron
 # job both resolve them there, and a relative scripts/ path only works when the
@@ -101,6 +115,20 @@ mkdir -p ~/.hermes/scripts
 cp $SKILL/scripts/kdp_watch.sh ~/.hermes/scripts/kdp_watch.sh
 chmod +x ~/.hermes/scripts/kdp_watch.sh
 ```
+
+### Profiles (Hermes — canonical dispatch on the reference host)
+
+```bash
+for r in kdp-research kdp-production kdp-seo kdp-qa kdp-publish; do
+  hermes profile create $r --description "kdp-team role: ${r#kdp-}"
+  cp $SKILL/roles/$r/SOUL.md ~/.hermes/profiles/$r/SOUL.md
+done
+```
+
+Copy `providers` + `fallback_providers` from the parent `~/.hermes/config.yaml`
+into each profile's config.yaml — children without them fail with "Unknown
+provider". Dispatch through a per-book kanban board; the full recipe lives in
+SKILL.md §Role profiles & kanban dispatch.
 
 ### Dashboard (optional, LAN-only)
 
