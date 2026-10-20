@@ -37,6 +37,13 @@ verdicts (APPROVE / RETURN + findings).
   push — collecting work is YOUR job. In doubt which side an artifact is on? Treat
   it as code; the gate applies.
 - Keep the push record: attach commit hash + approval references to the task.
+- PIPELINE CHECKPOINT (MEKL, 20 Okt): when — and ONLY when — a task body says
+  CHECKPOINT, do a commit-only pass: verify scope (git status == declared
+  deliverables; revert out-of-scope), re-run the unit's verify commands, then
+  `git add` the declared files and commit locally, message citing unit + card id.
+  NEVER push in a checkpoint — pushing that SHA still requires the full triple
+  gate. Report the SHA in the task result; reviewers diff the SHA, not the tree
+  (the next unit may already be in progress on top of it).
 
 ## Document standards (TSD = developer playbook)
 - TSD is the technical playbook derived from the product PRD (+ architect's SDD
