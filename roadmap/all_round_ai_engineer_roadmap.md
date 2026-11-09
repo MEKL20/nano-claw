@@ -29,12 +29,12 @@ Course titles and availability can change. Check the current syllabus, update da
 
 | Priority | Course | Purpose | Decision |
 |---:|---|---|---|
-| 1 | [AI Engineer Core Track: LLM Engineering, RAG, QLoRA, Agents](https://www.udemy.com/course/ai-engineer-core-track/) | LLM fundamentals, RAG, embeddings, fine-tuning, AI applications | Core |
-| 2 | [AI Engineer Agentic Track: The Complete Agent & MCP Course](https://www.udemy.com/course/ai-engineer-agentic-track/) | Agent loops, tools, MCP, orchestration, multi-agent systems | Core |
-| 3 | [AI FDE: The Forward Deployed Engineer & Agentic AI Architect](https://www.udemy.com/course/ai-fde-forward-deployed-engineer-agentic-ai-architect/) | Agent architecture, harnesses, durable execution, evaluations, security | Core |
-| 4 | [PyTorch for Deep Learning Bootcamp](https://www.udemy.com/course/pytorch-for-deep-learning/) | Tensors, neural networks, training loops, model evaluation | Supplement |
-| 5 | [Spring AI Masterclass for Generative & Agentic AI Developers](https://www.udemy.com/course/spring-ai-masterclass-for-generative-agentic-ai-developers/) | Integrate AI into Java/Spring Boot applications | Optional |
-| 6 | [LLM Production Engineering: Ship AI Apps That Scale](https://www.udemy.com/course/llm-production-engineering-ship-ai-apps-that-scale/) | Reliability, latency, cost, observability, production practices | Optional |
+| 1 | [AI Engineer Core Track: LLM Engineering, RAG, QLoRA, Agents](https://www.udemy.com/course/llm-engineering-master-ai-and-large-language-models) | LLM fundamentals, RAG, embeddings, fine-tuning, AI applications | Core |
+| 2 | [AI Engineer Agentic Track: The Complete Agent & MCP Course](https://www.udemy.com/course/the-complete-agentic-ai-engineering-course) | Agent loops, tools, MCP, orchestration, multi-agent systems | Core |
+| 3 | [AI Engineer Production Track: Deploy LLMs & Agents at Scale](https://www.udemy.com/course/generative-and-agentic-ai-in-production) | Cloud deployment, AWS Bedrock/SageMaker, Terraform, CI/CD, MCP deployment, multi-agent production systems | Core |
+| 4 | [AI FDE: The Forward Deployed Engineer & Agentic AI Architect](https://www.udemy.com/course/ai-fde-forward-deployed-engineer-agentic-ai-architect) | Agent architecture, harnesses, durable execution, evaluations, security | Core |
+| 5 | [PyTorch for Deep Learning Bootcamp](https://www.udemy.com/course/pytorch-for-deep-learning) | Tensors, neural networks, training loops, model evaluation | Supplement |
+| 6 | [LLM Production Engineering: Ship AI Apps That Scale](https://www.udemy.com/course/llm-production-engineering-ship-ai-apps-that-scale) | Reliability, latency, cost, observability, production practices | Optional |
 
 > **Important:** Udemy course slugs and curricula can change. If a link does not resolve, search the exact course title on Udemy. Do not buy based on title alone; inspect the current curriculum first.
 
@@ -44,9 +44,10 @@ Do not buy everything immediately.
 
 1. Start with AI Engineer Core Track.
 2. Buy Agentic Track when ready to begin agent projects.
-3. Buy AI FDE when you are ready to harden agents for production.
-4. Take selected PyTorch sections when entering model engineering.
-5. Treat Spring AI and Production Engineering as targeted supplements.
+3. Buy AI Engineer Production Track after you can build basic agents; use it to learn cloud deployment and AI platform engineering.
+4. Buy AI FDE after that to deepen agent harnesses, durable execution, evaluation, and security.
+5. Take selected PyTorch sections when entering model engineering.
+6. Treat LLM Production Engineering as targeted supplements.
 
 ---
 
@@ -57,8 +58,9 @@ Do not buy everything immediately.
 | 1 | Months 1–2 | AI & LLM Engineering | Enterprise Knowledge Assistant |
 | 2 | Month 3 | Agent Engineering | Autonomous IT Support Agent |
 | 3 | Months 4–5 | Model Engineering | Fine-tuned Domain Model |
-| 4 | Month 6 | AI Architecture & Reliability | Production-grade Agent Platform |
-| 5 | Months 7–8 | Production & Integration | Enterprise AI Platform |
+| 4 | Month 6 | AI Platform & Cloud Deployment | Deployed AI applications and agents |
+| 5 | Month 7 | AI Architecture & Reliability | Production-grade Agent Platform |
+| 6 | Months 8–9 | Production Integration & Hardening | Enterprise AI Platform |
 
 The timeline is an estimate. Extend a phase if the project does not meet its exit criteria.
 
@@ -229,7 +231,7 @@ You can explain the dataset, training configuration, evaluation method, and meas
 - [ ] MCP gateway and enterprise integration patterns.
 - [ ] Cost, latency, and reliability trade-offs.
 
-### Project 4 — Production-grade Agent Platform
+### Project 5 — Production-grade Agent Platform
 
 Upgrade Project 2 rather than starting a disconnected project.
 
@@ -252,8 +254,8 @@ A failed run can be diagnosed, safely retried or resumed, and evaluated. Risky a
 
 ---
 
-## Phase 5 — Production & Integration
-**Timeline:** Months 7–8  
+## Phase 6 — Production Integration & Hardening
+**Timeline:** Months 8–9  
 **Main courses:** Spring AI Masterclass and selected LLM Production Engineering sections.
 
 ### Learn
@@ -269,7 +271,7 @@ A failed run can be diagnosed, safely retried or resumed, and evaluated. Risky a
 - [ ] Caching, rate limiting, and backpressure.
 - [ ] Secrets management and network security.
 
-### Project 5 — Enterprise AI Platform
+### Project 6 — Enterprise AI Platform
 
 Combine the previous projects into one coherent platform.
 
@@ -445,9 +447,11 @@ The strongest outcome is not five certificates. It is one coherent, documented p
 - [ ] Project 2 — Autonomous IT Support Agent
 - [ ] Phase 3 — Model Engineering
 - [ ] Project 3 — Fine-tuned Domain Model
-- [ ] Phase 4 — AI Architecture & Reliability
-- [ ] Project 4 — Production-grade Agent Platform
-- [ ] Phase 5 — Production & Integration
-- [ ] Project 5 — Enterprise AI Platform
+- [ ] Phase 4 — AI Platform & Cloud Deployment
+- [ ] Project 4 — Deploy the AI Support Agent
+- [ ] Phase 5 — AI Architecture & Reliability
+- [ ] Project 5 — Production-grade Agent Platform
+- [ ] Phase 6 — Production Integration & Hardening
+- [ ] Project 6 — Enterprise AI Platform
 
 **Guiding principle:** 30% learning, 70% building. Learn a concept, implement it, evaluate it, and integrate it into the platform.
